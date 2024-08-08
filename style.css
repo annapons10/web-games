@@ -1,0 +1,159 @@
+:root {
+    --bg-color: #38242b;
+    --text-color:#000000;
+    --bg-color-claro: #fff;
+    --granate: #241626;
+    --blanco-vintage: #f8f8ff;
+    --beige: #f5f5dc;
+    --marron-claro: #d2b48c;
+    --verde-oliva: #808000;
+    --azul-polvoriento: #6b8e23;
+    --naranja-quemado: #cc5500; 
+}
+
+/*AÑADIR LOS :FOCUS EN TODA LA PÁGINA PARA LA ACCESIBILIDAD*/
+
+*{
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+}
+
+
+.header{
+    display: flex;
+    background-color: var(--text-color);
+    justify-content: space-even;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+    text-align: center;
+}
+
+.header__open-nav-button {
+    color: var(--bg-color-claro);
+    font-size: 3rem;
+    font-weight: 600;
+    position: absolute;
+    right: 10px;
+}
+
+.header__open-nav-button:hover{
+    transform: scale(1.2);
+    transition: all 0.3s;
+}
+
+.header__checkbox{
+    display: none; /*Desaparece*/
+}
+
+.header__nav{
+    display: none;
+    position: absolute;
+    background-color: var(--text-color);
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    z-index: -1;
+}
+
+.nav-links{ 
+   display: flex;
+   flex-direction: column;
+   height: 40vh;
+   margin: auto;
+   justify-content: space-evenly;
+}
+
+.header__checkbox:checked ~ .header__nav { /*Y cuando se chekea, sale.*/
+    display: flex;
+}
+
+.header__nav .nav-links li:hover{ 
+    transform: scale(1.1);
+}
+
+.header__nav .nav-links a{ 
+    color: var(--bg-color-claro);
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+
+.header__nav .nav-links a:hover{ 
+    color:var(--bg-color);
+}
+
+.header .logo{
+    cursor: pointer;
+    padding: 15px;
+}
+
+.header .logo img{
+    height: 70px;
+    width: auto;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.header .logo img:hover{
+    transform: scale(1.2);
+    transition: all 0.3s;
+}
+
+
+/*MEDIA QUERIES HEADER:*/
+
+@media (min-width: 767px) {
+    .header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .header__nav {
+        display: inline-block;
+        position: static;
+        height: 20px;
+        width: auto;
+    }
+
+    .nav-links{ 
+        display: flex;
+        flex-direction: row;
+        margin-right: 50px;
+    }
+
+    .nav-links li{ 
+        margin-right: 40px;
+    }
+
+    .header__nav .nav-links li a{ 
+       font-size: 1.5rem;
+    }
+
+    .header__nav .nav-links li:hover{ 
+        transform: scaleX(1.1);
+    }
+
+    .header .logo{
+        margin-left: 35px;
+    }
+
+    .header__open-nav-button {
+        display: none;
+    }
+   
+}
+
+.container__imagenes img{
+    width: 200px;
+}
+
+/*CONTENEDOR ESTRUCTURA PÁGINA.*/
+
+.container__game{
+    margin-top: 10px;
+}
