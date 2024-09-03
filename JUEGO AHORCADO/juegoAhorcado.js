@@ -5,11 +5,12 @@
 function escogePalabraAleatoria (palabras){
     let indiceA = Math.floor(Math.random() * palabras.length);
     let palabraAleatoria = palabras[indiceA].split("");
+    let palabraOculta;
 
     document.getElementById("palabra_oculta").innerHTML = Array(palabraAleatoria.length).fill('_');
-    /* let palabraOculta = Array(palabraAleatoria.length).fill('_'); //es un array
+    palabraOculta = Array(palabraAleatoria.length).fill('_'); //es un array
     console.log(palabraOculta);
-    console.log(palabraAleatoria); */
+    console.log(palabraAleatoria); 
    
     return [palabraAleatoria, palabraOculta];  
 } 
@@ -56,7 +57,7 @@ function juegoAhorcado (palabraAleatoria, palabraOculta){
 
             console.log(palabraOculta.join(' '));
 
-            document.body.innerHTML = palabraOculta.join(' ');
+            //document.body.innerHTML = palabraOculta.join(' ');
 
 
             if(!palabraOculta.includes('_')){ //NO COMPARA BIEN LOS OBJETOS. //si hay espacios en blanco lo vale.
