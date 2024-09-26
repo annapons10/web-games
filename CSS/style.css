@@ -68,7 +68,7 @@ body {
     height: 100vh;
     width: 100vw;
     top: 0;
-    z-index: -1;
+    z-index: -1; /*tiene que ser menor que el menú*/
 }
 
 .nav-links{ 
@@ -83,10 +83,6 @@ body {
     display: flex;
 }
 
-.header__closed {
-    display: none;
-}
-  
   
 .header__nav .nav-links a{ 
     color: var(--bg-color-claro);
@@ -139,11 +135,20 @@ body {
 }
 
 .header .logo img:hover {
-    transform: scale(1.2);
+    transform: scale(0.9);
 }
 
 .container__game .img-button img:hover {
-    transform: scale(1.1);
+    transform: scale(0.9);
+}
+
+.container__imagenes h1{
+    color: var(--bg-color-claro);
+}
+
+.container__imagenes .container__game h3{
+    color: var(--bg-color-claro);
+
 }
 
 
@@ -319,7 +324,7 @@ body {
 .footer{
     display: flex;
     justify-content: space-around;
-    color: var(--beige);
+    color: var(--bg-color-claro);
     background-color: var(--text-color);
     padding: 20px;
     margin-top: auto;
