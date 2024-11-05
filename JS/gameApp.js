@@ -64,6 +64,8 @@ class GameApp{
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
                     this.videojuegos[0].crearTecladoPantalla(); //ESTO DENTRO DEL FETCH ACTUA COMO CUANDO YA TIENE EL HTML, LLAMA AL MÉTODO. SI LO PONGO FUERA, SIGUE LEYENDO CÓDIGO SIN TENER HTML Y MIENTRAS SIGUE BUSCANDO, SIGUE LEYENDO. NO PUEDE ESCRIBIR LAS LETRAS. 
+                    this.videojuegos[0].escogerPalabraAleatoria();
+                    this.videojuegos[0].crearPimeraImgAhorcado();
                 });
                 
                
