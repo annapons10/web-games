@@ -1,0 +1,5 @@
+RewriteEngine On
+RewriteBase /webJuegos/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ /webJuegos/index.html [L]

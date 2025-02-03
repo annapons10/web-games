@@ -1,79 +1,109 @@
+//SE CARGA JUEGO AHORCADO: 
 class JuegoAhorcado extends Juego {
-    constructor() {
+    #palabraAleatoria;
+    #palabraOculta;
+    #maximaJugadas;
+    #palabras;
+    #numerosErrores;
+    #letrasEscritas;
+    #imagenesAhorcado;
+    constructor(maximaJugadas) {
         super('Juego Ahorcado', 'Juego de palabras', 0);
-        this.palabras = ['HOLA', 'ADIOS', 'ALTURA', 'AGUA', 'GATO', 'ORDENADOR']; 
-        this.palabraAleatoria = '';
-        this.palabraOculta = [];
-        this.numeroErrores = 0;
-        this.letrasEscritas = [];
-        this.imagenesAhorcado = ['../imgAhorcado/primera.jpg', '../imgAhorcado/segunda.jpg', '../imgAhorcado/tercera.jpg', '../imgAhorcado/cuarta.jpg',
-            '../imgAhorcado/quinta.jpg', '../imgAhorcado/sexta.jpg', '../imgAhorcado/septima.jpg', '../imgAhorcado/octava.jpg'
-        ];
-    }
+        this.#maximaJugadas = maximaJugadas;
+        this.#palabras = ['HOLA', 'ADIOS', 'ALTURA', 'AGUA', 'GATO', 'ORDENADOR']; 
+        this.#palabraAleatoria;
+        this.#palabraOculta;
+        this.#numerosErrores;
+        this.#letrasEscritas;
+        this.#imagenesAhorcado = [
+            'https://annaponsprojects.com/webJuegos/imgAhorcado/primera.jpg',
+            'https://annaponsprojects.com/webJuegos/imgAhorcado/segunda.jpg',
+            'https://annaponsprojects.com/webJuegos/imgAhorcado/tercera.jpg',
+            'https://annaponsprojects.com/webJuegos/imgAhorcado/cuarta.jpg',
+            'https://annaponsprojects.com/webJuegos/imgAhorcado/quinta.jpg',
+            'https://annaponsprojects.com/webJuegos/imgAhorcado/sexta.jpg',
+            'https://annaponsprojects.com/webJuegos/imgAhorcado/septima.jpg',
+            'https://annaponsprojects.com/webJuegos/imgAhorcado/octava.jpg'
+        ]; 
+    } 
+
+    //Setters:
+    setMaximaJugadas(jugadas){
+        this.#maximaJugadas = jugadas;
+    } 
 
     //LÓGICA JUEGO: 
 
-    escogerPalabraAleatoria() {
-        let indiceA = Math.floor(Math.random() * this.palabras.length);
-        this.palabraAleatoria = this.palabras[indiceA];
+    iniciarJuego(){
+        this.#palabraAleatoria = '';
+        this.#palabraOculta = [];
+        this.#numerosErrores = 0;
+        this.#letrasEscritas = [];
+        this.#escogerPalabraAleatoria();
+        this.#mostrarImgAhorcado();
+    }
+
+    #escogerPalabraAleatoria() {
+        let indiceA = Math.floor(Math.random() * this.#palabras.length);
+        this.#palabraAleatoria = this.#palabras[indiceA];
 
         // Inicializa palabraOculta con guiones bajos
-        this.palabraOculta = Array(this.palabraAleatoria.length).fill('_'); //Array: especifico el tamaño que va a tener. es un array llena de _ _ _ _
-        console.log(this.palabraOculta);
-        console.log(this.palabraAleatoria);
+        this.#palabraOculta = Array(this.#palabraAleatoria.length).fill('_'); //Array: especifico el tamaño que va a tener. es un array llena de _ _ _ _
+        console.log(this.#palabraOculta);
+        console.log(this.#palabraAleatoria);
 
-        let numLetras = this.palabraAleatoria.length; //Para mostras los ' _ ' que necesite en pantalla según la palabra.
-        this.mostrarGuionesPantalla(numLetras); //Llamo al método que lo hace. 
+        let numLetras = this.#palabraAleatoria.length; //Para mostras los ' _ ' que necesite en pantalla según la palabra.
+        this.#mostrarGuionesEnPantalla(numLetras); //Llamo al método que lo hace. 
 
-        this.eventoTeclado(); //Aqui se llama al evento. 
-        this.eventoReiniciarJuegoBoton();
+        this.#eventoTeclado(); //Aqui se llama al evento. 
+        this.#eventoReiniciarJuegoBoton();
     }
 
-    recorrerBotones = (event) => { //PARA TENER LA REFERENCIA Y LLAMARLA CUANDO AÑADO EL EVENTO Y LO ELIMINO. 
+    #recorrerBotones = (event) => { //PARA TENER LA REFERENCIA Y LLAMARLA CUANDO AÑADO EL EVENTO Y LO ELIMINO. 
         const letra = event.target.textContent; //Coge el contenido del botón que ha disparado el evento directamente. 
         console.log("Letra del botón:", letra);
-        this.jugarAhorcado(letra); 
+        this.#jugarAhorcado(letra); 
     }
 
-    eventoTeclado() {
+    #eventoTeclado() {
         //Evento click del ratón:
         const botonesTeclado = document.querySelectorAll('.button__letra');
         botonesTeclado.forEach(botonTeclado => {
             // Agregar el event listener con la función nombrada 
-            botonTeclado.addEventListener('click', this.recorrerBotones);
+            botonTeclado.addEventListener('click', this.#recorrerBotones);
         });
     } 
 
-    jugarAhorcado(letra) {
-
-        if (this.numeroErrores < 7) { //Confirmo que hay jugadas. 
-            this.letrasEscritas.push(letra); //Introduzco la letra para llevar el seguimiento.
+    #jugarAhorcado(letra) {
+        //CAMBIAR EL 7 COMO PARAMETRO , PROPRIEDAD, NO NÚMERO MÁGICO. 
+        if (this.#numerosErrores < this.#maximaJugadas){ //Confirmo que hay jugadas. 
+            this.#letrasEscritas.push(letra); //Introduzco la letra para llevar el seguimiento.
 
             let letraEncontrada = false; //No ha encontrado la letra, para marcarme el camino. 
-            for (let i = 0; i < this.palabraAleatoria.length; i++) { //Recorro para verificar si esta la letra o no. 
-                if (letra === this.palabraAleatoria[i].toLocaleUpperCase()) {
-                    this.palabraOculta[i] = this.palabraAleatoria[i]; //Añado la letra a la palabraOculta. 
+            for (let i = 0; i < this.#palabraAleatoria.length; i++) { //Recorro para verificar si esta la letra o no. 
+                if (letra === this.#palabraAleatoria[i].toLocaleUpperCase()) {
+                    this.#palabraOculta[i] = this.#palabraAleatoria[i]; //Añado la letra a la palabraOculta. 
                     letraEncontrada = true;
-                    this.mostrarLetraPantalla(letra); //Llamo al método de mostrar la letra en pantalla porque la ha acertado.   
+                    this.#mostrarLetraEnPantalla(letra); //Llamo al método de mostrar la letra en pantalla porque la ha acertado.   
                 }
             }
 
 
             if (!letraEncontrada) {
-                this.numeroErrores++;
-                this.mostrarRestoImgAhorcado(); 
-                console.log(`Estos son los errores: ${this.numeroErrores}`); 
+                this.#numerosErrores++;
+                this.#mostrarImgAhorcado(); 
+                console.log(`Estos son los errores: ${this.#numerosErrores}`); 
             }
 
-            if (!this.palabraOculta.includes('_')) { //Si ya no tiene '_' significa que ha completado la palabra.//NO COMPARA BIEN LOS OBJETOS. //si hay espacios en blanco lo vale.
-                this.mostrarLetraPantalla();
-                this.finalizarJuego(); 
+            if (!this.#palabraOculta.includes('_')) { //Si ya no tiene '_' significa que ha completado la palabra.//NO COMPARA BIEN LOS OBJETOS. //si hay espacios en blanco lo vale.
+                this.#mostrarLetraEnPantalla();
+                this.#finalizarJuego(); 
             }
 
         } else {
             //Mostrar que ha perdido. 
             console.log("No te quedan intentos, has perdido.");
-            this.finalizarJuego(); 
+            this.#finalizarJuego(); 
         }
 
 
@@ -106,30 +136,21 @@ class JuegoAhorcado extends Juego {
         ahorcadoContainer.appendChild(tecladoContainer); //finalmente pego todo el fragmento de una vez. 
     }
 
-    crearPimeraImgAhorcado() {
-        let img = document.getElementById('img__ahorcado'); //cojo el html de img. 
-        let imgActual = this.imagenesAhorcado[this.numeroErrores];//Cojo la img que toque junto con el contador de jugas. 
-
-        img.src = imgActual; //Le añado la ruta. 
-        img.alt = 'Ahorcado';
-
-    }
-
-    mostrarRestoImgAhorcado() {
+    #mostrarImgAhorcado() {
         console.log("ENTRO A CAMBIAR LA IMG");
         let img = document.getElementById('img__ahorcado'); //cojo el html de img. 
-        img.src = this.imagenesAhorcado[this.numeroErrores];
-
+        img.src = this.#imagenesAhorcado[this.#numerosErrores]; 
+        img.alt = 'Ahorcado';
     }
 
-    mostrarGuionesPantalla(numLetras) { //QUIERO CREAR UNA CADENA DE STRING DENTRO DE UN DIV. 
+    #mostrarGuionesEnPantalla(numLetras) { //QUIERO CREAR UNA CADENA DE STRING DENTRO DE UN DIV. 
         //let guiones = Array(numLetras).fill('_'); //Creo el array de guiones para marcarme el camino.  
         let containerLetra = document.getElementById('div__letra'); //Cojo el contenedor principal. 
 
         containerLetra.innerHTML = ''; //Limpio el contenedor por si se juega varias veces. 
 
         containerLetra.classList.add('guiones__en__pantalla');
-        this.palabraOculta.forEach(() => { //Recorro el array de palabra oculta para crear por guion un span. 
+        this.#palabraOculta.forEach(() => { //Recorro el array de palabra oculta para crear por guion un span. 
             let spanGuion = document.createElement('span');
             spanGuion.innerHTML = '_';  // Añadir el guion al span
             spanGuion.classList.add('guion');  // Añadir una clase para aplicar estilo
@@ -139,34 +160,34 @@ class JuegoAhorcado extends Juego {
         });
     }
 
-    mostrarLetraPantalla(letra) { //Coger los guiones de html en los span y recorrerlos para añadir la letra en el lugar correspodiente. 
+    #mostrarLetraEnPantalla(letra) { //Coger los guiones de html en los span y recorrerlos para añadir la letra en el lugar correspodiente. 
         let containerLetra = document.getElementById('div__letra'); //Cojo el contenedor principal. 
         let spans = containerLetra.querySelectorAll('span'); // Cojo los elem de dentro del div para recorrerlos. 
-        for (let i = 0; i < this.palabraAleatoria.length; i++) {
-            //for(let i = 0; i < this.palabraAleatoria.length; i++){ //Recorro para verificar si esta la letra o no. 
-            if (letra === this.palabraAleatoria[i].toLocaleUpperCase()) {
+        for (let i = 0; i < this.#palabraAleatoria.length; i++) {
+            //for(let i = 0; i < this.#palabraAleatoria.length; i++){ //Recorro para verificar si esta la letra o no. 
+            if (letra === this.#palabraAleatoria[i].toLocaleUpperCase()) {
                 spans[i].innerHTML = letra;
             }
         }
     }
 
-    finalizarJuego(){ //Para el evento para parar el juego hasta que de click al botón y reinicie el juego. 
+    #finalizarJuego(){ //Para el evento para parar el juego hasta que de click al botón y reinicie el juego. 
         setTimeout(() => {
-            this.removerEventoDelTeclado(); // Llamar al método reiniciar juego después del retraso 
+            this.#removerEventoDelTeclado(); // Llamar al método reiniciar juego después del retraso 
         }, 2000); 
     }
 
-    removerEventoDelTeclado(){ //Eliminar el evento para cuando reinice, empiece de cero y no se repitan eventos y sumen más de 1. 
+    #removerEventoDelTeclado(){ //Eliminar el evento para cuando reinice, empiece de cero y no se repitan eventos y sumen más de 1. 
          //Evento click del ratón:
          const botonesTeclado = document.querySelectorAll('.button__letra'); //Cojo todos los botones. 
          botonesTeclado.forEach(botonTeclado => { //Primero recorro todos los botones. Y me lo guardo. 
              //const botonTecladoPantalla = botonTeclado;
              // Agrego un event listener (a todos los botones) para cuando se haga clic en el botón.
-             botonTeclado.removeEventListener('click', this.recorrerBotones);
+             botonTeclado.removeEventListener('click', this.#recorrerBotones);
         }); //Es una opción de los listeners. Hace que el evento ocurra una vez y luego se elimine automáticamente. 
     };
     
-    eventoReiniciarJuegoBoton(){ //La persona puede clickar también a media partida por si quiere empezar una nueva. 
+    #eventoReiniciarJuegoBoton(){ //La persona puede clickar también a media partida por si quiere empezar una nueva. 
         const botonVolverAjugar = document.getElementById('botonVolverAjugar');
         if (!botonVolverAjugar) {
             console.error("El botón para reiniciar el juego no existe.");
@@ -182,19 +203,10 @@ class JuegoAhorcado extends Juego {
             setTimeout(() => {
                 botonVolverAjugar.disabled = false; // Rehabilitar el botón
             }, 2000); // 2 segundos, ajusta según necesites
-            this.reiniciarJuegoDesdeCero();
+            this.iniciarJuego();
         };
     } 
     
-
-    reiniciarJuegoDesdeCero() { //Todo vuelve a  para que se empiece a jugar de nuevo. 
-        this.palabraAleatoria = '';
-        this.palabraOculta = [];
-        this.numeroErrores = 0;
-        this.letrasEscritas = [];
-        this.crearPimeraImgAhorcado(); //Llamo para que vuelva a coger la primera img antes de empezar. 
-        this.escogerPalabraAleatoria(); //Por si se quiere jugar otra vez. 
-    }
 
 } 
 

@@ -1,48 +1,53 @@
-//SIN PROGRAMACIÓN ORIENTADA A OBJETOS: 
-//MODULAR HEADER Y FOOTER: 
+//SIEMPRE TENGO EL HEADER Y EL FOOTER EN TODAS MIS PÁGINAS: 
 console.log("se carga main");
 
-fetch('header.html') //TRAIGO LO QUE HAY EN HEADER.HTML PERO ESTOY EN INDEX.HTML ¿ya esta accesible?
-    .then(response => response.text())
+//TRAIGO LO QUE HAY EN HEADER.HTML PERO ESTOY EN INDEX.HTML 
+fetch('https://annaponsprojects.com/webJuegos/html/header.html') 
+    .then(response => {
+        if(!response.ok){
+            throw new Error(`Error al cargar header.html: ${response.statusText}`);
+        }
+        return response.text(); 
+    })
+        
     .then(data =>{
         document.getElementById('header').innerHTML = data;
-        //PARA CERRAR HAMBURGUESA:
-        let elementosMenu = document.querySelectorAll('.nav-links > li'); //Devuelve un array. 
+        //PARA CERRAR HAMBURGUESA CUANDO DOY CLICK EN ALGUNA OPCIón:
+        //Devuelve un array. 
+        let elementosMenu = document.querySelectorAll('.nav-links > li');
         elementosMenu.forEach(elemento => {
             elemento.addEventListener('click', ()=>{
-                document.getElementById('open-menu').checked = false; //checked accede a la propiedad de html que esta aunque no lo vea. 
+                //checked accede a la propiedad de html que esta aunque no lo vea. 
+                document.getElementById('open-menu').checked = false; 
             });
         });
+    })
+
+    .catch(error => {
+        console.error('Error cargando contenido:', error.message);
+        document.getElementById('header').innerHTML = "<p>Lo siento, no se pudo cargar el contenido del menú de la página.</p>";
     });
 
 
-
-fetch('footer.html') //TRAIGO LO QUE HAY EN footer.HTML PERO ESTOY EN INDEX.HTML
-    .then(response => response.text())
+//TRAIGO LO QUE HAY EN footer.HTML PERO ESTOY EN INDEX.HTML
+fetch('https://annaponsprojects.com/webJuegos/html/footer.html')
+    .then(response => {
+        //Si hay un error lo lanzo para que catch lo coja. 
+        if(!response.ok){
+            throw new Error(`Error al cargar footer.html: ${response.statusText}`);
+        }
+        //Si ese exitosa, contiunuamos. 
+        return response.text(); 
+    })
     .then(data =>{
-        document.getElementById('footer').innerHTML = data
+        document.getElementById('footer').innerHTML = data;
+    })
+
+    .catch(error => {
+        console.error('Error cargando contenido:', error.message);
+        document.getElementById('footer').innerHTML = "<p>Lo siento, no se pudo cargar el contenido del pie de página.</p>";
     });
 
+//Instancio la game App y cargo lo primero el home con las fotos de los juegos:
 const app = new GameApp();
-app.loadContent('Home');
-
-let juegos = [ //SE CARGAN ESTOS JUEGOS A LA GAMEAPP 
-    new JuegoAhorcado(),
-    new JuegoLaberinto()
-];
-
-
-juegos.forEach(game =>{ //LLeno la app de juegos. Su array. 
-    app.addGame(game);
-});
-
-app.showGame(); 
-
-
-
-
-
-
-
-
-
+app.loadContent('Home'); 

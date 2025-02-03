@@ -1,12 +1,13 @@
 :root {
     --bg-color: #242c3b;
+    --color-hover-claro:  #d4a4ecc6;
     --text-color:#000000;
     --text-color-claro: #f5f5dc;
     --bg-color-claro: #aec6d5;
     --bg-color-card:  #242c3b;
     --bg-color-teclado: #69638748;
     --color-box-shadow:  #440f0fc6;
-    --granate: #241626;rgba(117, 109, 109, 0.776)
+    --granate: #241626;
     --blanco-vintage: #f8f8ff;
     --beige: #f5f5dc;
     --marron-claro: #d2b48c;
@@ -92,7 +93,7 @@ body {
 }
 
 .header__nav .nav-links a:hover{ 
-    color:var(--bg-color);
+    color:var(--blanco-vintage);
 }
 
 .header .logo{
@@ -335,6 +336,6 @@ body {
     cursor: pointer;
     transform: scale(1.1);
     transition: transform 0.3s;
-    color:var(--bg-color);
+    color:var(--color-hover-claro); 
 }
 
