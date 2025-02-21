@@ -6,7 +6,8 @@ class GameApp{
         this.videojuegos = [
             { id: "ahorcado", nombre: "Juego Ahorcado", tipo: "Palabras", puntuacion: 0 },
             { id: "laberinto", nombre: "Juego Laberinto", tipo: "Puzzle", puntuacion: 0 },
-            { id: "numerico", nombre: "Juego Numérico", tipo: "Matemáticas", puntuacion: 0 }
+            { id: "numerico", nombre: "Juego Numérico", tipo: "Matemáticas", puntuacion: 0 },
+            { id: "tres en raya", nombre: "Juego Tres En Raya", tipo: "Estrategia", puntuacion: 0 }
         ];
         //Objeto donde voy a guardar las instancias para luego acceder a sus métodos. 
         this.videojuegosInstanciados = {} 
@@ -39,12 +40,11 @@ class GameApp{
         }else if(id === 'juego numerico' && !this.videojuegosInstanciados[id]){
             this.videojuegosInstanciados[id] = new JuegoNumerico(10, ['+', '-'], 3, 4);
             console.log("he insanciado juego numerico");
-           // this.videojuegosInstanciados[id].inicioJuegoBoton();
         }else if(id === 'tres en raya' && !this.videojuegosInstanciados[id]){
-            //this.videojuegosInstanciados[id] = new JuegoTresEnRaya();
-        }else{
+            this.videojuegosInstanciados[id] = new JuegoTresEnRaya();
+        }/* else{
             //this.videojuegosInstanciados[id] = new JuegoSerpiente();
-        }
+        } */
     }
 
     //Cargo dinámicamente las páginas en index.html en main depdende de donde haga click: 
@@ -126,6 +126,8 @@ class GameApp{
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
+                    console.log("tendgo la data el tresen raya");
+                    this.videojuegosInstanciados['tres en raya'].eventoClickBotones();  
                 })
                 .catch(error => console.error('Error cargando contenido:', error));
 

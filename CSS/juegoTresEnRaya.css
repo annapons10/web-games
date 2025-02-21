@@ -1,5 +1,68 @@
-
-
-.tresEnRaya__container{
-    background-color: aqua;
-}
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+ }
+ 
+ .tresEnRaya__container{
+     background-color: var(--bg--blanco); 
+     display: grid;
+     justify-content: center;
+     grid-template-columns: repeat(3, 1fr);
+     grid-template-rows: repeat(3, 1fr);
+     justify-items: center;
+     align-items: center;
+     width: 50%;
+     height: 60%;
+     border: 1px solid var(--granate);
+     border-radius: 8px;
+     box-shadow: -4px 4px 35px 1px var(--bg-color-card);
+   
+ } 
+ 
+ .contenedor__jugador{
+     display: flex;
+     justify-content: center;
+     margin-right: 1rem;
+ }
+ 
+ .contenedor__ordenador{
+     display: flex;
+     justify-content: center;
+     margin-left: 1rem;
+ }
+ 
+ .contenedor__button{
+     display: flex;
+     width: 100%;
+     height: 100%;
+     border: 8px solid var(--bg-color-tresEnRaya);
+     text-align: center;
+     /* background-color: var( --bg-color-card); */
+ }
+ 
+ .button{
+     display: flex;
+     justify-content: center;  /* Centra horizontalmente */
+     align-items: center;  /* Centra verticalmente */
+     flex: 1;
+     cursor: pointer;
+ }
+ 
+ /*CLASE PARA AÑADIR AL CREAR IMÁGEN DINÁMICAMENTE CUANDO SE HACE CLICK: */
+ .imagen_button{
+     width: 55%;
+     object-fit: cover; /* Hace que la imagen cubra el área del contenedor */
+ }
+ 
+ /*  */
+ 
+ 
+ 
+ 
+ @media (max-width: 700px) {
+    
+     
+ }
+ 
