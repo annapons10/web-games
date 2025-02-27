@@ -5,7 +5,6 @@ class GameApp{
         // Aquí tengo los metadatos de los juegos para mostrar en "mis juegos" y conectar con la BSDD: 
         this.videojuegos = [
             { id: "ahorcado", nombre: "Juego Ahorcado", tipo: "Palabras", puntuacion: 0 },
-            { id: "laberinto", nombre: "Juego Laberinto", tipo: "Puzzle", puntuacion: 0 },
             { id: "numerico", nombre: "Juego Numérico", tipo: "Matemáticas", puntuacion: 0 },
             { id: "tres en raya", nombre: "Juego Tres En Raya", tipo: "Estrategia", puntuacion: 0 }
         ];
@@ -33,18 +32,14 @@ class GameApp{
   
     //MÉTODO PARA INSTANCIAR LOS JUEGOS DEPENDIENDO DE DÓNDE HAGA CLICK EL USUARIO:
     instanciarJuego(id){
-        if(id === 'laberinto' && !this.videojuegosInstanciados[id]){
-            //this.videojuegosInstanciados[id] = new JuegoLaberinto();
-        }else if(id === 'ahorcado' && !this.videojuegosInstanciados[id]){
+        if(id === 'ahorcado' && !this.videojuegosInstanciados[id]){
             this.videojuegosInstanciados[id] = new JuegoAhorcado(7);
         }else if(id === 'juego numerico' && !this.videojuegosInstanciados[id]){
             this.videojuegosInstanciados[id] = new JuegoNumerico(10, ['+', '-'], 3, 4);
             console.log("he insanciado juego numerico");
         }else if(id === 'tres en raya' && !this.videojuegosInstanciados[id]){
             this.videojuegosInstanciados[id] = new JuegoTresEnRaya();
-        }/* else{
-            //this.videojuegosInstanciados[id] = new JuegoSerpiente();
-        } */
+        }
     }
 
     //Cargo dinámicamente las páginas en index.html en main depdende de donde haga click: 
@@ -59,14 +54,6 @@ class GameApp{
                     this.crearEventosParaTodosLosJuegosAlHacerClick(); 
                 })
                 .catch(error => console.error('Error cargando contenido:', error));
-        }else if(page === 'Chat'){
-            fetch('https://annaponsprojects.com/webJuegos/html/chat.html')
-                .then(response => response.text())
-                .then(data =>{
-                    document.getElementById('main').innerHTML = data
-                })
-                .catch(error => console.error('Error cargando contenido:', error));
-    
         }else if(page === 'Mis juegos'){
             fetch('https://annaponsprojects.com/webJuegos/html/misJuegos.html')
                 .then(response => response.text())
@@ -89,15 +76,7 @@ class GameApp{
 
     //Se cargan los juegos dinámicamente: 
     loadGameContent(game){
-        if(game === 'laberinto'){
-            fetch('https://annaponsprojects.com/webJuegos/html/laberinto.html') 
-                .then(response => response.text())
-                .then(data =>{
-                    document.getElementById('main').innerHTML = data
-                })
-                .catch(error => console.error('Error cargando contenido:', error));
-
-        }else if(game === 'ahorcado'){
+        if(game === 'ahorcado'){
             fetch('https://annaponsprojects.com/webJuegos/html/ahorcado.html') 
                 .then(response => response.text())
                 .then(data =>{
@@ -105,9 +84,7 @@ class GameApp{
                     this.videojuegosInstanciados['ahorcado'].crearTecladoPantalla(); 
                     this.videojuegosInstanciados['ahorcado'].iniciarJuego();
                 })
-                .catch(error => console.error('Error cargando contenido:', error));
-                
-               
+                .catch(error => console.error('Error cargando contenido:', error));   
     
         }else if(game === 'juego numerico'){
             fetch('https://annaponsprojects.com/webJuegos/html/juegoNumerico.html') 
@@ -120,7 +97,6 @@ class GameApp{
                 })
                 .catch(error => console.error('Error cargando contenido:', error));
 
-    
         }else if(game === 'tres en raya'){
             fetch('https://annaponsprojects.com/webJuegos/html/tresEnRaya.html')
                 .then(response => response.text())
@@ -131,14 +107,6 @@ class GameApp{
                 })
                 .catch(error => console.error('Error cargando contenido:', error));
 
-
-        }else if(game === 'juego de la serpiente'){
-            fetch('https://annaponsprojects.com/webJuegos/html/juegoSerpiente.html')
-                .then(response => response.text())
-                .then(data =>{
-                    document.getElementById('main').innerHTML = data
-                })
-                .catch(error => console.error('Error cargando contenido:', error));
 
         }
     }

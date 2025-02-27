@@ -1,19 +1,23 @@
 :root {
     --bg-color: #242c3b;
-    --color-hover-claro:  #d4a4ecc6;
     --text-color:#000000;
+    --text-color-segundo: #00000080;
     --text-color-claro: #f5f5dc;
+    --bg--blanco: #ffffff;
     --bg-color-claro: #aec6d5;
     --bg-color-card:  #242c3b;
     --bg-color-teclado: #69638748;
+    --bg-color-tresEnRaya: #2a254048;
     --color-box-shadow:  #440f0fc6;
+    --color-verde-shadow: #6b8e2380;
     --granate: #241626;
     --blanco-vintage: #f8f8ff;
     --beige: #f5f5dc;
     --marron-claro: #d2b48c;
     --verde-oliva: #808000;
-    --azul-polvoriento: #6b8e23;
+    --verde-polvoriento: #6b8e23;
     --naranja-quemado: #cc5500; 
+    --border-verde : #556B2F; 
 
 }
 
@@ -29,7 +33,7 @@ body {
     grid-template-rows: auto 1fr auto;
     min-height: 100vh;
     background-color: var(--bg-color);
-    font-family: "Audiowide", sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-weight: 400;
     font-style: normal;
 }
@@ -93,7 +97,7 @@ body {
 }
 
 .header__nav .nav-links a:hover{ 
-    color:var(--blanco-vintage);
+    color:var(--bg--blanco);
 }
 
 .header .logo{
@@ -112,18 +116,29 @@ body {
 
 .container__game{
     max-width: 27%; /*Solución a cuando la letra se hace grande, el contenedor crece y se adapta. Si le pongo un max, seguirán todos iguales. */
-    margin-top: 8px;
+    margin:2rem;
     text-align: center;
     font-size: 18px; /*AQUÍ SE MUEVE*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .container-grid__mobileFirst{
-    display: grid;
-    justify-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .container__imagenes img{
     width: 200px;
+}
+
+.img-button{
+    background-color: var(--bg-color);
+    border: none;
 }
 
 .header__nav .nav-links li:hover, 
@@ -144,13 +159,19 @@ body {
     transform: scale(0.9);
 }
 
-.container__imagenes h1{
-    color: var(--bg-color-claro);
+.h1__juegos{
+    color: var(--bg--blanco);
+    margin: 1rem;
+    font-size: 2em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .container__imagenes .container__game h3{
-    color: var(--bg-color-claro);
-
+    color: var(--bg--blanco);
+    margin: 10px;
+    font-size: 1em;
 }
 
 
@@ -182,7 +203,7 @@ body {
     }
 
     .header__nav .nav-links li a{ 
-       font-size: 1.4rem;
+       font-size: 1.2rem;
     }
 
     .header__nav .nav-links li:hover{ 
@@ -206,13 +227,9 @@ body {
 @media screen and (min-width: 768px) {
 
     .container__imagenes.container-grid__pantallaGrande {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        justify-items: center;
-        justify-content: space-evenly;
-        align-content: space-evenly;
-        height: 100vh;
-        padding-top: 3rem;
+        display: flex;
+        flex-direction: row;
+        padding-top: 2rem; 
     }
 
    .container__game{
@@ -336,6 +353,6 @@ body {
     cursor: pointer;
     transform: scale(1.1);
     transition: transform 0.3s;
-    color:var(--color-hover-claro); 
+    color:var(--bg--blanco);
 }
 
