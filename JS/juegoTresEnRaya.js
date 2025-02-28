@@ -1,96 +1,165 @@
-//EMPIEZA SIEMPRE PERSONA DE MOMENTO. 
 class JuegoTresEnRaya extends Juego{
-    constructor(){
+    // Declaración de los campos privados
+    #matrizJuego;
+    #fichaMaquina;
+    #fichaPersona;
+    #imagenesFichas;
+    #turno;
+    #numJugada;
+
+    constructor() {
         super('Juego Tres En Raya', 'Juego de estrategia', 0);
-        this.matrizJuego =  [
+        // Inicialización de los campos privados: 
+        this.#matrizJuego = [
             [undefined, undefined, undefined],
             [undefined, undefined, undefined],
-            [undefined,undefined, undefined]
+            [undefined, undefined, undefined]
         ];
-        this.fichaMaquina = 'x';
-        this.fichaPersona = 'o';
-        this.imagenesFichas = ['https://annaponsprojects.com/webJuegos/img/o.jpg',
-                            'https://annaponsprojects.com/webJuegos//img/x.jpg'];
-        //Primero le toca persona, irá cambiando cuando acabe la partida.
-        this.turno = this.fichaPersona;  
-        //Para saber en que jugada me encuentro. 
-        this.numJugada = 0; 
+        this.#fichaMaquina = 'x';
+        this.#fichaPersona = 'o';
+        this.#imagenesFichas = ['/img/o.jpg', '/img/x.jpg'];
+        this.#turno = this.#fichaPersona; // Primero le toca persona
+        this.#numJugada = 0; // Para saber en qué jugada me encuentro
     }
+    
     //Controlar inicio juego:
     iniciarJuego(){
-        if(this.turno === this.fichaPersona){
-            this.eventoClickBotones(); 
+        if(this.#turno === this.#fichaPersona){
+            this.#habilitarClickJugador();
+            this.#eventoClickBotones(); 
         }else{
-            this.primeraJugadaSiTurnoMaquina();
+            this.#primeraJugadaSiTurnoMaquina();
         }
-    }
-
-    reiniciarJuego(){
-        this.turno = this.turno === this.fichaMaquina ? this.fichaPersona : this.fichaMaquina;
     }
 
     //JUGADA PERSONA:
     //EVENTO CLICK PARA MOSTRAR IMÁGENES:
-    eventoClickBotones(){
-        //Cuando hace click el usuario, se posiciona la 0 en pantalla y se llama al método para posicionarla en matriz:
+    #eventoClickBotones() {
+        //Selecciona todos los botones
         const botones = document.querySelectorAll('.button');
+    
         botones.forEach((boton, index) => {
+            // Elimina cualquier evento previo para evitar acumulaciones
+            boton.replaceWith(boton.cloneNode(true));
+        });
+    
+        // Vuelve a seleccionar los botones después del replace
+        const nuevosBotones = document.querySelectorAll('.button');
+    
+        nuevosBotones.forEach((boton, index) => {
             boton.addEventListener('click', () => {
-                //Comprobar que num de jugada es, si es la última y no quedan, empate: 
-                if(this.numJugada === 9){
-                    //this.empate();
-                }
-                this.numJugada++;
-                console.log("hago clickkkkkkk");
-                //Desabilita todos los botones:
-                this.deshabilitarClickJugador(botones);
-                //Calculo fila. 
-                let fila = Math.floor(index / 3);  
-                //Calculo columna. 
+                this.#numJugada++;
+    
+                // Deshabilita todos los botones:
+                this.#deshabilitarJugador();
+    
+                // Calculo fila y columna
+                let fila = Math.floor(index / 3);
                 let columna = index % 3;
-                //Comprobar que donde ha hecho click está vacío:
-                if(this.comprobarPosicionVacia(fila, columna)){
-                    //Creo img dinámicamente. 
-                    this.posicionarImagenFicha(this.fichaPersona, fila, columna);
-                    //Añado ficha jugador a la matriz interna:
-                    this.matrizJuego[fila][columna] = this.fichaPersona;
-                    console.log(this.matrizJuego);
+    
+                // Comprobar que la casilla está vacía
+                if (this.#comprobarPosicionVacia(fila, columna)) {
+                    this.#posicionarImagenFicha(this.#fichaPersona, fila, columna);
+                    this.#matrizJuego[fila][columna] = this.#fichaPersona;
                 }
-                //Antes comprobar si persona ha ganado a partir de la tercera ronda: 
-                if(this.numJugada >= 3){
-                    this.comprobarSiPersonaHaGanado();
+    
+                // Comprobar empate
+                if (this.#numJugada === 9) {
+                    this.#mensajeFinalizaJuego('Empate');
+                    this.#eliminarMensajeFinalizaJuego();
+                    return;
                 }
-                //Ahora empieza la jugada máquina:
-                //Si primero ha jugado persona, posiciono la ficha máquina en la primera vacía. 
-                if(this.numJugada === 1 && this.turno === this.fichaPersona){
-                    this.primeraJugadaSiPrimerTurnoPersona();
-                }else{ 
-                    this.jugadaMaquina();
+    
+                // Comprobar si ha ganado la persona
+                if (this.#numJugada >= 5) {
+                    let respuestaHaGanadoPersona = this.#comprobarSiPersonaHaGanadoPersona();
+                    if (respuestaHaGanadoPersona) {
+                        this.#mensajeFinalizaJuego('Ha ganado Jugador O');
+                        this.#eliminarMensajeFinalizaJuego();
+                        return;
+                    }
                 }
-            })
+    
+                // Turno de la máquina
+                if (this.#numJugada === 1 && this.#turno === this.#fichaPersona) {
+                    this.#primeraJugadaSiPrimerTurnoPersona();
+                } else if (this.#numJugada === 9) {
+                    return;
+                } else {
+                    this.#jugadaMaquina();
+                }
+            });
         });
     }
-
-    comprobarSiPersonaHaGanado(){
+    
+    #comprobarSiPersonaHaGanadoPersona(){
+        let hayTresFichasPersonaFila = false;
+        let hayTresFichasPersonaCol = false;
+        let hayTresFichasPersonaDiagonal = false;
         //Recorrer matriz a ver si encuentro tres fichas persona, si encuentro, ha ganado. 
+        hayTresFichasPersonaFila = this.#hayTresEnFilaPersona();
+        if(hayTresFichasPersonaFila){
+            return true;
+        }
+        hayTresFichasPersonaCol = this.#hayTresEnColPersona();
+        if(hayTresFichasPersonaCol){
+            return true;
+        }
+        hayTresFichasPersonaDiagonal = this.#hayTresEnDiagonalPersona();
+        if(hayTresFichasPersonaDiagonal){
+            return true;
+        }
+
+        return false;
+    }
+
+    #hayTresEnFilaPersona(){
+        for (let i = 0; i < this.#matrizJuego.length; i++) {
+            if (this.#matrizJuego[i][0] === this.#fichaPersona && this.#matrizJuego[i][1] === this.#fichaPersona && this.#matrizJuego[i][2] === this.#fichaPersona) {
+                //Hay tres en una fila:
+                return true; 
+            }
+        }
+        //No hay tres en una fila:
+        return false;
+    }
+
+    #hayTresEnColPersona(){
+        for (let j = 0; j < this.#matrizJuego[0].length; j++) {
+            if (this.#matrizJuego[0][j] === this.#fichaPersona && this.#matrizJuego[1][j] === this.#fichaPersona && this.#matrizJuego[2][j] === this.#fichaPersona) {
+                // Hay tres en columna
+                return true; 
+            }
+        }
+        // No hay tres en columna
+        return false; 
+    }
+
+    #hayTresEnDiagonalPersona(){
+        //Revisa diagonal principal y secundaria. 
+        return (
+            (this.#matrizJuego[0][0] === this.#fichaPersona && this.#matrizJuego[1][1] === this.#fichaPersona && this.#matrizJuego[2][2] === this.#fichaPersona) || 
+            (this.#matrizJuego[0][2] === this.#fichaPersona &&this.#matrizJuego[1][1] === this.#fichaPersona && this.#matrizJuego[2][0] === this.#fichaPersona)   
+        );
     }
 
     //Termina de jugar la máquina y se vuelven a habilitar: 
-    habilitarClickJugador(){
+    #habilitarClickJugador(){
         const botones = document.querySelectorAll('.button');
         botones.forEach((boton)=>{
             boton.disabled = false;
         }); 
     }
     //Para que no pueda hacer click mientras juega la máquina:
-    deshabilitarClickJugador(botones){
+    #deshabilitarJugador(){
+        const botones = document.querySelectorAll('.button');
         botones.forEach((boton)=>{
             boton.disabled = true;
         }); 
     }
     //Antes de posicionar ficha jugador, comprueba que el sitio está vacío: 
-    comprobarPosicionVacia(fila, columna){
-        if(this.matrizJuego[fila][columna] === undefined){
+    #comprobarPosicionVacia(fila, columna){
+        if(this.#matrizJuego[fila][columna] === undefined){
             return true;
         }else{
             return false;
@@ -98,97 +167,112 @@ class JuegoTresEnRaya extends Juego{
     }
 
     //JUGADA MÁQUINA: 
-    primeraJugadaSiTurnoMaquina(){
-        this.numJugada++; 
+    #primeraJugadaSiTurnoMaquina(){
+        this.#deshabilitarJugador();
         //Siempre la primera tirada de la máquina será en medio: 
         let primeraPosicionMaquina = [1,1];
-        this.posicionarFichaMaquina(primeraPosicionMaquina);
+        this.#posicionarFichaMaquina(primeraPosicionMaquina);
         //Y llama al evento click para que el usuario pueda jugar:
-        this.eventoClickBotones(); 
+        this.#eventoClickBotones(); 
     }
 
-    primeraJugadaSiPrimerTurnoPersona(){
+    #primeraJugadaSiPrimerTurnoPersona(){
         let filaCol = [];
         //Si primero le toca a persona, su primera tirada será en la primera que encuentre vacia. 
-        this.matrizJuego.forEach((fila, indexFila) => {
+        this.#matrizJuego.forEach((fila, indexFila) => {
             fila.forEach((columna, indexColumna) => {
-                if(this.matrizJuego[indexFila][indexColumna] === undefined){
+                if(this.#matrizJuego[indexFila][indexColumna] === undefined){
                     filaCol.push(indexFila, indexColumna);
                 } 
             });
         });
-        this.posicionarFichaMaquina(filaCol);
+        this.#posicionarFichaMaquina(filaCol);
     }
 
-    jugadaMaquina(){
-        console.log("Entro a hacer jugada máquina");
-        //Comprobar que num de jugada es, si es la última y no quedan, empate: 
-        if(this.numJugada === 9){
-            //this.empate();
-        }
+    #jugadaMaquina(){
         let respuestaDobleFichaGanadora = false;
         let respuestaFichaEvitarPerder = false;
         let posicionEstrategicaEncontrada = [];
+        let posicionVaciaEncontrada = [];
         //let respuestaFichaEvitarPerder = false;
         //Primero comprobar si hay dos seguidas máquina para posicionar la tercera y ganar:
-        respuestaDobleFichaGanadora = this.posicionEntreDos(this.fichaMaquina);
+        respuestaDobleFichaGanadora = this.#posicionEntreDos(this.#fichaMaquina);
         //Si ha encontrado posición ganadora, posicionarla: 
         if(respuestaDobleFichaGanadora){
-            this.posicionarFichaMaquina(respuestaDobleFichaGanadora);
-            console.log("ha ganado la maquina");
+            this.#posicionarFichaMaquina(respuestaDobleFichaGanadora);
             //Mostrar que ha ganado la máquina. 
-            //this.ganador();
+            setTimeout(() => {
+                this.#mensajeFinalizaJuego('Ha ganado Jugador X');
+                this.#eliminarMensajeFinalizaJuego();
+            }, 1000);
             return;
         }else{
-            console.log("No he encontrado dos fichas seguidas de máquina en jugada máquina y voy a ver si hay 2 seguidas de persona");
-            respuestaFichaEvitarPerder = this.posicionEntreDos(this.fichaPersona);
+            respuestaFichaEvitarPerder = this.#posicionEntreDos(this.#fichaPersona);
             if(respuestaFichaEvitarPerder){
-                this.posicionarFichaMaquina(respuestaFichaEvitarPerder);
-                return;
+                this.#posicionarFichaMaquina(respuestaFichaEvitarPerder);
             }else{
-                console.log("no he encontrado 2 de ficha persona seguidas, llamo a posición estratégica");
-                posicionEstrategicaEncontrada = this.posicionEstrategica();
+                posicionEstrategicaEncontrada = this.#posicionEstrategica();
                 //He encontrado esa posición. 
                 if(posicionEstrategicaEncontrada){
-                    this.posicionarFichaMaquina(posicionEstrategicaEncontrada);
-                    console.log(`Esta es la posicion estrategica ${posicionEstrategicaEncontrada}`);
+                    this.#posicionarFichaMaquina(posicionEstrategicaEncontrada);
                     //Posicionar ficha en la matriz interna y la imágen en su posición correcta. 
                 }else{
-                    console.log("error no encuentro posición estratégica");
-                    //Posiciono en cualquier espacio vacio. 
+                    posicionVaciaEncontrada = this.#posicionarMaquinaEspacioVacio();
+                    if(posicionVaciaEncontrada){
+                        this.#posicionarFichaMaquina(posicionVaciaEncontrada);
+                    }
                 } 
             }
         } 
+
+        //Comprobar que num de jugada es, si es la última y no quedan, empate: 
+        if(this.#numJugada === 9){
+            setTimeout(() => {
+                this.#mensajeFinalizaJuego('Empate');
+                this.#eliminarMensajeFinalizaJuego();
+            }, 1000);
+        }
+    }
+
+    #posicionarMaquinaEspacioVacio(){
+        let posicionVacia = [];
+
+        for (let i = 0; i < this.#matrizJuego.length; i++) {
+            for (let j = 0; j < this.#matrizJuego[i].length; j++) {
+                if (this.#matrizJuego[i][j] === undefined) {
+                    posicionVacia = [i,j];
+                    return posicionVacia;
+                }
+            }
+        }
+       
     }
 
     //Recibe fichaMaquina o fichaPersona para comprobar si hay dos seguidas y colocar la tercera o bien para ganar o para evitar perder.
     //Llama para revisar filaColumna recursivamente. Diagonal principal. Diagonal secundaria. 
-    posicionEntreDos(ficha){
+    #posicionEntreDos(ficha){
         let respuestaDiagonaPrincipal, respuestaDiagonalSecundaria, respuestaFilaCol;
         //Llamo, compruebo en fila y col si hay 2 iguales de ficha máquina. Si las hay return fila y col de la posición. 
-        respuestaFilaCol = this.revisarFilaColumna(0,0, ficha);
-        console.log(`Eso es fila para situar ficha maquina: ${respuestaFilaCol[0]} y col: ${respuestaFilaCol[1]}`);
+        respuestaFilaCol = this.#revisarFilaColumna(0,0, ficha);
         if(respuestaFilaCol){
             return respuestaFilaCol;
-        }else{
-            console.log("No se han encontrado fichas maquina dos seguidas");
-        } 
-        respuestaDiagonaPrincipal = this.recorrerDiagonalPrincipal(ficha)
+        }
+
+        respuestaDiagonaPrincipal = this.#recorrerDiagonalPrincipal(ficha)
         if(respuestaDiagonaPrincipal){
             return respuestaDiagonaPrincipal;
-        }else{
-            console.log("No se han encontrado fichas maquina dos seguidas en diagonal principal");
-        } 
-        respuestaDiagonalSecundaria = this.recorrerDiagonalSecundaria(ficha)
+        }
+
+        respuestaDiagonalSecundaria = this.#recorrerDiagonalSecundaria(ficha)
         if(respuestaDiagonalSecundaria){
             return respuestaDiagonalSecundaria;
         } 
+
         //No ha encontrado lugar ni ganadora ni evitar perder. 
         return false;
     }
 
-    revisarFilaColumna(fila, columna, ficha){
-        console.log(`Reviso fila: ${fila} y col: ${columna}`);
+    #revisarFilaColumna(fila, columna, ficha){
         let ocurrenciasFila =  0;
         let contadorOcurrenciasColumna = 0;
         let indiceVacio = -1;
@@ -196,50 +280,39 @@ class JuegoTresEnRaya extends Juego{
         let columnaArray = [];
         //Caso base: //Ya se ha comprobado todo. 
         if(fila > 2){
-            console.log("No se encontró un índice vacío o no hay 2 fichas.");
             return false;
         }
         //Primero compruebo la fila, la recorro y me devuelve las veces que ha encontrado esa ficha. 
-        ocurrenciasFila = this.matrizJuego[fila].filter(elemento => elemento === ficha).length;
+        ocurrenciasFila = this.#matrizJuego[fila].filter(elemento => elemento === ficha).length;
         if(ocurrenciasFila === 2){
-            console.log("he encontrado 2 fichas máquina");
-            indiceVacio = this.matrizJuego[fila].findIndex(elemento => elemento === undefined);
-            console.log(`El indice vacio de fila es: ${indiceVacio}`);
+            indiceVacio = this.#matrizJuego[fila].findIndex(elemento => elemento === undefined);
             if(indiceVacio != -1){
-                //Returno la posición que he encontrado para posicionar fichaMaquina. 
-                console.log(`entro y retorno fila: ${fila} y indicevacio: ${indiceVacio}`);
+                //Returno la posición que he encontrado para posicionar fichaMaquina.
                 return [fila, indiceVacio];
             }
-            
         }
         //Ahora compruebo las columnas: 
-        columnaArray = this.matrizJuego.map(fila => fila[columna]);
+        columnaArray = this.#matrizJuego.map(fila => fila[columna]);
         contadorOcurrenciasColumna = columnaArray.filter(elemento => elemento === ficha).length;
-        console.log(`este es el contadorOcurrecnias de columna: ${contadorOcurrenciasColumna}`);
         if(contadorOcurrenciasColumna === 2){
             indiceVacioCol = columnaArray.findIndex(elemento => elemento === undefined);
-            console.log(`El indice vacio de columna es: ${indiceVacioCol}`);
             if(indiceVacioCol != -1){
-                //Returno la posición que he encontrado para posicionar fichaMaquina. 
-                console.log("Se ha encontrado en columna");
-                console.log(`entro y retorno desde columna fila: ${indiceVacioCol} y indicevacio: ${fila}`);
-                //Retorno al revés, indiceVacio como fila y fila como columna. 
+                //Retorno la posición que he encontrado para posicionar fichaMaquina. 
                 return [indiceVacioCol, fila];
             }
         }
-
         // Llamada recursiva y DEVOLVER SU RESULTADO
-        return this.revisarFilaColumna(fila + 1, columna + 1, ficha);   
+        return this.#revisarFilaColumna(fila + 1, columna + 1, ficha);   
     }
 
-    recorrerDiagonalPrincipal(ficha){
+    #recorrerDiagonalPrincipal(ficha){
         let contador = 0;
         let indiceVacio = -1;
-        for(let i = 0; i < this.matrizJuego.length; i++){
-            if(this.matrizJuego[i][i] === ficha){
+        for(let i = 0; i < this.#matrizJuego.length; i++){
+            if(this.#matrizJuego[i][i] === ficha){
                 contador++;
             }
-            if(this.matrizJuego[i][i] === undefined){
+            if(this.#matrizJuego[i][i] === undefined){
                 indiceVacio = i;
             }
         }
@@ -251,19 +324,18 @@ class JuegoTresEnRaya extends Juego{
 
     }
 
-    recorrerDiagonalSecundaria(ficha){
+    #recorrerDiagonalSecundaria(ficha){
         let contador = 0;
         let indiceVacio = -1;
-        for(let i = 0; i < this.matrizJuego.length; i++){
-            if(this.matrizJuego[i][2-i] === ficha){
+        for(let i = 0; i < this.#matrizJuego.length; i++){
+            if(this.#matrizJuego[i][2-i] === ficha){
                 contador++;
             }
-            if(this.matrizJuego[i][2-i] === undefined){
+            if(this.#matrizJuego[i][2-i] === undefined){
                 indiceVacio = i;
             }
         }
         if(contador === 2 && indiceVacio != -1){
-            console.log("Se ha encontrado en diagonal secundariaaaaaa");
             return [indiceVacio, 2 - indiceVacio];
         }else{
             return false;
@@ -271,21 +343,21 @@ class JuegoTresEnRaya extends Juego{
     }
 
     //Recorrer la matriz por la misma fil/col comprobando que hay fichaMaquina + 2 espacios vacios.
-    posicionEstrategica() {
+    #posicionEstrategica() {
         let posicionEstrategica;
     
         // Primero compruebo en fila,col
-        posicionEstrategica = this.posicionEstrategicaFilaCol(0, 0);
+        posicionEstrategica = this.#posicionEstrategicaFilaCol(0, 0);
         if (posicionEstrategica) {
             return posicionEstrategica;
         }
     
-         posicionEstrategica = this.posicionEstrategicaDiagonalPrincipal();
+        posicionEstrategica = this.#posicionEstrategicaDiagonalPrincipal();
         if (posicionEstrategica) {
             return posicionEstrategica;
         }
     
-         posicionEstrategica = this.posicionEstrategicaDiagonalSecundaria();
+         posicionEstrategica = this.#posicionEstrategicaDiagonalSecundaria();
         if (posicionEstrategica) {
             return posicionEstrategica;
         } 
@@ -293,8 +365,7 @@ class JuegoTresEnRaya extends Juego{
         return false;
     }
 
-    posicionEstrategicaFilaCol(fila, columna){
-        console.log(`Reviso fila: ${fila} y col: ${columna} de la posicion eestrategica`);
+    #posicionEstrategicaFilaCol(fila, columna){
         let contadorEspacioVacioFila = 0;
         let contadorEspacioVacioCol = 0; 
         let totalFichaMaquinaFila = 0;
@@ -304,54 +375,55 @@ class JuegoTresEnRaya extends Juego{
         let columnaArray = [];
         //Caso base: //Ya se ha comprobado todo. 
         if(fila > 2){
-            console.log("No se ha encontrado fichaMaquina con 2 espacios vacios de la estrategica.");
             return false;
         }
         //Primero compruebo la fila. 
-        this.matrizJuego[fila].forEach((elemento, indice) =>{
+        this.#matrizJuego[fila].forEach((elemento, indice) =>{
             if(elemento === undefined){
                 contadorEspacioVacioFila++;
                 indicesVaciosFila.push(indice);
             }
-            if(elemento === this.fichaMaquina){
+            if(elemento === this.#fichaMaquina){
                 totalFichaMaquinaFila++;
             }
         });
+
         if(contadorEspacioVacioFila === 2 && totalFichaMaquinaFila === 1){
             //He encontrado mi ficha con 2 espacios vacios.
             return [fila, indicesVaciosFila[0]];
         }
 
         //Ahora compruebo las columnas: 
-        columnaArray = this.matrizJuego.map(fila => fila[columna]);
+        columnaArray = this.#matrizJuego.map(fila => fila[columna]);
         columnaArray.forEach((elemento, indice) => {
             if(elemento === undefined){
                 contadorEspacioVacioCol++;
                 indicesVaciosCol.push(indice);
             }
-            if(elemento === this.fichaMaquina){
+            if(elemento === this.#fichaMaquina){
                 totalFichaMaquinaCol++;
             }
         });
+
         if(contadorEspacioVacioCol === 2 && totalFichaMaquinaCol === 1){
             //He encontrado mi ficha con 2 espacios vacios.
             return [indicesVaciosCol[0], fila];
         }
+
         // Llamada recursiva y DEVOLVER SU RESULTADO
-        return this.posicionEstrategicaFilaCol(fila + 1, columna + 1); 
+        return this.#posicionEstrategicaFilaCol(fila + 1, columna + 1); 
     }
 
     //COMPROBAR DIAGONALES PARA POSICION ESTRATEGICA. 
-    posicionEstrategicaDiagonalPrincipal(){
-        console.log("entro a revistar diagonal principale strategica");
+    #posicionEstrategicaDiagonalPrincipal(){
         let contadorFichaMaquina = 0;
         let contadorEspaciosVacios = 0;
         let indiceVacio = -1;
-        for(let i = 0; i < this.matrizJuego.length; i++){
-            if(this.matrizJuego[i][i] === this.fichaMaquina){
+        for(let i = 0; i < this.#matrizJuego.length; i++){
+            if(this.#matrizJuego[i][i] === this.#fichaMaquina){
                 contadorFichaMaquina++;
             }
-            if(this.matrizJuego[i][i] === undefined){
+            if(this.#matrizJuego[i][i] === undefined){
                 contadorEspaciosVacios++;
                 indiceVacio = i;
             }
@@ -363,22 +435,20 @@ class JuegoTresEnRaya extends Juego{
         }
     }
 
-    posicionEstrategicaDiagonalSecundaria(){
-        console.log("entro a revistar diagonal secundaria strategica");
+    #posicionEstrategicaDiagonalSecundaria(){
         let contadorFichaMaquina = 0;
         let contadorEspaciosVacios = 0;
         let indiceVacio = -1;
-        for(let i = 0; i < this.matrizJuego.length; i++){
-            if(this.matrizJuego[i][2-i] === this.fichaMaquina){
+        for(let i = 0; i < this.#matrizJuego.length; i++){
+            if(this.#matrizJuego[i][2-i] === this.#fichaMaquina){
                 contadorFichaMaquina++;
             }
-            if(this.matrizJuego[i][2-i] === undefined){
+            if(this.#matrizJuego[i][2-i] === undefined){
                 contadorEspaciosVacios++;
                 indiceVacio = i;
             }
         }
         if(contadorFichaMaquina === 1 && contadorEspaciosVacios === 2){
-            console.log("Se ha encontrado en diagonal secundariaaaaaa");
             return [indiceVacio, 2 - indiceVacio];
         }else{
             return false;
@@ -386,22 +456,67 @@ class JuegoTresEnRaya extends Juego{
     }
 
     //Posiciono ficha ganadora máquina. 
-    posicionarFichaMaquina(filaColumna){
-        this.numJugada++;
+    #posicionarFichaMaquina(filaColumna){
+        this.#numJugada++;
         //Se posiciona ficha en matriz interna:
-        this.matrizJuego[filaColumna[0]][filaColumna[1]] = this.fichaMaquina;
-        //Posicionar ficha máquina visualmente aquí:
-        this.posicionarImagenFicha(this.fichaMaquina,filaColumna[0], filaColumna[1]);
-        //Para que vuelva a poder hacer click. 
-        this.habilitarClickJugador(); 
+        this.#matrizJuego[filaColumna[0]][filaColumna[1]] = this.#fichaMaquina;
+        //Posicionar ficha máquina visualmente aquí pero con unos segundos de espera:
+        setTimeout(() =>{
+            this.#posicionarImagenFicha(this.#fichaMaquina,filaColumna[0], filaColumna[1]);
+        },800)
     }
 
     //Crea imágen dinámica y añade la ficha máquina o ficha persona según corresponda:
-    posicionarImagenFicha(ficha, fila, columna){
+    #posicionarImagenFicha(ficha, fila, columna){
         const boton = document.querySelectorAll('.button')[fila * 3 + columna];
         let img = document.createElement('img');
-        ficha === this.fichaMaquina ? img.src = '../img/x.png' : img.src = '../img/o.png';
+        img.src = ficha === this.#fichaMaquina ? '../img/x.png' : '../img/o.png';
         img.classList.add('imagen_button');
         boton.appendChild(img);
+        if(ficha === this.#fichaMaquina){
+            //Para que vuelva a poder hacer click. 
+            this.#habilitarClickJugador(); 
+        }
+
+    }
+
+    #mensajeFinalizaJuego(mensajeAmostrar){
+        //Muestra un cartel de empate, o de quien ha ganado. 
+        const fondo = document.querySelector('.fondo');
+        const mensaje = document.querySelector('.mensaje');
+        mensaje.textContent = mensajeAmostrar;
+        fondo.classList.add('fondo__transparente');
+        mensaje.classList.add('mostrar__mensaje'); 
+        //Termino juego para deshabilitar los botones:
+        this.#terminarJuego();
+    }
+
+    #eliminarMensajeFinalizaJuego(){ //eliminar mensaje última ronda al pasar 4 segundos. 
+        const fondo = document.querySelector('.fondo');
+        const mensaje = document.querySelector('.mensaje');
+        let temporizadorMensaje = setTimeout(()=>{
+            fondo.classList.remove('fondo__transparente');
+            mensaje.classList.remove('mostrar__mensaje');
+
+        }, 2000);
+    } 
+
+    #terminarJuego(){
+        this.#deshabilitarJugador();
+        //Para que se pueda hacer click a volver a jugar. 
+        this.#reiniciarJuego();
+    }
+
+    #reiniciarJuego(){
+        let botonVolverAjugar = document.querySelector('.boton__volver-jugar');
+        botonVolverAjugar.onclick = (() =>{
+            //Limpio matriz interna:
+            this.#matrizJuego = Array(3).fill().map(() => Array(3).fill(undefined));
+            this.#numJugada = 0;
+            //Limpio imágenes en tablero:
+            document.querySelectorAll('.imagen_button').forEach(img => img.remove());
+            this.#turno = this.#turno === this.#fichaPersona ? this.#fichaMaquina : this.#fichaPersona;
+            this.iniciarJuego(); 
+        })
     }
 } 

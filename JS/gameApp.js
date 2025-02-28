@@ -1,5 +1,3 @@
-console.log("se carga gameapp por segunddddda vez");
-
 class GameApp{
     constructor(){
         // Aquí tengo los metadatos de los juegos para mostrar en "mis juegos" y conectar con la BSDD: 
@@ -35,8 +33,7 @@ class GameApp{
         if(id === 'ahorcado' && !this.videojuegosInstanciados[id]){
             this.videojuegosInstanciados[id] = new JuegoAhorcado(7);
         }else if(id === 'juego numerico' && !this.videojuegosInstanciados[id]){
-            this.videojuegosInstanciados[id] = new JuegoNumerico(10, ['+', '-'], 3, 4);
-            console.log("he insanciado juego numerico");
+            this.videojuegosInstanciados[id] = new JuegoNumerico(10, ['+', '-'], 3, 4); 
         }else if(id === 'tres en raya' && !this.videojuegosInstanciados[id]){
             this.videojuegosInstanciados[id] = new JuegoTresEnRaya();
         }
@@ -91,7 +88,6 @@ class GameApp{
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data 
-                    console.log("tengo el html del juego numerico");
                     this.videojuegosInstanciados['juego numerico'].inicioJuegoBoton();  
                     const botonVolver = document.getElementById('volverJugar');
                 })
@@ -101,9 +97,8 @@ class GameApp{
             fetch('https://annaponsprojects.com/webJuegos/html/tresEnRaya.html')
                 .then(response => response.text())
                 .then(data =>{
-                    document.getElementById('main').innerHTML = data
-                    console.log("tendgo la data el tresen raya");
-                    this.videojuegosInstanciados['tres en raya'].eventoClickBotones();  
+                    document.getElementById('main').innerHTML = data 
+                    this.videojuegosInstanciados['tres en raya'].iniciarJuego(); 
                 })
                 .catch(error => console.error('Error cargando contenido:', error));
 
