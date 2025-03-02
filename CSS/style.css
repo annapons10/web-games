@@ -4,10 +4,11 @@
     --text-color-segundo: #00000080;
     --text-color-claro: #f5f5dc;
     --bg--blanco: #ffffff;
+    --bg--blanco-completo: #ffffff;
     --bg-color-claro: #aec6d5;
     --bg-color-card:  #242c3b;
     --bg-color-teclado: #69638748;
-    --bg-color-tresEnRaya: #2a254048;
+    --bg-color-tresEnRaya: #ffffff66;
     --color-box-shadow:  #440f0fc6;
     --color-verde-shadow: #6b8e2380;
     --granate: #241626;
@@ -159,7 +160,7 @@ body {
     transform: scale(0.9);
 }
 
-.h1__juegos{
+.h1{
     color: var(--bg--blanco);
     margin: 1rem;
     font-size: 2em;
@@ -247,12 +248,6 @@ body {
         width: 30rem;  
     }
 
-    .h1__juegos{
-        display: flex;
-        justify-content: center; 
-        margin-top: 5rem;
-    }
-
 
 } 
 
@@ -322,7 +317,6 @@ body {
         display: flex;
         flex-direction: row;
         justify-content: center;
-        align-items:last baseline;
         min-height: 50vh;
     }
 
@@ -349,4 +343,5 @@ body {
     transform: scale(1.1);
     transition: transform 0.3s;
     color:var(--bg--blanco);
-} 
+}
+

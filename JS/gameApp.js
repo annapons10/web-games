@@ -33,7 +33,8 @@ class GameApp{
         if(id === 'ahorcado' && !this.videojuegosInstanciados[id]){
             this.videojuegosInstanciados[id] = new JuegoAhorcado(7);
         }else if(id === 'juego numerico' && !this.videojuegosInstanciados[id]){
-            this.videojuegosInstanciados[id] = new JuegoNumerico(10, ['+', '-'], 3, 4); 
+            this.videojuegosInstanciados[id] = new JuegoNumerico(10, ['+', '-'], 3, 4);
+            console.log("he insanciado juego numerico");
         }else if(id === 'tres en raya' && !this.videojuegosInstanciados[id]){
             this.videojuegosInstanciados[id] = new JuegoTresEnRaya();
         }
@@ -43,7 +44,7 @@ class GameApp{
     loadContent(page){ 
         if(page === 'Home'){
             //TRAIGO LO QUE HAY EN HEADER.HTML PERO ESTOY EN INDEX.HTML
-            fetch('https://annaponsprojects.com/webJuegos/html/home.html') 
+            fetch('/HTML/home.html') 
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data;
@@ -51,8 +52,16 @@ class GameApp{
                     this.crearEventosParaTodosLosJuegosAlHacerClick(); 
                 })
                 .catch(error => console.error('Error cargando contenido:', error));
+        }else if(page === 'Chat'){
+            fetch('/HTML/chat.html')
+                .then(response => response.text())
+                .then(data =>{
+                    document.getElementById('main').innerHTML = data
+                })
+                .catch(error => console.error('Error cargando contenido:', error));
+    
         }else if(page === 'Mis juegos'){
-            fetch('https://annaponsprojects.com/webJuegos/html/misJuegos.html')
+            fetch('/HTML/misJuegos.html')
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
@@ -61,7 +70,7 @@ class GameApp{
                 .catch(error => console.error('Error cargando contenido:', error));
     
         }else if(page === 'Mi usuario'){
-            fetch('https://annaponsprojects.com/webJuegos/html/miUsuario.html')
+            fetch('/HTML/miUsuario.html')
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
@@ -74,17 +83,19 @@ class GameApp{
     //Se cargan los juegos dinámicamente: 
     loadGameContent(game){
         if(game === 'ahorcado'){
-            fetch('https://annaponsprojects.com/webJuegos/html/ahorcado.html') 
+            fetch('/HTML/ahorcado.html') 
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
                     this.videojuegosInstanciados['ahorcado'].crearTecladoPantalla(); 
                     this.videojuegosInstanciados['ahorcado'].iniciarJuego();
                 })
-                .catch(error => console.error('Error cargando contenido:', error));   
+                .catch(error => console.error('Error cargando contenido:', error));
+                
+               
     
         }else if(game === 'juego numerico'){
-            fetch('https://annaponsprojects.com/webJuegos/html/juegoNumerico.html') 
+            fetch('/HTML/juegoNumerico.html') 
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data 
@@ -93,16 +104,15 @@ class GameApp{
                 })
                 .catch(error => console.error('Error cargando contenido:', error));
 
+    
         }else if(game === 'tres en raya'){
-            fetch('https://annaponsprojects.com/webJuegos/html/tresEnRaya.html')
+            fetch('/HTML/tresEnRaya.html')
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data 
-                    this.videojuegosInstanciados['tres en raya'].iniciarJuego(); 
+                    this.videojuegosInstanciados['tres en raya'].iniciarJuego();
                 })
-                .catch(error => console.error('Error cargando contenido:', error));
-
-
+                .catch(error => console.error('Error cargando contenido:', error)); 
         }
     }
         //MÉTODO NUEVO PARA MOSTRAR JUEGOS EN PANTALLA CUANDO EL USUARIO HAGA CLICK EN "MIS JUEGOS":
@@ -127,6 +137,4 @@ class GameApp{
         // Una vez que he acumulado todo el HTML, se inserta en el dom de una vez.
         document.getElementById('gamesContainer').innerHTML = juegosHTML;
     }
-}
-
-
+} 

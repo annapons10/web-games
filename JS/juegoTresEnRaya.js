@@ -1,15 +1,17 @@
 class JuegoTresEnRaya extends Juego{
-    // Declaración de los campos privados
+    // Declaración de los atributos privados
     #matrizJuego;
     #fichaMaquina;
     #fichaPersona;
     #imagenesFichas;
     #turno;
     #numJugada;
+    #primerTurno;
+    #turnoActual;
 
     constructor() {
         super('Juego Tres En Raya', 'Juego de estrategia', 0);
-        // Inicialización de los campos privados: 
+        // Inicialización de los atributos privados: 
         this.#matrizJuego = [
             [undefined, undefined, undefined],
             [undefined, undefined, undefined],
@@ -18,13 +20,14 @@ class JuegoTresEnRaya extends Juego{
         this.#fichaMaquina = 'x';
         this.#fichaPersona = 'o';
         this.#imagenesFichas = ['/img/o.jpg', '/img/x.jpg'];
-        this.#turno = this.#fichaPersona; // Primero le toca persona
+        this.#primerTurno = this.#fichaPersona; // Primero le toca persona
+        this.#turnoActual = this.#primerTurno;
         this.#numJugada = 0; // Para saber en qué jugada me encuentro
     }
     
     //Controlar inicio juego:
     iniciarJuego(){
-        if(this.#turno === this.#fichaPersona){
+        if(this.#primerTurno === this.#fichaPersona){
             this.#habilitarClickJugador();
             this.#eventoClickBotones(); 
         }else{
@@ -33,7 +36,6 @@ class JuegoTresEnRaya extends Juego{
     }
 
     //JUGADA PERSONA:
-    //EVENTO CLICK PARA MOSTRAR IMÁGENES:
     #eventoClickBotones() {
         //Selecciona todos los botones
         const botones = document.querySelectorAll('.button');
@@ -81,7 +83,7 @@ class JuegoTresEnRaya extends Juego{
                 }
     
                 // Turno de la máquina
-                if (this.#numJugada === 1 && this.#turno === this.#fichaPersona) {
+                if (this.#numJugada === 1 && this.#primerTurno === this.#fichaPersona) {
                     this.#primeraJugadaSiPrimerTurnoPersona();
                 } else if (this.#numJugada === 9) {
                     return;
@@ -149,6 +151,7 @@ class JuegoTresEnRaya extends Juego{
         botones.forEach((boton)=>{
             boton.disabled = false;
         }); 
+        this.#cambiarTurnoVisual(); 
     }
     //Para que no pueda hacer click mientras juega la máquina:
     #deshabilitarJugador(){
@@ -156,7 +159,22 @@ class JuegoTresEnRaya extends Juego{
         botones.forEach((boton)=>{
             boton.disabled = true;
         }); 
+        this.#cambiarTurnoVisual();
     }
+
+    #cambiarTurnoVisual(){
+        // Cambiar turnos visualmente. 
+        const jugador = document.querySelector('.jugador');
+        const maquina = document.querySelector('.maquina');
+        if(maquina && maquina.classList.contains('maquina__activo')){
+            maquina.classList.remove('maquina__activo');
+            jugador.classList.add('jugador__activo');
+        }else{
+            jugador.classList.remove('jugador__activo');
+            maquina.classList.add('maquina__activo');
+        }
+    }
+
     //Antes de posicionar ficha jugador, comprueba que el sitio está vacío: 
     #comprobarPosicionVacia(fila, columna){
         if(this.#matrizJuego[fila][columna] === undefined){
@@ -508,14 +526,14 @@ class JuegoTresEnRaya extends Juego{
     }
 
     #reiniciarJuego(){
-        let botonVolverAjugar = document.querySelector('.boton__volver-jugar');
+        let botonVolverAjugar = document.querySelector('.boton__volver-jugar-tres-en-raya');
         botonVolverAjugar.onclick = (() =>{
             //Limpio matriz interna:
             this.#matrizJuego = Array(3).fill().map(() => Array(3).fill(undefined));
             this.#numJugada = 0;
             //Limpio imágenes en tablero:
             document.querySelectorAll('.imagen_button').forEach(img => img.remove());
-            this.#turno = this.#turno === this.#fichaPersona ? this.#fichaMaquina : this.#fichaPersona;
+            this.#primerTurno = this.#primerTurno === this.#fichaPersona ? this.#fichaMaquina : this.#fichaPersona;
             this.iniciarJuego(); 
         })
     }
