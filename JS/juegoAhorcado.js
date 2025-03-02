@@ -10,7 +10,7 @@ class JuegoAhorcado extends Juego {
     constructor(maximaJugadas) {
         super('Juego Ahorcado', 'Juego de palabras', 0);
         this.#maximaJugadas = maximaJugadas;
-        this.#palabras = ['HOLA', 'ADIOS', 'ALTURA', 'AGUA', 'GATO', 'ORDENADOR']; 
+        this.#palabras = ['AGUA', 'GATO', 'ORDENADOR', 'PROGRAMADORA', 'NATURALEZA', 'BOSQUE', 'ACAMPADA']; 
         this.#palabraAleatoria;
         this.#palabraOculta;
         this.#numerosErrores;

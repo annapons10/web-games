@@ -1,6 +1,4 @@
-//SIEMPRE TENGO EL HEADER Y EL FOOTER EN TODAS MIS PÁGINAS: 
-console.log("se carga main");
-
+console.log("cargo main ahora estilos nuevos");
 //TRAIGO LO QUE HAY EN HEADER.HTML PERO ESTOY EN INDEX.HTML 
 fetch('https://annaponsprojects.com/webJuegos/html/header.html') 
     .then(response => {
