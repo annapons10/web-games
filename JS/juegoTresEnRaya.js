@@ -19,7 +19,9 @@ class JuegoTresEnRaya extends Juego{
         ];
         this.#fichaMaquina = 'x';
         this.#fichaPersona = 'o';
-        this.#imagenesFichas = ['/img/o.jpg', '/img/x.jpg'];
+        this.#imagenesFichas = [ 'https://annaponsprojects.com/webJuegos/img/o.png', 
+                                'https://annaponsprojects.com/webJuegos/img/x.png'];
+       
         this.#primerTurno = this.#fichaPersona; // Primero le toca persona
         this.#turnoActual = this.#primerTurno;
         this.#numJugada = 0; // Para saber en qué jugada me encuentro

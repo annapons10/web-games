@@ -1,4 +1,3 @@
-console.log("entro a juego numérico a jugar");
 class JuegoNumerico extends Juego{
     #rondas;
     #operacionesPosibles;
@@ -40,8 +39,7 @@ class JuegoNumerico extends Juego{
     #jugar(){
         this.#construirOperacion(this.#sacarNumOperandosRandom()); 
         //Cada vez que se llama a jugar, se cuenta la ronda. 
-        this.#contadorRondas++;
-        console.log(`ESTAMOS EN LA RONDA: ${this.#contadorRondas}`); 
+        this.#contadorRondas++; 
     }
 
     //PARA SEGUIR JUGANDO LIMPIANDO ANTES Y REINICIADO TEMPORIZADOR. 
@@ -77,16 +75,12 @@ class JuegoNumerico extends Juego{
 
     #confirmarOperacion(operacionString) {
         this.#resultado = math.evaluate(operacionString);//Utilizo la librería para pasar un string a num y calcular. 
-        console.log(this.#resultado); 
         if (this.#resultado >= 1 && this.#resultado <= this.#tope) {
             this.#mostrarOperacionPantalla(operacionString); //Si el this.resultado es correcto. Muestro operación. 
-            console.log("YA HE CONSTRUIDO LA OPERACION");
             return;
         } 
-        console.log("SIGO AQUI");
         //Para que se construya otra vez y obtenga el resultado. 
         this.#construirOperacion(this.#sacarNumOperandosRandom());
-        console.log("CONSTRUYENDO.....");
     }
 
     #calcularNumeroArellenar(){
@@ -144,7 +138,6 @@ class JuegoNumerico extends Juego{
     inicioJuegoBoton() {
         let botonIniciar = document.getElementById('buttonIniciar');
         botonIniciar.onclick = () => {
-            console.log("hago click a iniciar juego");
             this.#empezarJuego(); 
             this.#eventoBotonResultado();
             botonIniciar.disabled = true; //el usuario ya no puede hacer click en él, está desabilitado. //al darle click a iniciar juego porque si no, el juego empieza aunque no haya iniciado y le doy click al 1, ya cuenta. 
@@ -155,7 +148,6 @@ class JuegoNumerico extends Juego{
     #configurarBotonVolverAjugar(){
         const botonVolver = document.getElementById('volverJugar');
         botonVolver.onclick = () => {
-            console.log("Volviendo a jugar desde el inicio...");
             //Primero reincicio todos los valores a 0. 
             this.#reiniciarJuego();
             //Habilitar botones porque se dejan deshabilitados antes de dar click a "volver a jugar", porque no le da tiempo a cambiar al no llamar a gestionar ronda:
@@ -168,7 +160,6 @@ class JuegoNumerico extends Juego{
     //MÉTODO PARA NO REPETIR CÓDIGO DENTRO DEL EVENTO CLICK PARA QUE SI ES LA PENÚLTIMA HAGA ESTO PASADOS 2S:
     #manejarRespuesta(boton, divResultado) {
         const valorSeleccionado = parseFloat(boton.getAttribute('data-valor')); 
-        console.log('Resultado seleccionado:', valorSeleccionado); 
     
         // Si el resultado es correcto
         if (valorSeleccionado === this.#resultado) { 
@@ -177,19 +168,16 @@ class JuegoNumerico extends Juego{
         } else {
             this.#mostrarResultado(divResultado, 'rojo');
         }
-        console.log("ESTOY EN MANEJAR RESPUESTA"); 
         // Temporizador para mostrar el resultado en blanco después de 2 segundos.
         this.temporizadorEvento = setTimeout(() => {
             this.#mostrarResultado(divResultado, 'blanco'); 
             divResultado.textContent = '';
-            console.log("ESTOY EN BLANCOOOOOO"); 
             this.#comprobarRonda();
         }, 2000); 
     }
 
     //EVENTO CLICK PARA EL RESULTADO DE 1,2 O 3:
     #eventoBotonResultado() {
-        console.log("Entro al click");
         let botones = document.querySelectorAll('.button__resultado');
         botones.forEach((boton) => {
             boton.addEventListener('click', () => {
@@ -228,7 +216,6 @@ class JuegoNumerico extends Juego{
 
         // PASADOS 5 SEGUNDOS COMPRUEBA SI HA HABIDO RESPUESTA:
         this.idTemporizadorRespuesta = setTimeout(() => {
-            console.log("entro cuando han pasado 5 segundos"); 
             //Si  no se recibió respuesta: 
             if(!this.#respuesta){
                 this.#comprobarRonda(); 

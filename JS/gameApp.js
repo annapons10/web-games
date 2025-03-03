@@ -1,3 +1,4 @@
+console.log("cargo gameApp con rutas nuevas");
 class GameApp{
     constructor(){
         // Aquí tengo los metadatos de los juegos para mostrar en "mis juegos" y conectar con la BSDD: 
@@ -44,7 +45,7 @@ class GameApp{
     loadContent(page){ 
         if(page === 'Home'){
             //TRAIGO LO QUE HAY EN HEADER.HTML PERO ESTOY EN INDEX.HTML
-            fetch('/HTML/home.html') 
+            fetch('https://annaponsprojects.com/webJuegos/html/home.html') 
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data;
@@ -52,16 +53,8 @@ class GameApp{
                     this.crearEventosParaTodosLosJuegosAlHacerClick(); 
                 })
                 .catch(error => console.error('Error cargando contenido:', error));
-        }else if(page === 'Chat'){
-            fetch('/HTML/chat.html')
-                .then(response => response.text())
-                .then(data =>{
-                    document.getElementById('main').innerHTML = data
-                })
-                .catch(error => console.error('Error cargando contenido:', error));
-    
         }else if(page === 'Mis juegos'){
-            fetch('/HTML/misJuegos.html')
+            fetch('https://annaponsprojects.com/webJuegos/html/misJuegos.html')
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
@@ -70,7 +63,7 @@ class GameApp{
                 .catch(error => console.error('Error cargando contenido:', error));
     
         }else if(page === 'Mi usuario'){
-            fetch('/HTML/miUsuario.html')
+            fetch('https://annaponsprojects.com/webJuegos/html/miUsuario.html')
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
@@ -83,7 +76,7 @@ class GameApp{
     //Se cargan los juegos dinámicamente: 
     loadGameContent(game){
         if(game === 'ahorcado'){
-            fetch('/HTML/ahorcado.html') 
+            fetch('https://annaponsprojects.com/webJuegos/html/ahorcado.html') 
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
@@ -95,7 +88,7 @@ class GameApp{
                
     
         }else if(game === 'juego numerico'){
-            fetch('/HTML/juegoNumerico.html') 
+            fetch('https://annaponsprojects.com/webJuegos/html/juegoNumerico.html') 
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data 
@@ -106,7 +99,7 @@ class GameApp{
 
     
         }else if(game === 'tres en raya'){
-            fetch('/HTML/tresEnRaya.html')
+            fetch('https://annaponsprojects.com/webJuegos/html/tresEnRaya.html')
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data 

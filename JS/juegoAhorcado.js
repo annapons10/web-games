@@ -48,9 +48,7 @@ class JuegoAhorcado extends Juego {
         this.#palabraAleatoria = this.#palabras[indiceA];
 
         // Inicializa palabraOculta con guiones bajos
-        this.#palabraOculta = Array(this.#palabraAleatoria.length).fill('_'); //Array: especifico el tamaño que va a tener. es un array llena de _ _ _ _
-        console.log(this.#palabraOculta);
-        console.log(this.#palabraAleatoria);
+        this.#palabraOculta = Array(this.#palabraAleatoria.length).fill('_'); //Array: especifico el tamaño que va a tener. es un array llena de _ _ _ _ 
 
         let numLetras = this.#palabraAleatoria.length; //Para mostras los ' _ ' que necesite en pantalla según la palabra.
         this.#mostrarGuionesEnPantalla(numLetras); //Llamo al método que lo hace. 
@@ -61,7 +59,6 @@ class JuegoAhorcado extends Juego {
 
     #recorrerBotones = (event) => { //PARA TENER LA REFERENCIA Y LLAMARLA CUANDO AÑADO EL EVENTO Y LO ELIMINO. 
         const letra = event.target.textContent; //Coge el contenido del botón que ha disparado el evento directamente. 
-        console.log("Letra del botón:", letra);
         this.#jugarAhorcado(letra); 
     }
 
@@ -92,7 +89,6 @@ class JuegoAhorcado extends Juego {
             if (!letraEncontrada) {
                 this.#numerosErrores++;
                 this.#mostrarImgAhorcado(); 
-                console.log(`Estos son los errores: ${this.#numerosErrores}`); 
             }
 
             if (!this.#palabraOculta.includes('_')) { //Si ya no tiene '_' significa que ha completado la palabra.//NO COMPARA BIEN LOS OBJETOS. //si hay espacios en blanco lo vale.
@@ -102,7 +98,6 @@ class JuegoAhorcado extends Juego {
 
         } else {
             //Mostrar que ha perdido. 
-            console.log("No te quedan intentos, has perdido.");
             this.#finalizarJuego(); 
         }
 
@@ -125,8 +120,7 @@ class JuegoAhorcado extends Juego {
             button.classList.add('button__letra');
 
             // Calcula la letra del abecedario usando el código ASCII
-            button.textContent = String.fromCharCode(65 + x); // 'A' es 65 en ASCII
-            console.log(button);
+            button.textContent = String.fromCharCode(65 + x); // 'A' es 65 en ASCII 
 
             div.appendChild(button);
             fragment.appendChild(div);
@@ -136,8 +130,7 @@ class JuegoAhorcado extends Juego {
         ahorcadoContainer.appendChild(tecladoContainer); //finalmente pego todo el fragmento de una vez. 
     }
 
-    #mostrarImgAhorcado() {
-        console.log("ENTRO A CAMBIAR LA IMG");
+    #mostrarImgAhorcado() { 
         let img = document.getElementById('img__ahorcado'); //cojo el html de img. 
         img.src = this.#imagenesAhorcado[this.#numerosErrores]; 
         img.alt = 'Ahorcado';
@@ -194,8 +187,7 @@ class JuegoAhorcado extends Juego {
             return;
         }
         //HACERELO CON ONCLICK. 
-        botonVolverAjugar.onclick = () => {
-            console.log("Aquí he dado click");
+        botonVolverAjugar.onclick = () => { 
             // Deshabilitar el botón después de hacer click para no acumular llamadas. 
             botonVolverAjugar.disabled = true; 
             // Rehabilitar el botón después de cierto tiempo o condición
