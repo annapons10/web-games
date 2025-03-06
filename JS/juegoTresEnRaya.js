@@ -19,8 +19,9 @@ class JuegoTresEnRaya extends Juego{
         ];
         this.#fichaMaquina = 'x';
         this.#fichaPersona = 'o';
-        this.#imagenesFichas = [ 'https://annaponsprojects.com/webJuegos/img/o.png', 
-                                'https://annaponsprojects.com/webJuegos/img/x.png'];
+        this.#imagenesFichas = [ 
+            'https://annaponsprojects.com/webJuegos/img/o.png', 
+            'https://annaponsprojects.com/webJuegos/img/x.png'];
        
         this.#primerTurno = this.#fichaPersona; // Primero le toca persona
         this.#turnoActual = this.#primerTurno;
@@ -490,7 +491,7 @@ class JuegoTresEnRaya extends Juego{
     #posicionarImagenFicha(ficha, fila, columna){
         const boton = document.querySelectorAll('.button')[fila * 3 + columna];
         let img = document.createElement('img');
-        img.src = ficha === this.#fichaMaquina ? '../img/x.png' : '../img/o.png';
+        img.src = ficha === this.#fichaMaquina ? this.#imagenesFichas[1] : this.#imagenesFichas[0];
         img.classList.add('imagen_button');
         boton.appendChild(img);
         if(ficha === this.#fichaMaquina){
