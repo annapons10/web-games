@@ -36,6 +36,8 @@ class JuegoTresEnRaya extends Juego{
         }else{
             this.#primeraJugadaSiTurnoMaquina();
         }
+        //Al iniciar juego se activa el onclick de reiniciar: 
+        this.#reiniciarJuego();
     }
 
     //JUGADA PERSONA:
@@ -523,9 +525,7 @@ class JuegoTresEnRaya extends Juego{
     } 
 
     #terminarJuego(){
-        this.#deshabilitarJugador();
-        //Para que se pueda hacer click a volver a jugar. 
-        this.#reiniciarJuego();
+        this.#deshabilitarJugador(); 
     }
 
     #reiniciarJuego(){
