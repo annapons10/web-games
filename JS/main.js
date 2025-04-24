@@ -1,5 +1,5 @@
 //TRAIGO LO QUE HAY EN HEADER.HTML PERO ESTOY EN INDEX.HTML 
-fetch('https://annaponsprojects.com/webJuegos/html/header.html') 
+fetch('./html/header.html') 
     .then(response => {
         if(!response.ok){
             throw new Error(`Error al cargar header.html: ${response.statusText}`);
@@ -27,7 +27,7 @@ fetch('https://annaponsprojects.com/webJuegos/html/header.html')
 
 
 //TRAIGO LO QUE HAY EN footer.HTML PERO ESTOY EN INDEX.HTML
-fetch('https://annaponsprojects.com/webJuegos/html/footer.html')
+fetch('./html/footer.html')
     .then(response => {
         //Si hay un error lo lanzo para que catch lo coja. 
         if(!response.ok){
@@ -48,3 +48,7 @@ fetch('https://annaponsprojects.com/webJuegos/html/footer.html')
 //Instancio la game App y cargo lo primero el home con las fotos de los juegos:
 const app = new GameApp();
 app.loadContent('Home'); 
+
+
+//Añado los eventos para poder ir para atrás y adelante de la página (Router): 
+window.addEventListener('hashchange', app.router.bind(app)); 

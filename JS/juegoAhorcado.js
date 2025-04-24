@@ -16,14 +16,14 @@ class JuegoAhorcado extends Juego {
         this.#numerosErrores;
         this.#letrasEscritas;
         this.#imagenesAhorcado = [
-            'https://annaponsprojects.com/webJuegos/imgAhorcado/primera.jpg',
-            'https://annaponsprojects.com/webJuegos/imgAhorcado/segunda.jpg',
-            'https://annaponsprojects.com/webJuegos/imgAhorcado/tercera.jpg',
-            'https://annaponsprojects.com/webJuegos/imgAhorcado/cuarta.jpg',
-            'https://annaponsprojects.com/webJuegos/imgAhorcado/quinta.jpg',
-            'https://annaponsprojects.com/webJuegos/imgAhorcado/sexta.jpg',
-            'https://annaponsprojects.com/webJuegos/imgAhorcado/septima.jpg',
-            'https://annaponsprojects.com/webJuegos/imgAhorcado/octava.jpg'
+            './imgAhorcado/primera.jpg',
+            './imgAhorcado/segunda.jpg',
+            './imgAhorcado/tercera.jpg',
+            './imgAhorcado/cuarta.jpg',
+            './imgAhorcado/quinta.jpg',
+            './imgAhorcado/sexta.jpg',
+            './imgAhorcado/septima.jpg',
+            './imgAhorcado/octava.jpg'
         ]; 
     } 
 

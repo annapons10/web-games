@@ -4,8 +4,8 @@ class GameApp{
         // Aquí tengo los metadatos de los juegos para mostrar en "mis juegos" y conectar con la BSDD: 
         this.videojuegos = [
             { id: "ahorcado", nombre: "Juego Ahorcado", tipo: "Palabras", puntuacion: 0 },
-            { id: "numerico", nombre: "Juego Numérico", tipo: "Matemáticas", puntuacion: 0 },
-            { id: "tres en raya", nombre: "Juego Tres En Raya", tipo: "Estrategia", puntuacion: 0 }
+            { id: "juegoNumerico", nombre: "Juego Numérico", tipo: "Matemáticas", puntuacion: 0 },
+            { id: "tresEnRaya", nombre: "Juego Tres En Raya", tipo: "Estrategia", puntuacion: 0 }
         ];
         //Objeto donde voy a guardar las instancias para luego acceder a sus métodos. 
         this.videojuegosInstanciados = {} 
@@ -18,6 +18,9 @@ class GameApp{
         botonesImagenesJuegos.forEach(boton => {
             boton.addEventListener('click', () =>{
                 const juego = boton.getAttribute('data-game');
+                //Cambio hash de la URL : 
+                const nuevoHash = `#${juego}`;
+                location.hash = nuevoHash; 
                 this.instanciarJuego(juego);
                 //Para asegurarme que el dom está cargado y tengo las instancias para llamar a sus métodos. 
                 setTimeout(() => {
@@ -33,10 +36,10 @@ class GameApp{
     instanciarJuego(id){
         if(id === 'ahorcado' && !this.videojuegosInstanciados[id]){
             this.videojuegosInstanciados[id] = new JuegoAhorcado(7);
-        }else if(id === 'juego numerico' && !this.videojuegosInstanciados[id]){
+        }else if(id === 'juegoNumerico' && !this.videojuegosInstanciados[id]){
             this.videojuegosInstanciados[id] = new JuegoNumerico(10, ['+', '-'], 3, 4);
             console.log("he insanciado juego numerico");
-        }else if(id === 'tres en raya' && !this.videojuegosInstanciados[id]){
+        }else if(id === 'tresEnRaya' && !this.videojuegosInstanciados[id]){
             this.videojuegosInstanciados[id] = new JuegoTresEnRaya();
         }
     }
@@ -45,8 +48,8 @@ class GameApp{
     loadContent(page){ 
         if(page === 'Home'){
             //TRAIGO LO QUE HAY EN HEADER.HTML PERO ESTOY EN INDEX.HTML
-            fetch('https://annaponsprojects.com/webJuegos/html/home.html') 
-                .then(response => response.text())
+            fetch('./html/home.html') 
+                .then(response => response.text() )
                 .then(data =>{
                     document.getElementById('main').innerHTML = data;
                     // Me aseguro de que primero tengo el html para luego llamar a la función de los botones. 
@@ -54,7 +57,7 @@ class GameApp{
                 })
                 .catch(error => console.error('Error cargando contenido:', error));
         }else if(page === 'Mis juegos'){
-            fetch('https://annaponsprojects.com/webJuegos/html/misJuegos.html')
+            fetch('./html/misJuegos.html')
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
@@ -63,7 +66,7 @@ class GameApp{
                 .catch(error => console.error('Error cargando contenido:', error));
     
         }else if(page === 'Mi usuario'){
-            fetch('https://annaponsprojects.com/webJuegos/html/miUsuario.html')
+            fetch('./html/miUsuario.html')
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
@@ -76,7 +79,7 @@ class GameApp{
     //Se cargan los juegos dinámicamente: 
     loadGameContent(game){
         if(game === 'ahorcado'){
-            fetch('https://annaponsprojects.com/webJuegos/html/ahorcado.html') 
+            fetch('./html/ahorcado.html') 
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
@@ -87,23 +90,23 @@ class GameApp{
                 
                
     
-        }else if(game === 'juego numerico'){
-            fetch('https://annaponsprojects.com/webJuegos/html/juegoNumerico.html') 
+        }else if(game === 'juegoNumerico'){
+            fetch('./html/juegoNumerico.html') 
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data 
-                    this.videojuegosInstanciados['juego numerico'].inicioJuegoBoton();  
+                    this.videojuegosInstanciados['juegoNumerico'].inicioJuegoBoton();  
                     const botonVolver = document.getElementById('volverJugar');
                 })
                 .catch(error => console.error('Error cargando contenido:', error));
 
     
-        }else if(game === 'tres en raya'){
-            fetch('https://annaponsprojects.com/webJuegos/html/tresEnRaya.html')
+        }else if(game === 'tresEnRaya'){
+            fetch('./html/tresEnRaya.html')
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data 
-                    this.videojuegosInstanciados['tres en raya'].iniciarJuego();
+                    this.videojuegosInstanciados['tresEnRaya'].iniciarJuego();
                 })
                 .catch(error => console.error('Error cargando contenido:', error)); 
         }
@@ -129,5 +132,20 @@ class GameApp{
             }
         // Una vez que he acumulado todo el HTML, se inserta en el dom de una vez.
         document.getElementById('gamesContainer').innerHTML = juegosHTML;
+    }
+
+    //Método para cambiar el hash y mostrar la pantalla correspondiente: 
+    router(){
+        const router = location.hash.slice(1);
+
+        if(router === 'home'){
+            this.loadContent('Home');
+        } else if(router === 'misJuegos'){
+            console.log("entro en mis juegos");
+            this.loadContent('Mis juegos'); 
+        } else if(router === 'miUsuario'){
+            this.loadContent('Mi usuario'); 
+        }
+
     }
 } 
