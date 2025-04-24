@@ -10,7 +10,7 @@ Un juego en el que debes de elegir la respuesta entre 1, 2 o 3 en base a una ope
 ### 2. Ahorcado
 La clásica versión del ahorcado, donde tendrás que adivinar una palabra antes de que el muñeco quede completamente ahorcado. Un reto para tu vocabulario y rapidez mental.
 
-### 3. Tres en Raya (En Desarrollo)
+### 3. Tres en Raya 
 Podrás competir para alinear tres símbolos (X o O) en una fila, columna o diagonal, y el primero en lograrlo ganará. 
 
 ## Tecnologías Utilizadas
