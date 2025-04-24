@@ -1,4 +1,20 @@
 <h1 class="h1">Conectarse o Registrarse</h1>
-<div>
-    En desarrollo...
+
+<div class="container__miUsuario">
+    <form class="form__miUsuario" action="index.html" method="post">
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label text-light">Email</label>
+            <input type="email" class="form-control input-form" id="exampleInputEmail1" aria-describedby="emailHelp"> 
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label text-light">Contraseña</label>
+            <input type="password" class="form-control input-form" id="exampleInputPassword1">
+        </div> 
+        <button type="submit" class="btn btn-light">Enviar</button>
+
+        <!-- Enlace para registrarse si no está registrado -->
+        <div class="mt-3 text-light">
+            ¿No tienes cuenta? <a href="registro.html" class="text-light">Regístrate aquí</a>
+        </div>
+    </form>
 </div>

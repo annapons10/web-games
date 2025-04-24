@@ -39,6 +39,10 @@ body {
     font-style: normal;
 }
 
+li{
+    list-style: none;
+}
+
 /*HEADER MOBILE FIRST*/
 
 .header{
@@ -344,3 +348,30 @@ body {
     transition: transform 0.3s;
     color:var(--bg--blanco);
 } 
+
+.container__miUsuario{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.form__miUsuario{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem; 
+    width: 100%;
+}
+
+.mb-3{
+    min-width: 30%;
+}
+
+.form-label{
+    display: flex;
+    justify-content: center;
+}
+
