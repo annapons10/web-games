@@ -313,6 +313,9 @@ li{
     margin-bottom: 20px;
 }
 
+.h3__card{
+    font-size: 1.2em;
+}
 
 /*MEDIA QUERIES MIS JUEGOS__TARJETAS*/
 @media screen and (min-width: 950px){
@@ -373,5 +376,5 @@ li{
 .form-label{
     display: flex;
     justify-content: center;
-}
+} 
 
