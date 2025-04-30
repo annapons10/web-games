@@ -345,12 +345,20 @@ li{
     font-size: 1.5em;
 }
 
-.footer a:hover{
+.footer .contact{
+    color: var(--bg-color-claro);
+    text-decoration: none;
+} 
+
+.footer .contact:hover {
     cursor: pointer;
     transform: scale(1.1);
-    transition: transform 0.3s;
-    color:var(--bg--blanco);
-} 
+    color:var(--bg--blanco); 
+    transition: transform 0.3s, color 0.3s;
+}
+
+
+/*FORMULARIO USUARIO*/
 
 .container__miUsuario{
     display: flex;
