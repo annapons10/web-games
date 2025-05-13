@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('games', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            //Se crea la foreing key relacionada con el id de genres:
+            $table->foreignId('genre_id')->constrained('genres');
             $table->timestamps();
         });
     }
@@ -25,3 +28,4 @@ return new class extends Migration
         Schema::dropIfExists('games');
     }
 };
+
