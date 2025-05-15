@@ -12,6 +12,7 @@ use App\Models\Score;
 
 class User extends Authenticatable
 {
+    
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasApiTokens;
 

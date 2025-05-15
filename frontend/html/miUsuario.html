@@ -33,19 +33,20 @@
         <form>
             <div class="mb-3">
                 <label for="recipient-name" class="col-form-label text-light">Nombre:</label>
-                <input type="text" class="form-control  text-light border-secondary bg-dark" id="nombre" name="nombre">
-            </div>
-            <div class="mb-3">
-                <label for="recipient-name" class="col-form-label text-light">Apellidos:</label>
-                <input type="text" class="form-control bg-dark text-light" id="apellidos" name="apellidos">
+                <input type="text" class="form-control  text-light border-secondary bg-dark" id="nombre" name="name" required>
             </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label text-light">Email:</label>
-            <input type="email" class="form-control bg-dark text-light" id="email" name="email">
+            <input type="email" class="form-control bg-dark text-light" id="email" name="email" required>
           </div>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label text-light">Contraseña:</label>
-            <input type="password" class="form-control bg-dark text-light" id="password"  name="password">
+            <input type="password" class="form-control bg-dark text-light" id="password"  name="password" required>
+          </div>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label text-light">Confirma contraseña:</label>
+            <!-- Lo llamo así para que laravel lo entienda: -->
+            <input type="password" class="form-control bg-dark text-light" id="password_confirmation"  name="password_confirmation" required> 
           </div>
         </form>
       </div>
