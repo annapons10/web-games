@@ -8,7 +8,9 @@ class GameApp{
             { id: "tresEnRaya", nombre: "Juego Tres En Raya", tipo: "Estrategia", puntuacion: 0 }
         ];
         //Objeto donde voy a guardar las instancias para luego acceder a sus métodos. 
-        this.videojuegosInstanciados = {} 
+        this.videojuegosInstanciados = {} ;
+        this.conectado = false; 
+        this.user = {}; 
     }
 
 
@@ -66,12 +68,29 @@ class GameApp{
                 .catch(error => console.error('Error cargando contenido:', error));
     
         }else if(page === 'Mi usuario'){
-            fetch('./html/miUsuario.html')
+            //No está conectado, mostrar para conectarse: 
+            if(!this.conectado){
+                fetch('./html/miUsuario.html')
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
+                    //Para activar el evento de envío de form: 
+                    this.configurarEventoLogin(); 
                 })
                 .catch(error => console.error('Error cargando contenido:', error));
+            }else{ //esta conectado, mostrar para poder hacer logout: 
+                fetch('./html/logout.html')
+                .then(response => response.text())
+                .then(data =>{
+                    document.getElementById('main').innerHTML = data
+                    //Para activar el evento de envío de form: 
+                   // this.configurarEventoLogin(); 
+                    //Activar el click en el botón cerrar sesión:
+                    this.configurarEventoLogout(); 
+                })
+                .catch(error => console.error('Error cargando contenido:', error));
+
+            }
         }
         
     }
@@ -147,5 +166,102 @@ class GameApp{
             this.loadContent('Mi usuario'); 
         }
 
+    }
+
+    //Método para el login: 
+    configurarEventoLogin(){
+        //Escucha el envío de login y hace la llamada al backend:
+        const loginForm = document.querySelector('.form__miUsuario');
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+
+            //Acedo a los input/name del form: 
+            const email = loginForm.email.value;
+            const password = loginForm.password.value;
+
+            //Voy al backend para confirmar:
+            try{
+                const respuesta = await fetch('http://127.0.0.1:8000/api/v1/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    //Primero creo un objeto, luego se pasa a json: 
+                    body: JSON.stringify({ email, password })
+                }); 
+
+                //Respuesta servidor fuera de rango 200-299: 
+                if(!respuesta.ok){
+                    const errorData = await respuesta.json();
+                    //Me aseguro si el error ha sido por credenciales incorrectas: 
+                    if(errorData.message){
+                        throw new Error(errorData.message);
+                    }else{
+                        //Manejar más errores: 
+                        throw new Error('Error en el login');
+                    }
+                }
+
+                //Si ha funcionado, convierto la respuesta de json a un obj de js: 
+                const data = await respuesta.json(); 
+                //Guardo el token: 
+                localStorage.setItem('token', data.token);
+                //Usuario conectado: 
+                this.conectado = true; 
+                //Redigirijo a mis juegos:
+                app.loadContent('Mis juegos'); 
+
+
+            }catch(e){  
+                const errorDiv = document.querySelector('.mensaje-error'); 
+                //Solo muestro mensaje real si viene de mi backend: 
+                if (
+                    e.message === 'Credenciales incorrectas' || 
+                    e.message === 'Error en el login'
+                ) {
+                    errorDiv.textContent = e.message;
+                } else {
+                    //Error de red, servidor caído, URL mal escrita, etc.
+                    errorDiv.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde.';
+                }
+            }
+
+
+        }); 
+    }
+
+    //Método para el logout:
+    configurarEventoLogout(){
+        const buttonLogout = document.querySelector('.btn-logout');
+
+        buttonLogout.addEventListener('click', async () => {
+            try{
+                //Recupero el token :
+                const token = localStorage.getItem('token'); 
+
+                const respuesta = await fetch('http://127.0.0.1:8000/api/v1/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` 
+                    }
+                });
+
+                if(!respuesta.ok){
+                    throw new Error();
+                }else{
+                    //Usuario desconectado: 
+                    this.conectado = false; 
+                    //Redigirijo a mis juegos:
+                    app.loadContent('Mi usuario'); 
+                    console.log("He conseguido cerrar sesión"); 
+                }
+
+            }catch(e){
+                const errorDiv = document.querySelector('.mensaje-error'); 
+                errorDiv.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde.';
+                
+            } 
+        }); 
     }
 } 

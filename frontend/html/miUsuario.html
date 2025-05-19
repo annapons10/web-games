@@ -1,14 +1,14 @@
 <h1 class="h1">Conectarse o Registrarse</h1>
 
 <div class="container__miUsuario">
-    <form class="form__miUsuario" action="index.html" method="post">
+    <form  class="form__miUsuario" >
         <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label text-light">Email</label>
-            <input type="email" class="form-control input-form bg-dark text-light" id="exampleInputEmail1" aria-describedby="emailHelp"> 
+            <label for="email-login" class="form-label text-light">Email</label>
+            <input type="email" name="email" class="form-control input-form bg-dark text-light" id="email-login" aria-describedby="emailHelp" required> 
         </div>
         <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label text-light">Contraseña</label>
-            <input type="password" class="form-control input-form bg-dark text-light" id="exampleInputPassword1">
+            <label for="password-login" class="form-label text-light">Contraseña</label>
+            <input type="password" name="password" class="form-control input-form bg-dark text-light" id="password-login" required>
         </div> 
         <button type="submit" class="btn btn-light">Enviar</button>
 
@@ -16,6 +16,7 @@
         <div class="mt-3 text-light">
             ¿No tienes cuenta? <a href="#" data-bs-toggle="modal" data-bs-target="#modalRegistrarse" class="text-light">Regístrate aquí</a>
         </div>
+        <div id="error-message" class="mensaje-error oculto text-danger mt-3"></div> 
     </form>
 </div>
 
@@ -30,7 +31,7 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body bg-dark">
-        <form>
+        <form class="form__register">
             <div class="mb-3">
                 <label for="recipient-name" class="col-form-label text-light">Nombre:</label>
                 <input type="text" class="form-control  text-light border-secondary bg-dark" id="nombre" name="name" required>
