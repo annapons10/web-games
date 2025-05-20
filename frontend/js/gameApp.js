@@ -11,6 +11,10 @@ class GameApp{
         this.videojuegosInstanciados = {} ;
         this.conectado = false; 
         this.user = {}; 
+        //Para no añadir más de un evento a los formularios:
+        this.eventoLogin = false;
+        this.eventoRegister = false;
+        this.eventoLogout = false; 
     }
 
 
@@ -57,7 +61,9 @@ class GameApp{
                     // Me aseguro de que primero tengo el html para luego llamar a la función de los botones. 
                     this.crearEventosParaTodosLosJuegosAlHacerClick(); 
                 })
-                .catch(error => console.error('Error cargando contenido:', error));
+                .catch(error => {
+                    document.querySelector('.container__home').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
+                });
         }else if(page === 'Mis juegos'){
             fetch('./html/misJuegos.html')
                 .then(response => response.text())
@@ -65,8 +71,9 @@ class GameApp{
                     document.getElementById('main').innerHTML = data
                     this.mostrarJuegosEnPantalla();
                 })
-                .catch(error => console.error('Error cargando contenido:', error));
-    
+                .catch(error => {
+                    document.querySelector('.container__home').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
+                });
         }else if(page === 'Mi usuario'){
             //No está conectado, mostrar para conectarse: 
             if(!this.conectado){
@@ -74,25 +81,36 @@ class GameApp{
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
-                    //Para activar el evento de envío de form: 
+                    //Activar el evento de envío de form: 
                     this.configurarEventoLogin(); 
+                   //Llamar al método para que active el onlcick del botón registro y pueda activar el evento de registro cuando el form se haya cargado en el DOM:
+                   this.configurarEventoClickRegistro();
                 })
-                .catch(error => console.error('Error cargando contenido:', error));
+                .catch(error => {
+                    document.querySelector('.container__home').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
+                });
             }else{ //esta conectado, mostrar para poder hacer logout: 
                 fetch('./html/logout.html')
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
-                    //Para activar el evento de envío de form: 
-                   // this.configurarEventoLogin(); 
                     //Activar el click en el botón cerrar sesión:
                     this.configurarEventoLogout(); 
                 })
-                .catch(error => console.error('Error cargando contenido:', error));
+                .catch(error => {
+                    document.querySelector('.container__home').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
+                });
 
             }
         }
         
+    }
+
+    configurarEventoClickRegistro(){
+        const buttonRegister =  document.querySelector('.button-register');
+        buttonRegister.addEventListener('click', () => {
+            this.configurarEventoRegister(); 
+        }); 
     }
 
     //Se cargan los juegos dinámicamente: 
@@ -105,7 +123,9 @@ class GameApp{
                     this.videojuegosInstanciados['ahorcado'].crearTecladoPantalla(); 
                     this.videojuegosInstanciados['ahorcado'].iniciarJuego();
                 })
-                .catch(error => console.error('Error cargando contenido:', error));
+                .catch(error => {
+                    document.querySelector('.container__home').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
+                });
                 
                
     
@@ -117,8 +137,9 @@ class GameApp{
                     this.videojuegosInstanciados['juegoNumerico'].inicioJuegoBoton();  
                     const botonVolver = document.getElementById('volverJugar');
                 })
-                .catch(error => console.error('Error cargando contenido:', error));
-
+                .catch(error => {
+                    document.querySelector('.container__home').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
+                });
     
         }else if(game === 'tresEnRaya'){
             fetch('./html/tresEnRaya.html')
@@ -127,7 +148,9 @@ class GameApp{
                     document.getElementById('main').innerHTML = data 
                     this.videojuegosInstanciados['tresEnRaya'].iniciarJuego();
                 })
-                .catch(error => console.error('Error cargando contenido:', error)); 
+                .catch(error => {
+                    document.querySelector('.container__home').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
+                });
         }
     }
         //MÉTODO NUEVO PARA MOSTRAR JUEGOS EN PANTALLA CUANDO EL USUARIO HAGA CLICK EN "MIS JUEGOS":
@@ -170,6 +193,9 @@ class GameApp{
 
     //Método para el login: 
     configurarEventoLogin(){
+        if(this.eventoLogin) return; 
+
+        this.eventoLogin = true;
         //Escucha el envío de login y hace la llamada al backend:
         const loginForm = document.querySelector('.form__miUsuario');
         loginForm.addEventListener('submit', async (e) => {
@@ -184,7 +210,8 @@ class GameApp{
                 const respuesta = await fetch('http://127.0.0.1:8000/api/v1/login', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json', 
+                        'Accept': 'application/json',
                     },
                     //Primero creo un objeto, luego se pasa a json: 
                     body: JSON.stringify({ email, password })
@@ -232,6 +259,8 @@ class GameApp{
 
     //Método para el logout:
     configurarEventoLogout(){
+        if(this.eventoLogout) return;
+        this.eventoLogout = true;
         const buttonLogout = document.querySelector('.btn-logout');
 
         buttonLogout.addEventListener('click', async () => {
@@ -243,7 +272,7 @@ class GameApp{
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}` 
+                        'Authorization': `Bearer ${token}`
                     }
                 });
 
@@ -259,9 +288,98 @@ class GameApp{
 
             }catch(e){
                 const errorDiv = document.querySelector('.mensaje-error'); 
-                errorDiv.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde.';
+                errorDiv.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde.'; 
                 
             } 
         }); 
+    }
+
+    configurarEventoRegister(){
+        if(this.eventoRegister) return;
+        this.eventoRegister = true; 
+        console.log("entro en configurar evento register");
+        //Cojo form: 
+        const registerForm = document.querySelector('.form__register'); 
+        //Cojo los divs donde voy a mostrar los errores:
+        const errorName = document.querySelector('.nameRegister');
+        const errorEmail = document.querySelector('.emailRegister');
+        const errorPassword = document.querySelector('.passwordRegister');
+        const errorPasswordConfirm = document.querySelector('.passwordConfirmationRegister'); 
+
+
+        //Le añado el evento: 
+        registerForm.addEventListener('submit', async (e) => {
+            console.log("Submit form detectado");
+            e.preventDefault();
+            //Limpio los mensajes de error:
+            errorName.textContent = '';
+            errorEmail.textContent = '';
+            errorPassword.textContent = '';
+            errorPasswordConfirm.textContent = '';
+
+            // Accedo a inputs: 
+            const name = registerForm.nameRegister.value;
+            const email = registerForm.emailRegister.value;
+            const password = registerForm.passwordRegister.value;
+            const passwordConfirm = registerForm.passwordConfirmationRegister.value; 
+
+            //Voy al backend para confirmar:
+            try{
+                const respuesta = await fetch('http://127.0.0.1:8000/api/v1/register', {
+                    method: 'POST', 
+                    headers: {
+                        'Content-Type': 'application/json', //-->Le dice a laravel que le estoy enviando un json. 
+                        'Accept': 'application/json', //-->Le dice a laravel que quiero recibir un json, no redirecciones. 
+                    },
+                    //Primero convierto a objeto js y luego a json: 
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        password,
+                        password_confirmation: passwordConfirm, 
+                    })
+                });
+
+                //Respuesta servidor si algo ha fallado, 422 + mensaje de error:
+                if(!respuesta.ok){
+                    //Cojo el error y lo convierto a objeto js: 
+                    const errorData = await respuesta.json();
+                    //Envío el catch todo el objeto: 
+                    throw errorData; 
+                }
+                //Si ha funcionado, convierto la respuesta de json a un obj de js:
+                const data = await respuesta.json();
+                //Guardo el token:
+                localStorage.setItem('token', data.token);
+                //Usuario conectado:
+                this.conectado = true;
+                //Cierro el modal:
+                document.querySelector('.modal-backdrop')?.remove();
+                //Redigirijo a mis juegos:
+                app.loadContent('Mis juegos'); 
+
+            }catch(e){ 
+                //Manejo los errores:
+                if(e.errors){
+                    if(e.errors.name){
+                        errorName.textContent = e.errors.name[0];
+                    }
+                    if(e.errors.email){
+                        errorEmail.textContent = e.errors.email[0];
+                    }
+                    if(e.errors.password){
+                        errorPassword.textContent = e.errors.password[0];
+                    }
+                    if(e.errors.password_confirmation){
+                        errorPasswordConfirm.textContent = e.errors.password_confirmation[0];
+                    }
+
+                }else{
+                    //Error de red, servidor caído, URL mal escrita, etc.
+                    errorPasswordConfirm.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde.'; 
+                }
+            }  
+        }) 
+
     }
 } 

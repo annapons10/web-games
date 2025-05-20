@@ -20,6 +20,14 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
+        //Si algo falla, 422 y mensaje de error:
+       /*  {
+            "errors": {
+                "email": ["The email has already been taken."],
+                "password": ["The password field is required."]
+            }
+        } */
+
         //Automáticamente Auth::attempt (se dirige a la tabla user y comprueba que es correcto) y devuelve true o false:
         if(Auth::attempt($credentials)){
             //Si son correctas, genero un token personal con el user correspondiente:
@@ -44,6 +52,7 @@ class AuthController extends Controller
 
     public function register(Request $request){
         //Primero valido datos con $request y su método que tiene los datos de la petición HTTP:
+        //Si algo falla, laravel devuelve errores e intenta redirigir html, pero como es una api, lo que quiero es que devuelva un json (establezo esto en el headers del fetch): 
         $validate = $request->validate([
             "name" => 'required|string|max:255',
             "email" => 'required|email|unique:users,email',
@@ -69,7 +78,7 @@ class AuthController extends Controller
             'message' => 'Registro exitoso',
             'user' => $user,
             'token' => $token, 
-        ], 201);
+        ], 201); 
         
     }
 

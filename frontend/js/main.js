@@ -21,7 +21,6 @@ fetch('./html/header.html')
     })
 
     .catch(error => {
-        console.error('Error cargando contenido:', error.message);
         document.getElementById('header').innerHTML = "<p>Lo siento, no se pudo cargar el contenido del menú de la página.</p>";
     });
 
@@ -41,7 +40,6 @@ fetch('./html/footer.html')
     })
 
     .catch(error => {
-        console.error('Error cargando contenido:', error.message);
         document.getElementById('footer').innerHTML = "<p>Lo siento, no se pudo cargar el contenido del pie de página.</p>";
     });
 

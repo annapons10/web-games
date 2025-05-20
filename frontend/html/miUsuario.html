@@ -14,7 +14,7 @@
 
         <!-- Enlace para registrarse si no está registrado -->
         <div class="mt-3 text-light">
-            ¿No tienes cuenta? <a href="#" data-bs-toggle="modal" data-bs-target="#modalRegistrarse" class="text-light">Regístrate aquí</a>
+            ¿No tienes cuenta? <a href="#" data-bs-toggle="modal" data-bs-target="#modalRegistrarse" class="text-light button-register">Regístrate aquí</a>
         </div>
         <div id="error-message" class="mensaje-error oculto text-danger mt-3"></div> 
     </form>
@@ -33,27 +33,33 @@
       <div class="modal-body bg-dark">
         <form class="form__register">
             <div class="mb-3">
-                <label for="recipient-name" class="col-form-label text-light">Nombre:</label>
-                <input type="text" class="form-control  text-light border-secondary bg-dark" id="nombre" name="name" required>
+                <label for="nameRegister" class="col-form-label text-light">Nombre:</label>
+                <input type="text" class="form-control  text-light border-secondary bg-dark" id="nameRegister" name="nameRegister" required>
+                <div class="mensaje-error nameRegister oculto text-danger mt-3"></div> 
             </div>
           <div class="mb-3">
-            <label for="recipient-name" class="col-form-label text-light">Email:</label>
-            <input type="email" class="form-control bg-dark text-light" id="email" name="email" required>
+            <label for="emailRegister" class="col-form-label text-light">Email:</label>
+            <input type="email" class="form-control bg-dark text-light" id="email-register" name="emailRegister" required>
+             <div class="mensaje-error emailRegister oculto text-danger mt-3"></div>
           </div>
           <div class="mb-3">
-            <label for="recipient-name" class="col-form-label text-light">Contraseña:</label>
-            <input type="password" class="form-control bg-dark text-light" id="password"  name="password" required>
+            <label for="passwordRegister" class="col-form-label text-light">Contraseña:</label>
+            <input type="password" class="form-control bg-dark text-light" id="passwordRegister"  name="passwordRegister" required>
+             <div class="mensaje-error passwordRegister oculto text-danger mt-3"></div>
           </div>
           <div class="mb-3">
-            <label for="recipient-name" class="col-form-label text-light">Confirma contraseña:</label>
+            <label for="passwordConfirmationRegister" class="col-form-label text-light">Confirma contraseña:</label>
             <!-- Lo llamo así para que laravel lo entienda: -->
-            <input type="password" class="form-control bg-dark text-light" id="password_confirmation"  name="password_confirmation" required> 
+            <input type="password" class="form-control bg-dark text-light" id="passwordConfirmationRegister"  name="passwordConfirmationRegister" required>
+             <div class="mensaje-error passwordConfirmationRegister oculto text-danger mt-3"></div> 
           </div>
+          <div class="modal-footer bg-dark">
+            <button type="submit" class="btn btn-light">Registrarse</button>
+          </div>
+
         </form>
       </div>
-      <div class="modal-footer bg-dark">
-        <button type="button" class="btn btn-light">Enviar</button>
-      </div>
+     
     </div>
   </div>
 </div>
