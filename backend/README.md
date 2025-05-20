@@ -19,18 +19,6 @@ La autenticación se maneja mediante **Laravel Sanctum**. Al iniciar sesión exi
 
 ### 🛠 Endpoints principales
 
-### 🟢 Login de usuario
-
-- **Método:** `POST`
-- **URL:** `/api/v1/login`
-
-#### 📥 Body (JSON)
-```json
-{
-  "email": "usuario@correo.com",
-  "password": "contraseña123"
-}
-
 ### 🟢 Registro de usuario
 
 - **Método:** `POST`
@@ -43,14 +31,31 @@ La autenticación se maneja mediante **Laravel Sanctum**. Al iniciar sesión exi
   "email": "usuario@correo.com",
   "password": "contraseña123"
 }
+```
 
 ### 🟢 Logout de usuario
 
 - **Método:** `POST`
 - **URL:** `/api/v1/logout`
 
-#### 📥 Headers 
-- Content-Type: application/json,
-- Authorization: Bearer TU_TOKEN
+#### 📥 Headers
+
+- Content-Type: application/json
+- Authorization: Bearer TU_TOKEN 
+
+
+### 🟢 Login de usuario
+
+- **Método:** `POST`
+- **URL:** `/api/v1/login`
+
+#### 📥 Body (JSON)
+```json
+{
+  "email": "usuario@correo.com",
+  "password": "contraseña123"
+}
+``` 
+
 
 
