@@ -81,15 +81,18 @@ class GameApp{
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
-                    //Activar el evento de envío de form: 
-                    this.configurarEventoLogin(); 
-                   //Llamar al método para que active el onlcick del botón registro y pueda activar el evento de registro cuando el form se haya cargado en el DOM:
-                   this.configurarEventoClickRegistro();
+                    //Activar el evento de envío de form y registro solo cuando el html está cargado: 
+                    requestAnimationFrame(() => {
+                        this.configurarEventoLogin(); 
+                        this.configurarEventoClickRegistro();
+                    });
                 })
                 .catch(error => {
                     document.querySelector('.container__home').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
                 });
-            }else{ //esta conectado, mostrar para poder hacer logout: 
+            }
+            //Está conectado, mostrar para poder hacer logout: 
+            if(this.conectado){ 
                 fetch('./html/logout.html')
                 .then(response => response.text())
                 .then(data =>{
@@ -193,17 +196,26 @@ class GameApp{
 
     //Método para el login: 
     configurarEventoLogin(){
+        
         if(this.eventoLogin) return; 
 
         this.eventoLogin = true;
         //Escucha el envío de login y hace la llamada al backend:
         const loginForm = document.querySelector('.form__miUsuario');
         loginForm.addEventListener('submit', async (e) => {
+            console.log("Submit form detectado");
             e.preventDefault(); 
 
             //Acedo a los input/name del form: 
             const email = loginForm.email.value;
             const password = loginForm.password.value;
+
+            //Valido los campos desde el frontend, si estan vacíos, no hago fetch: 
+            if(!email || !password){
+                const errorDiv = document.querySelector('.mensaje-error'); 
+                errorDiv.textContent = 'Por favor, completa todos los campos.';
+                return; 
+            }
 
             //Voy al backend para confirmar:
             try{
@@ -211,7 +223,7 @@ class GameApp{
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json', 
-                        'Accept': 'application/json',
+                        'Accept': 'application/json'
                     },
                     //Primero creo un objeto, luego se pasa a json: 
                     body: JSON.stringify({ email, password })
@@ -221,12 +233,7 @@ class GameApp{
                 if(!respuesta.ok){
                     const errorData = await respuesta.json();
                     //Me aseguro si el error ha sido por credenciales incorrectas: 
-                    if(errorData.message){
-                        throw new Error(errorData.message);
-                    }else{
-                        //Manejar más errores: 
-                        throw new Error('Error en el login');
-                    }
+                    throw new Error(errorData.message);
                 }
 
                 //Si ha funcionado, convierto la respuesta de json a un obj de js: 
@@ -242,12 +249,9 @@ class GameApp{
             }catch(e){  
                 const errorDiv = document.querySelector('.mensaje-error'); 
                 //Solo muestro mensaje real si viene de mi backend: 
-                if (
-                    e.message === 'Credenciales incorrectas' || 
-                    e.message === 'Error en el login'
-                ) {
+                if (e.message) {
                     errorDiv.textContent = e.message;
-                } else {
+                }else {
                     //Error de red, servidor caído, URL mal escrita, etc.
                     errorDiv.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde.';
                 }

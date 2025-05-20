@@ -7,27 +7,15 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\LoginRequest;
 
 
 
 class AuthController extends Controller
 {
     //
-    public function login(Request $request){
-        //Valido los datos:
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        //Si algo falla, 422 y mensaje de error:
-       /*  {
-            "errors": {
-                "email": ["The email has already been taken."],
-                "password": ["The password field is required."]
-            }
-        } */
-
+    public function login(LoginRequest $request){
+        $credentials = $request->only('email', 'password');
         //Automáticamente Auth::attempt (se dirige a la tabla user y comprueba que es correcto) y devuelve true o false:
         if(Auth::attempt($credentials)){
             //Si son correctas, genero un token personal con el user correspondiente:
