@@ -263,6 +263,7 @@ class GameApp{
 
     //Método para el logout:
     configurarEventoLogout(){
+        console.log("entro en configurar evento logout"); 
         if(this.eventoLogout) return;
         this.eventoLogout = true;
         const buttonLogout = document.querySelector('.btn-logout');
@@ -286,6 +287,7 @@ class GameApp{
                 }else{
                     //Usuario desconectado: 
                     this.conectado = false; 
+                    this.eventoLogout = false; 
                     //Redigirijo a mis juegos:
                     app.loadContent('Mi usuario'); 
                     console.log("He conseguido cerrar sesión"); 
