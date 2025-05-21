@@ -268,6 +268,7 @@ class GameApp{
         const buttonLogout = document.querySelector('.btn-logout');
 
         buttonLogout.addEventListener('click', async () => {
+            console.log("He hecho click en logout");
             try{
                 //Recupero el token :
                 const token = localStorage.getItem('token'); 
@@ -304,22 +305,13 @@ class GameApp{
         console.log("entro en configurar evento register");
         //Cojo form: 
         const registerForm = document.querySelector('.form__register'); 
-        //Cojo los divs donde voy a mostrar los errores:
-        const errorName = document.querySelector('.nameRegister');
-        const errorEmail = document.querySelector('.emailRegister');
-        const errorPassword = document.querySelector('.passwordRegister');
-        const errorPasswordConfirm = document.querySelector('.passwordConfirmationRegister'); 
-
+        const error = document.querySelector('.error');
 
         //Le añado el evento: 
         registerForm.addEventListener('submit', async (e) => {
             console.log("Submit form detectado");
             e.preventDefault();
-            //Limpio los mensajes de error:
-            errorName.textContent = '';
-            errorEmail.textContent = '';
-            errorPassword.textContent = '';
-            errorPasswordConfirm.textContent = '';
+            this.limpiarErroresFormulario();
 
             // Accedo a inputs: 
             const name = registerForm.nameRegister.value;
@@ -344,12 +336,25 @@ class GameApp{
                     })
                 });
 
-                //Respuesta servidor si algo ha fallado, 422 + mensaje de error:
+                //Se sale del rango 200-299:
                 if(!respuesta.ok){
                     //Cojo el error y lo convierto a objeto js: 
                     const errorData = await respuesta.json();
-                    //Envío el catch todo el objeto: 
-                    throw errorData; 
+                    //Manejo aquí los errores que me devuelve el backend:
+                    if(errorData.errors){
+                        //Si hay errores, los muestro en el formulario:
+                        console.log("entro en errores de laravel por campos vacíos");
+                        this.mostrarErroresFormulario(errorData.errors);
+                        return;
+                    }
+                    if(errorData.message){
+                        //Si hay un mensaje de error, lo muestro:
+                        error.textContent = errorData.message;
+                        return;
+                    }
+                    //Lanzo un error genérico si no hay errores específicos:
+                    error.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde.';
+
                 }
                 //Si ha funcionado, convierto la respuesta de json a un obj de js:
                 const data = await respuesta.json();
@@ -363,27 +368,62 @@ class GameApp{
                 app.loadContent('Mis juegos'); 
 
             }catch(e){ 
-                //Manejo los errores:
-                if(e.errors){
-                    if(e.errors.name){
-                        errorName.textContent = e.errors.name[0];
-                    }
-                    if(e.errors.email){
-                        errorEmail.textContent = e.errors.email[0];
-                    }
-                    if(e.errors.password){
-                        errorPassword.textContent = e.errors.password[0];
-                    }
-                    if(e.errors.password_confirmation){
-                        errorPasswordConfirm.textContent = e.errors.password_confirmation[0];
-                    }
-
-                }else{
-                    //Error de red, servidor caído, URL mal escrita, etc.
-                    errorPasswordConfirm.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde.'; 
-                }
+                //Manejo los errores de conexión, url, etc:
+                error.textContent = 'Error de red o servidor. Inténtalo más tarde.'; 
             }  
         }) 
 
+    }
+
+    objetoDivsErrores(){
+        //Cojo los divs donde voy a mostrar los errores:
+        const errorName = document.querySelector('.nameRegister');
+        const errorEmail = document.querySelector('.emailRegister');
+        const errorPassword = document.querySelector('.passwordRegister');
+        const errorPasswordConfirm = document.querySelector('.passwordConfirmationRegister'); 
+
+        const divErrores = {
+            errorName,
+            errorEmail,
+            errorPassword,
+            errorPasswordConfirm 
+        }
+
+        return divErrores; 
+    }
+    
+    
+
+    mostrarErroresFormulario(errors){
+        //Destructuración de objetos: 
+        const { errorName, errorEmail, errorPassword, errorPasswordConfirm } = this.objetoDivsErrores();
+
+        if(errors.name){
+            errorName.textContent = errors.name[0];
+            return;
+        }
+        if(errors.email){
+            errorEmail.textContent = errors.email[0];
+            return; 
+        }
+        if(errors.password){
+            errorPassword.textContent = errors.password[0];
+            return; 
+        }
+        if(errors.password_confirmation){
+            errorPasswordConfirm.textContent = errors.password_confirmation[0]; 
+            return; 
+        }
+    }
+
+    limpiarErroresFormulario(){
+        //Destructuración de objetos: 
+        const { errorName, errorEmail, errorPassword, errorPasswordConfirm } = this.objetoDivsErrores();
+
+        //Limpio los mensajes de error:
+        errorName.textContent = '';
+        errorEmail.textContent = '';
+        errorPassword.textContent = '';
+        errorPasswordConfirm.textContent = '';
     }
 } 
