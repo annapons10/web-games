@@ -1,4 +1,3 @@
-console.log("cargo gameApp con rutas nuevas");
 class GameApp{
     constructor(){
         // Aquí tengo los metadatos de los juegos para mostrar en "mis juegos" y conectar con la BSDD: 
@@ -13,7 +12,7 @@ class GameApp{
         this.user = {}; 
         //Para no añadir más de un evento a los formularios:
         this.eventoLogin = false;
-        this.eventoRegister = false;
+        this.eventoRegister = false; 
         this.eventoLogout = false; 
     }
 
@@ -43,8 +42,7 @@ class GameApp{
         if(id === 'ahorcado' && !this.videojuegosInstanciados[id]){
             this.videojuegosInstanciados[id] = new JuegoAhorcado(7);
         }else if(id === 'juegoNumerico' && !this.videojuegosInstanciados[id]){
-            this.videojuegosInstanciados[id] = new JuegoNumerico(10, ['+', '-'], 3, 4);
-            console.log("he insanciado juego numerico");
+            this.videojuegosInstanciados[id] = new JuegoNumerico(10, ['+', '-'], 3, 4); 
         }else if(id === 'tresEnRaya' && !this.videojuegosInstanciados[id]){
             this.videojuegosInstanciados[id] = new JuegoTresEnRaya();
         }
@@ -185,8 +183,7 @@ class GameApp{
 
         if(router === 'home'){
             this.loadContent('Home');
-        } else if(router === 'misJuegos'){
-            console.log("entro en mis juegos");
+        } else if(router === 'misJuegos'){ 
             this.loadContent('Mis juegos'); 
         } else if(router === 'miUsuario'){
             this.loadContent('Mi usuario'); 
@@ -195,15 +192,14 @@ class GameApp{
     }
 
     //Método para el login: 
-    configurarEventoLogin(){
-        
+    configurarEventoLogin(){ 
         if(this.eventoLogin) return; 
 
         this.eventoLogin = true;
         //Escucha el envío de login y hace la llamada al backend:
         const loginForm = document.querySelector('.form__miUsuario');
-        loginForm.addEventListener('submit', async (e) => {
-            console.log("Submit form detectado");
+        const errorDiv = document.querySelector('.errorLogin'); 
+        loginForm.addEventListener('submit', async (e) => { 
             e.preventDefault(); 
 
             //Acedo a los input/name del form: 
@@ -212,7 +208,6 @@ class GameApp{
 
             //Valido los campos desde el frontend, si estan vacíos, no hago fetch: 
             if(!email || !password){
-                const errorDiv = document.querySelector('.mensaje-error'); 
                 errorDiv.textContent = 'Por favor, completa todos los campos.';
                 return; 
             }
@@ -233,7 +228,14 @@ class GameApp{
                 if(!respuesta.ok){
                     const errorData = await respuesta.json();
                     //Me aseguro si el error ha sido por credenciales incorrectas: 
-                    throw new Error(errorData.message);
+                    if(errorData.message){
+                        errorDiv.textContent = errorData.message;
+                        return; 
+                    }else{
+                        //Si no es por credenciales, lanzo un error genérico:
+                        errorDiv.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde.';
+                        return;
+                    }
                 }
 
                 //Si ha funcionado, convierto la respuesta de json a un obj de js: 
@@ -247,14 +249,8 @@ class GameApp{
 
 
             }catch(e){  
-                const errorDiv = document.querySelector('.mensaje-error'); 
-                //Solo muestro mensaje real si viene de mi backend: 
-                if (e.message) {
-                    errorDiv.textContent = e.message;
-                }else {
-                    //Error de red, servidor caído, URL mal escrita, etc.
-                    errorDiv.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde.';
-                }
+                //Error de red, servidor caído, URL mal escrita, etc.
+                errorDiv.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde.'; 
             }
 
 
@@ -262,14 +258,13 @@ class GameApp{
     }
 
     //Método para el logout:
-    configurarEventoLogout(){
-        console.log("entro en configurar evento logout"); 
+    configurarEventoLogout(){ 
         if(this.eventoLogout) return;
         this.eventoLogout = true;
         const buttonLogout = document.querySelector('.btn-logout');
+        const errorDiv = document.querySelector('.errorLogout');
 
-        buttonLogout.addEventListener('click', async () => {
-            console.log("He hecho click en logout");
+        buttonLogout.addEventListener('click', async () => { 
             try{
                 //Recupero el token :
                 const token = localStorage.getItem('token'); 
@@ -283,20 +278,30 @@ class GameApp{
                 });
 
                 if(!respuesta.ok){
-                    throw new Error();
-                }else{
-                    //Usuario desconectado: 
-                    this.conectado = false; 
-                    this.eventoLogout = false; 
-                    //Redigirijo a mis juegos:
-                    app.loadContent('Mi usuario'); 
-                    console.log("He conseguido cerrar sesión"); 
+
+                    if(respuesta.status === 401){
+                        errorDiv.textContent = 'No estás autorizado para cerrar sesión. Por favor, inicia sesión primero.'; 
+                        return;
+                    }
+                    errorDiv.textContent = 'Error al cerrar sesión. Inténtalo más tarde.';
+                    return; 
+
                 }
 
-            }catch(e){
-                const errorDiv = document.querySelector('.mensaje-error'); 
-                errorDiv.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde.'; 
+                //Usuario desconectado: 
+                this.conectado = false; 
+                this.eventoLogout = false; 
+                this.eventoLogin = false;
+                this.eventoRegister = false; 
+                //Borro el token:
+                localStorage.removeItem('token'); 
+                //Redigirijo a mis juegos:
+                app.loadContent('Mi usuario'); 
                 
+
+            }catch(e){
+
+                errorDiv.textContent = 'Error de red o servidor. Inténtalo más tarde.'; 
             } 
         }); 
     }
@@ -304,14 +309,12 @@ class GameApp{
     configurarEventoRegister(){
         if(this.eventoRegister) return;
         this.eventoRegister = true; 
-        console.log("entro en configurar evento register");
         //Cojo form: 
         const registerForm = document.querySelector('.form__register'); 
         const error = document.querySelector('.error');
 
         //Le añado el evento: 
-        registerForm.addEventListener('submit', async (e) => {
-            console.log("Submit form detectado");
+        registerForm.addEventListener('submit', async (e) => { 
             e.preventDefault();
             this.limpiarErroresFormulario();
 
@@ -344,8 +347,7 @@ class GameApp{
                     const errorData = await respuesta.json();
                     //Manejo aquí los errores que me devuelve el backend:
                     if(errorData.errors){
-                        //Si hay errores, los muestro en el formulario:
-                        console.log("entro en errores de laravel por campos vacíos");
+                        //Si hay errores, los muestro en el formulario: 
                         this.mostrarErroresFormulario(errorData.errors);
                         return;
                     }
