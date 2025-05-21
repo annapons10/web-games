@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 
 
 
@@ -15,9 +16,9 @@ class AuthController extends Controller
 {
     //
     public function login(LoginRequest $request){
-        $credentials = $request->only('email', 'password');
+        $validateCredentials = $request->validated(); 
         //Automáticamente Auth::attempt (se dirige a la tabla user y comprueba que es correcto) y devuelve true o false:
-        if(Auth::attempt($credentials)){
+        if(Auth::attempt($validateCredentials)){
             //Si son correctas, genero un token personal con el user correspondiente:
             $user = Auth::user();
             $token = $user->createToken('auth_token')->plainTextToken;
@@ -38,22 +39,15 @@ class AuthController extends Controller
 
     }
 
-    public function register(Request $request){
-        //Primero valido datos con $request y su método que tiene los datos de la petición HTTP:
-        //Si algo falla, laravel devuelve errores e intenta redirigir html, pero como es una api, lo que quiero es que devuelva un json (establezo esto en el headers del fetch): 
-        $validate = $request->validate([
-            "name" => 'required|string|max:255',
-            "email" => 'required|email|unique:users,email',
-            //Para que reciba el confirmed, en el front tiene que tener este name: password_confirmation
-            "password" => 'required|confirmed|min:8',
-        ]);
-
+    public function register(RegisterRequest $request){
+        //Antes de ejecutar el constructo, se valida en el RegisterRequest, si todo es correcto: 
+        $validatedData  = $request->validated(); 
         //Validate es un array asociativo que contiene los datos validados:
         //Así que, creo un nuevo modelo de user, añadiéndole estos datos:
         $user = User::create([
-            'name' => $validate['name'],
-            'email' => $validate['email'],
-            'password' => Hash::make($validate['password']),
+            'name' => $validatedData ['name'],
+            'email' => $validatedData ['email'],
+            'password' => Hash::make($validatedData ['password']),
         ]);
 
         //Autentico al usuario recién creado:
