@@ -14,6 +14,7 @@ class GameApp{
         this.eventoLogin = false;
         this.eventoRegister = false; 
         this.eventoLogout = false; 
+        this.api = 'https://api-games.annaponsprojects.com/'; 
     }
 
 
@@ -269,7 +270,7 @@ class GameApp{
                 //Recupero el token :
                 const token = localStorage.getItem('token'); 
 
-                const respuesta = await fetch('http://127.0.0.1:8000/api/v1/logout', {
+                const respuesta = await fetch(`${this.api}/logout`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -326,7 +327,7 @@ class GameApp{
 
             //Voy al backend para confirmar:
             try{
-                const respuesta = await fetch('http://127.0.0.1:8000/api/v1/register', {
+                const respuesta = await fetch(`${this.api}/register`, {
                     method: 'POST', 
                     headers: {
                         'Content-Type': 'application/json', //-->Le dice a laravel que le estoy enviando un json. 

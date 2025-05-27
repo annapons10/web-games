@@ -395,11 +395,16 @@ li{
 }
 
 .card-logout{
-    width: 22rem;
-    height: 200px;
+    width: 24rem;
+    height: 235px;
     text-align: center;
     background-color: var(--bg-color-teclado);
     color: var(--text-color-claro); 
     border-radius: 20px;
     box-shadow: 6px 6px 6px var(--bg-color-claro);
 }
+
+.btn-logout{
+    margin-right: 8px;
+}
+
