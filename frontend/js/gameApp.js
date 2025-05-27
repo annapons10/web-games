@@ -14,7 +14,7 @@ class GameApp{
         this.eventoLogin = false;
         this.eventoRegister = false; 
         this.eventoLogout = false; 
-        this.api = 'https://api-games.annaponsprojects.com/'; 
+        this.api = 'https://apigames.annaponsprojects.com/api/v1'; 
     }
 
 
@@ -215,7 +215,7 @@ class GameApp{
 
             //Voy al backend para confirmar:
             try{
-                const respuesta = await fetch('http://127.0.0.1:8000/api/v1/login', {
+                const respuesta = await fetch(`${this.api}/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json', 
