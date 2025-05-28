@@ -45,7 +45,9 @@ fetch('./html/footer.html')
 
 //Instancio la game App y cargo lo primero el home con las fotos de los juegos:
 const app = new GameApp();
-app.loadContent('Home'); 
+app.loadContent('Home');
+//Recupero los datos del usuario si los hay, para que no se pierdan al recargar la página.  
+app.recoverUserData();
 
 
 //Añado los eventos para poder ir para atrás y adelante de la página (Router): 

@@ -8,8 +8,11 @@ class GameApp{
         ];
         //Objeto donde voy a guardar las instancias para luego acceder a sus métodos. 
         this.videojuegosInstanciados = {} ;
-        this.conectado = false; 
-        this.user = {}; 
+        this.user = {
+            id: null,
+            token: null,
+            conectado: false,
+        }; 
         //Para no añadir más de un evento a los formularios:
         this.eventoLogin = false;
         this.eventoRegister = false; 
@@ -17,6 +20,21 @@ class GameApp{
         this.api = 'https://apigames.annaponsprojects.com/api/v1'; 
     }
 
+    //Método para recuperar los datos del usuario si los hay: 
+    recoverUserData(){
+        const storedUser = localStorage.getItem('user');
+        if(storedUser){
+            this.user = JSON.parse(storedUser);
+        }else{
+            this.user = {
+                id: null,
+                token: null,
+                conectado: false,
+            };
+        }
+
+        console.log('Datos del usuario recuperados:', this.user); 
+    }
 
     //Método para los clicks de los botones de los juegos para cargar html y instanciar los juegos:
     crearEventosParaTodosLosJuegosAlHacerClick(){
@@ -39,6 +57,7 @@ class GameApp{
 
   
     //MÉTODO PARA INSTANCIAR LOS JUEGOS DEPENDIENDO DE DÓNDE HAGA CLICK EL USUARIO:
+    //AÑADIR A PROPIEDADES THIS.CONECTADO PARA SABER SI ESTÁ CONECTADO O NO Y SUMARLE PUNTUACIÓN A LOS JUEGOS: 
     instanciarJuego(id){
         if(id === 'ahorcado' && !this.videojuegosInstanciados[id]){
             this.videojuegosInstanciados[id] = new JuegoAhorcado(7);
@@ -75,7 +94,7 @@ class GameApp{
                 });
         }else if(page === 'Mi usuario'){
             //No está conectado, mostrar para conectarse: 
-            if(!this.conectado){
+            if(!this.user.conectado){
                 fetch('./html/miUsuario.html')
                 .then(response => response.text())
                 .then(data =>{
@@ -91,7 +110,7 @@ class GameApp{
                 });
             }
             //Está conectado, mostrar para poder hacer logout: 
-            if(this.conectado){ 
+            if(this.user.conectado){ 
                 fetch('./html/logout.html')
                 .then(response => response.text())
                 .then(data =>{
@@ -215,7 +234,7 @@ class GameApp{
 
             //Voy al backend para confirmar:
             try{
-                const respuesta = await fetch('http://127.0.0.1:8000/login', {
+                const respuesta = await fetch('http://127.0.0.1:8000/api/v1/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json', 
@@ -242,14 +261,21 @@ class GameApp{
                 //Si ha funcionado, convierto la respuesta de json a un obj de js: 
                 const data = await respuesta.json(); 
                 //Guardo el token: 
-                localStorage.setItem('token', data.token);
-                //Usuario conectado: 
-                this.conectado = true; 
+                //localStorage.setItem('token', data.token);
+                //Guardo los datos del usuario: 
+                this.user.id = data.id;
+                this.user.token = data.token;
+                this.user.conectado = true; 
+
+                //Guardo el user en localStorage (pasándolo a json): 
+                localStorage.setItem('user', JSON.stringify(this.user));
+
                 //Redigirijo a mis juegos:
                 app.loadContent('Mis juegos'); 
 
 
             }catch(e){  
+                console.error(e);
                 //Error de red, servidor caído, URL mal escrita, etc.
                 errorDiv.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde.'; 
             }
@@ -266,15 +292,12 @@ class GameApp{
         const errorDiv = document.querySelector('.errorLogout');
 
         buttonLogout.addEventListener('click', async () => { 
-            try{
-                //Recupero el token :
-                const token = localStorage.getItem('token'); 
-
-                const respuesta = await fetch('http://127.0.0.1:8000/logout', {
+            try{ 
+                const respuesta = await fetch('http://127.0.0.1:8000/api/v1/logout', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${this.user.token}`, 
                     }
                 });
 
@@ -289,16 +312,19 @@ class GameApp{
 
                 }
 
-                //Usuario desconectado: 
-                this.conectado = false; 
                 this.eventoLogout = false; 
                 this.eventoLogin = false;
                 this.eventoRegister = false; 
                 //Borro el token:
-                localStorage.removeItem('token'); 
+                localStorage.removeItem('user');
+                this.user = {
+                    id: null,
+                    token: null,
+                    conectado: false,
+                }
+
                 //Redigirijo a mis juegos:
                 app.loadContent('Mi usuario'); 
-                
 
             }catch(e){
 
@@ -327,7 +353,7 @@ class GameApp{
 
             //Voy al backend para confirmar:
             try{
-                const respuesta = await fetch('http://127.0.0.1:8000/register', {
+                const respuesta = await fetch('http://127.0.0.1:8000/api/v1/register', {
                     method: 'POST', 
                     headers: {
                         'Content-Type': 'application/json', //-->Le dice a laravel que le estoy enviando un json. 
@@ -363,12 +389,18 @@ class GameApp{
                 }
                 //Si ha funcionado, convierto la respuesta de json a un obj de js:
                 const data = await respuesta.json();
-                //Guardo el token:
-                localStorage.setItem('token', data.token);
-                //Usuario conectado:
-                this.conectado = true;
+
+                //Guardo datos suario conectado:
+                this.user.id = data.id;
+                this.user.token = data.token;
+                this.user.conectado = true;
+
+                //Guardo el user con token en localStorage: 
+                localStorage.setItem('user', JSON.stringify(this.user)); 
+
                 //Cierro el modal:
                 document.querySelector('.modal-backdrop')?.remove();
+                
                 //Redigirijo a mis juegos:
                 app.loadContent('Mis juegos'); 
 
