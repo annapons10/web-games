@@ -122,10 +122,10 @@
 
 .mostrar__mensaje {
     display: block;
-    color: white; 
+    color: var(--granate);
     font-size: 2em;
     text-align: center;
-    text-shadow: 2px 2px 4px var(--color-verde-shadow); 
+    text-shadow: 2px 2px 4px var( --color-box-shadow); 
 }  
 
 

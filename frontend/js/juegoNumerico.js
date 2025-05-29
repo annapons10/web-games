@@ -133,7 +133,7 @@ class JuegoNumerico extends Juego{
             fondo.classList.remove('fondo__transparente');
             mensaje.classList.remove('mostrar__mensaje');
            callback();
-        }, 2000);
+        }, 8000);
     } 
 
     /*PRIMER MÉTODO AL QUE SE LLAMA PARA EMPEZAR TODO. CLICK INICIO JUEGO */ 
