@@ -101,3 +101,31 @@
     margin-right: 2px; 
 }
 
+/* MENSAJE GANADOR / PERDEDOR */
+
+/*FONDO TRANSPARENTE CON EL MENSAJE ÚTLIMA RONDA*/
+.mensaje{
+    display: none;
+}
+
+.fondo__transparente {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; 
+    height: 100%; 
+    background-color: var( --text-color-segundo);
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+.mostrar__mensaje {
+    display: block;
+    color: white; 
+    font-size: 2em;
+    text-align: center;
+    text-shadow: 2px 2px 4px var(--color-verde-shadow); 
+}  
+
+

@@ -7,7 +7,8 @@ class JuegoAhorcado extends Juego {
     #numerosErrores;
     #letrasEscritas;
     #imagenesAhorcado;
-    constructor(maximaJugadas) {
+    #user; 
+    constructor(maximaJugadas, user) {
         super('Juego Ahorcado', 'Juego de palabras', 0);
         this.#maximaJugadas = maximaJugadas;
         this.#palabras = ['AGUA', 'GATO', 'ORDENADOR', 'PROGRAMADORA', 'NATURALEZA', 'BOSQUE', 'ACAMPADA']; 
@@ -24,7 +25,8 @@ class JuegoAhorcado extends Juego {
             './imgAhorcado/sexta.jpg',
             './imgAhorcado/septima.jpg',
             './imgAhorcado/octava.jpg'
-        ]; 
+        ];
+        this.#user = user; 
     } 
 
     //Setters:
@@ -72,7 +74,7 @@ class JuegoAhorcado extends Juego {
     } 
 
     #jugarAhorcado(letra) {
-        //CAMBIAR EL 7 COMO PARAMETRO , PROPRIEDAD, NO NÚMERO MÁGICO. 
+
         if (this.#numerosErrores < this.#maximaJugadas){ //Confirmo que hay jugadas. 
             this.#letrasEscritas.push(letra); //Introduzco la letra para llevar el seguimiento.
 
@@ -94,11 +96,12 @@ class JuegoAhorcado extends Juego {
             if (!this.#palabraOculta.includes('_')) { //Si ya no tiene '_' significa que ha completado la palabra.//NO COMPARA BIEN LOS OBJETOS. //si hay espacios en blanco lo vale.
                 this.#mostrarLetraEnPantalla();
                 this.#finalizarJuego(); 
+                this.#mostrarMensajePartidaFinalizada('¡Felicidades! Has ganado el juego. Sumas 10 puntos.'); 
             }
 
-        } else {
-            //Mostrar que ha perdido. 
+        } else { 
             this.#finalizarJuego(); 
+            this.#mostrarMensajePartidaFinalizada('¡Has perdido! La palabra era: ' + this.#palabraAleatoria + '.');   
         }
 
 
@@ -179,11 +182,31 @@ class JuegoAhorcado extends Juego {
              botonTeclado.removeEventListener('click', this.#recorrerBotones);
         }); //Es una opción de los listeners. Hace que el evento ocurra una vez y luego se elimine automáticamente. 
     };
+
+    //MOSTRAR MENSAJE QUE HA GANADO Y LOS PUNTOS: 
+    #mostrarMensajePartidaFinalizada(resultado){
+        const fondo = document.querySelector('.fondo');
+        const mensaje = document.querySelector('.mensaje');
+        mensaje.textContent = resultado; 
+        fondo.classList.add('fondo__transparente');
+        mensaje.classList.add('mostrar__mensaje'); 
+        //Llamar fetch para actualizar los puntos del usuario: 
+        this.#eliminarMensajePartidaFinalizada(); 
+    }
+
+    #eliminarMensajePartidaFinalizada() {
+        setTimeout(() => {
+            const fondo = document.querySelector('.fondo');
+            const mensaje = document.querySelector('.mensaje');
+            fondo.classList.remove('fondo__transparente');
+            mensaje.classList.remove('mostrar__mensaje'); 
+        }, 3000); 
+    } 
+    
     
     #eventoReiniciarJuegoBoton(){ //La persona puede clickar también a media partida por si quiere empezar una nueva. 
         const botonVolverAjugar = document.getElementById('botonVolverAjugar');
-        if (!botonVolverAjugar) {
-            console.error("El botón para reiniciar el juego no existe.");
+        if (!botonVolverAjugar) { 
             return;
         }
         //HACERELO CON ONCLICK. 

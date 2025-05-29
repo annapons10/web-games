@@ -8,8 +8,9 @@ class JuegoTresEnRaya extends Juego{
     #numJugada;
     #primerTurno;
     #turnoActual;
+    #user; 
 
-    constructor() {
+    constructor(user) {
         super('Juego Tres En Raya', 'Juego de estrategia', 0);
         // Inicialización de los atributos privados: 
         this.#matrizJuego = [
@@ -26,6 +27,7 @@ class JuegoTresEnRaya extends Juego{
         this.#primerTurno = this.#fichaPersona; // Primero le toca persona
         this.#turnoActual = this.#primerTurno;
         this.#numJugada = 0; // Para saber en qué jugada me encuentro
+        this.#user = user; 
     }
     
     //Controlar inicio juego:

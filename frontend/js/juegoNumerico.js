@@ -7,7 +7,8 @@ class JuegoNumerico extends Juego{
     #resultado;
     #respuesta;
     #puntos;
-    constructor(rondas, operacionesPosibles, tope, numOperaciones){
+    #user;
+    constructor(rondas, operacionesPosibles, tope, numOperaciones, user){
         super('Juego Numerico', 'Juego de matematicas', 0);
         this.#rondas = rondas; 
         this.#operacionesPosibles = operacionesPosibles; 
@@ -21,6 +22,7 @@ class JuegoNumerico extends Juego{
         this.idTemporizadorRespuesta = null;
         this.temporizadorEvento = null;
         this.tempoGestionarRondaTrue = null; 
+        this.#user = user; 
     }
 
     //¿Cambiar a Jugar? Pone todo el blanco para empezar de 0. 

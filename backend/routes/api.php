@@ -23,7 +23,7 @@ Route::prefix('v1')->group(function(){
 
     //Ruta protegida para ver los juegos y su puntuación, este middleware es el que valida el token devuelvo por front (guardado en la bd):
     //La ruta middleware le inyecta el usuario autenticado al $request, por eso luego se puede acceder a él directamente, o devuelve null : 
-    //Al darle click al botón salir, dirigir a esta ruta de mi api (conectar esto con frontend): 
-    Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+    //Va a la BD y comprueba si el token es válido, si no lo es devuelve un error 401: 
+    Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']); 
 
-});
+}); 

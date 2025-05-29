@@ -70,11 +70,11 @@ class GameApp{
     //AÑADIR A PROPIEDADES THIS.CONECTADO PARA SABER SI ESTÁ CONECTADO O NO Y SUMARLE PUNTUACIÓN A LOS JUEGOS: 
     instanciarJuego(id){
         if(id === 'ahorcado' && !this.videojuegosInstanciados[id]){
-            this.videojuegosInstanciados[id] = new JuegoAhorcado(7);
+            this.videojuegosInstanciados[id] = new JuegoAhorcado(7, this.user);
         }else if(id === 'juegoNumerico' && !this.videojuegosInstanciados[id]){
-            this.videojuegosInstanciados[id] = new JuegoNumerico(10, ['+', '-'], 3, 4); 
+            this.videojuegosInstanciados[id] = new JuegoNumerico(10, ['+', '-'], 3, 4, this.user); 
         }else if(id === 'tresEnRaya' && !this.videojuegosInstanciados[id]){
-            this.videojuegosInstanciados[id] = new JuegoTresEnRaya();
+            this.videojuegosInstanciados[id] = new JuegoTresEnRaya(this.user); 
         }
     }
 
