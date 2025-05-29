@@ -83,7 +83,8 @@ class JuegoTresEnRaya extends Juego{
                 if (this.#numJugada >= 5) {
                     let respuestaHaGanadoPersona = this.#comprobarSiPersonaHaGanadoPersona();
                     if (respuestaHaGanadoPersona) {
-                        this.#mensajeFinalizaJuego('Ha ganado Jugador O');
+                        this.#mensajeFinalizaJuego('¡Has ganado! Sumas 10 puntos');
+                        //Llamar al fetch para sumar los puntos en la BD: 
                         this.#eliminarMensajeFinalizaJuego();
                         return;
                     }
@@ -227,9 +228,10 @@ class JuegoTresEnRaya extends Juego{
             this.#posicionarFichaMaquina(respuestaDobleFichaGanadora);
             //Mostrar que ha ganado la máquina. 
             setTimeout(() => {
-                this.#mensajeFinalizaJuego('Ha ganado Jugador X');
+                this.#mensajeFinalizaJuego('¡Te ha ganado la máquina! No sumas puntos.');
                 this.#eliminarMensajeFinalizaJuego();
-            }, 1000);
+            }, 1000); 
+
             return;
         }else{
             respuestaFichaEvitarPerder = this.#posicionEntreDos(this.#fichaPersona);

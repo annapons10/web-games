@@ -8,6 +8,7 @@ class JuegoNumerico extends Juego{
     #respuesta;
     #puntos;
     #user;
+    #puntosGanador; 
     constructor(rondas, operacionesPosibles, tope, numOperaciones, user){
         super('Juego Numerico', 'Juego de matematicas', 0);
         this.#rondas = rondas; 
@@ -18,6 +19,7 @@ class JuegoNumerico extends Juego{
         this.#resultado = 0;
         this.#respuesta = false; 
         this.#puntos = 0; 
+        this.#puntosGanador = 5;
         this.temporizadorAnimacion = null;
         this.idTemporizadorRespuesta = null;
         this.temporizadorEvento = null;
@@ -133,7 +135,7 @@ class JuegoNumerico extends Juego{
             fondo.classList.remove('fondo__transparente');
             mensaje.classList.remove('mostrar__mensaje');
            callback();
-        }, 8000);
+        }, 3000);
     } 
 
     /*PRIMER MÉTODO AL QUE SE LLAMA PARA EMPEZAR TODO. CLICK INICIO JUEGO */ 
@@ -228,10 +230,18 @@ class JuegoNumerico extends Juego{
     #comprobarRonda(){
         //Si es última: 
         if (this.#contadorRondas >= this.#rondas){
-            this.#mostrarMensajeUltimaRonda(`Estos han sido tus puntos: ${this.#puntos}`);
+            //Compruebo si ha ganado o no: 
+            if(this.#puntos >= 5){
+                this.#mostrarMensajeUltimaRonda(`¡Has ganado! Sumas 10 puntos`);
+                //Llamar fetch para sumarle los puntos en backend. 
+            } else{
+                this.#mostrarMensajeUltimaRonda(`¡Has perdido! No sumas nigún punto`);  
+            } 
+            
             this.#eliminarMensajeUltimaRonda(() => this.#reiniciarJuego()); 
             return; 
         } 
+
         //Si es penúltima:
         if (this.#contadorRondas === this.#rondas - 1) {
             this.#mostrarMensajeUltimaRonda('Última ronda');
