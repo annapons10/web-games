@@ -8,7 +8,7 @@ fetch('./html/header.html')
     })
         
     .then(data =>{
-        document.getElementById('header').innerHTML = data;
+        document.getElementById('header').innerHTML = data; 
         //PARA CERRAR HAMBURGUESA CUANDO DOY CLICK EN ALGUNA OPCIón:
         //Devuelve un array. 
         let elementosMenu = document.querySelectorAll('.nav-links > li');
@@ -47,8 +47,7 @@ fetch('./html/footer.html')
 const app = new GameApp();
 app.loadContent('Home');
 //Recupero los datos del usuario si los hay, para que no se pierdan al recargar la página.  
-app.recoverUserData();
+app.recoverUserData(); 
 
-
-//Añado los eventos para poder ir para atrás y adelante de la página (Router): 
+//Añado los eventos para poder ir para atrás y adelante de la página (Router), escucha cambios en # el hash de la URL:  
 window.addEventListener('hashchange', app.router.bind(app)); 

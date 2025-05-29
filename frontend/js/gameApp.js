@@ -17,6 +17,7 @@ class GameApp{
         this.eventoLogin = false;
         this.eventoRegister = false; 
         this.eventoLogout = false; 
+        //Para producción: 
         this.api = 'https://apigames.annaponsprojects.com/api/v1'; 
     }
 
@@ -24,17 +25,26 @@ class GameApp{
     recoverUserData(){
         const storedUser = localStorage.getItem('user');
         if(storedUser){
-            this.user = JSON.parse(storedUser);
+            this.user = JSON.parse(storedUser); 
         }else{
-            this.user = {
-                id: null,
-                token: null,
-                conectado: false,
-            };
-        }
-
-        console.log('Datos del usuario recuperados:', this.user); 
+            this.resetUserData();
+        } 
     }
+
+    resetEvents(){ 
+        this.eventoLogin = false;
+        this.eventoRegister = false; 
+        this.eventoLogout = false;
+    }  
+
+    resetUserData(){  
+        this.user = {
+            id: null,
+            token: null,
+            conectado: false,
+        }
+    }
+
 
     //Método para los clicks de los botones de los juegos para cargar html y instanciar los juegos:
     crearEventosParaTodosLosJuegosAlHacerClick(){
@@ -70,6 +80,7 @@ class GameApp{
 
     //Cargo dinámicamente las páginas en index.html en main depdende de donde haga click: 
     loadContent(page){ 
+
         if(page === 'Home'){
             //TRAIGO LO QUE HAY EN HEADER.HTML PERO ESTOY EN INDEX.HTML
             fetch('./html/home.html') 
@@ -87,12 +98,13 @@ class GameApp{
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
-                    this.mostrarJuegosEnPantalla();
+                    this.mostrarJuegosEnPantalla(); 
                 })
                 .catch(error => {
                     document.querySelector('.container__home').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
                 });
-        }else if(page === 'Mi usuario'){
+        }else if(page === 'Mi usuario'){ 
+
             //No está conectado, mostrar para conectarse: 
             if(!this.user.conectado){
                 fetch('./html/miUsuario.html')
@@ -107,7 +119,7 @@ class GameApp{
                 })
                 .catch(error => {
                     document.querySelector('.container__home').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
-                });
+                }); 
             }
             //Está conectado, mostrar para poder hacer logout: 
             if(this.user.conectado){ 
@@ -115,8 +127,8 @@ class GameApp{
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
-                    //Activar el click en el botón cerrar sesión:
-                    this.configurarEventoLogout(); 
+                    //Activar el click en el botón cerrar sesión: 
+                    this.configurarEventoLogout();  
                 })
                 .catch(error => {
                     document.querySelector('.container__home').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
@@ -209,7 +221,7 @@ class GameApp{
             this.loadContent('Mi usuario'); 
         }
 
-    }
+    } 
 
     //Método para el login: 
     configurarEventoLogin(){ 
@@ -260,8 +272,7 @@ class GameApp{
 
                 //Si ha funcionado, convierto la respuesta de json a un obj de js: 
                 const data = await respuesta.json(); 
-                //Guardo el token: 
-                //localStorage.setItem('token', data.token);
+
                 //Guardo los datos del usuario: 
                 this.user.id = data.id;
                 this.user.token = data.token;
@@ -286,10 +297,11 @@ class GameApp{
 
     //Método para el logout:
     configurarEventoLogout(){ 
-        if(this.eventoLogout) return;
+
+        if(this.eventoLogout) return; 
         this.eventoLogout = true;
         const buttonLogout = document.querySelector('.btn-logout');
-        const errorDiv = document.querySelector('.errorLogout');
+        const errorDiv = document.querySelector('.errorLogout'); 
 
         buttonLogout.addEventListener('click', async () => { 
             try{ 
@@ -312,16 +324,10 @@ class GameApp{
 
                 }
 
-                this.eventoLogout = false; 
-                this.eventoLogin = false;
-                this.eventoRegister = false; 
+                this.resetEvents(); 
                 //Borro el token:
                 localStorage.removeItem('user');
-                this.user = {
-                    id: null,
-                    token: null,
-                    conectado: false,
-                }
+                this.resetUserData(); 
 
                 //Redigirijo a mis juegos:
                 app.loadContent('Mi usuario'); 
@@ -400,7 +406,7 @@ class GameApp{
 
                 //Cierro el modal:
                 document.querySelector('.modal-backdrop')?.remove();
-                
+
                 //Redigirijo a mis juegos:
                 app.loadContent('Mis juegos'); 
 
