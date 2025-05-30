@@ -101,12 +101,23 @@ class JuegoAhorcado extends Juego {
 
         } else { 
             this.#finalizarJuego(); 
-            this.#mostrarMensajePartidaFinalizada('¡Has perdido! La palabra era: ' + this.#palabraAleatoria + '.');   
+            this.#mostrarMensajePartidaFinalizada('¡Has perdido! La palabra era: ' + this.#palabraAleatoria + '.');  
+            this.#mostrarTodaPalabraPantalla(); 
         }
 
 
     }
 
+    #mostrarTodaPalabraPantalla(){
+        let containerLetra = document.getElementById('div__letra'); //Cojo el contenedor principal. 
+        let spans = containerLetra.querySelectorAll('span'); // Cojo los elem de dentro del div para recorrerlos. 
+        for (let i = 0; i < this.#palabraAleatoria.length; i++) {
+            if(spans[i].innerHTML === ''){
+                continue;
+            }
+            spans[i].innerHTML = this.#palabraAleatoria[i]; 
+        }
+    } 
 
     //MOVIMIENTO DOM DINÁMICO:
     //CREO UN MÉTODO PARA QUE CADA VEZ QUE LA PERSONA FALLE EN UNA LETRA, SE LLAME A ÉSTE Y SE VAYA IMPRIMIENDO EL "AHORCADO"
