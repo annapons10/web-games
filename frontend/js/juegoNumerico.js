@@ -10,7 +10,7 @@ class JuegoNumerico extends Juego{
     #user;
     #puntosGanador; 
     constructor(rondas, operacionesPosibles, tope, numOperaciones, user){
-        super('Juego Numerico', 'Juego de matematicas', 0);
+        super('numerico', 'Juego de matematicas', 0);
         this.#rondas = rondas; 
         this.#operacionesPosibles = operacionesPosibles; 
         this.#tope = tope; 

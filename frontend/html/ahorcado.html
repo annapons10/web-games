@@ -1,5 +1,5 @@
 
-<section id="ahorcado__container" class="ahorcado__container">
+<section id="ahorcado__container" class="ahorcado__container ahorcado__focus">
     <div id="div__letra" class="div__letra"></div>
     <div id="div__img-ahorcado" class="div__img-ahorcado">
         <img id="img__ahorcado" class="img__ahorcado" alt="Imágen ahorcado">
@@ -11,3 +11,23 @@
 <div class="fondo">
     <h2 class="mensaje"></h2>
 </div>
+
+
+<!-- Modal explicación juego: -->
+<div class="modal fade" id="modal-ahorcado" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title">Juego Ahorcado</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Bienvenido/a al juego del Ahorcado (Adivina la palabra): tendrás 7 intentos.  
+          Si consigues adivinar la palabra antes de que se acaben, ¡has ganado la partida!  
+          Y si estás logueado, sumarás 10 puntos.
+        </p>
+      </div>
+    </div>
+  </div>
+</div> 

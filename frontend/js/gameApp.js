@@ -154,10 +154,11 @@ class GameApp{
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
                     this.videojuegosInstanciados['ahorcado'].crearTecladoPantalla(); 
+                    this.videojuegosInstanciados['ahorcado'].mostrarModalInicio(); 
                     this.videojuegosInstanciados['ahorcado'].iniciarJuego();
                 })
                 .catch(error => {
-                    document.querySelector('.container__home').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
+                    document.querySelector('.ahorcado__container').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
                 });
                 
                
@@ -167,11 +168,12 @@ class GameApp{
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data 
+                    this.videojuegosInstanciados['juegoNumerico'].mostrarModalInicio(); 
                     this.videojuegosInstanciados['juegoNumerico'].inicioJuegoBoton();  
                     const botonVolver = document.getElementById('volverJugar');
                 })
                 .catch(error => {
-                    document.querySelector('.container__home').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
+                    document.querySelector('.general__container').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
                 });
     
         }else if(game === 'tresEnRaya'){
@@ -179,10 +181,11 @@ class GameApp{
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data 
+                    this.videojuegosInstanciados['tresEnRaya'].mostrarModalInicio(); 
                     this.videojuegosInstanciados['tresEnRaya'].iniciarJuego();
                 })
                 .catch(error => {
-                    document.querySelector('.container__home').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
+                    document.querySelector('.container').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
                 });
         }
     }

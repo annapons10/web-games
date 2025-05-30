@@ -11,7 +11,7 @@ class JuegoTresEnRaya extends Juego{
     #user; 
 
     constructor(user) {
-        super('Juego Tres En Raya', 'Juego de estrategia', 0);
+        super('tresEnRaya', 'Juego de estrategia', 0);
         // Inicialización de los atributos privados: 
         this.#matrizJuego = [
             [undefined, undefined, undefined],
