@@ -36,9 +36,13 @@ class ScoreController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(int $id)
     {
-        //
+        //Con el propio id que recibe con el método (Put/Patch): 
+        /* Score::where($id)->update(
+            
+        ) */
+
     }
 
     /**

@@ -1,3 +1,5 @@
+
+//import { API } from './config.js';
 class GameApp{
     constructor(){
         // Aquí tengo los metadatos de los juegos para mostrar en "mis juegos" y conectar con la BSDD: 
@@ -8,17 +10,18 @@ class GameApp{
         ];
         //Objeto donde voy a guardar las instancias para luego acceder a sus métodos. 
         this.videojuegosInstanciados = {} ;
+        //¿ME GUARDO TODOS LOS SCORES CON LOS ID DE LOS JUEGOS DE ESTE USER EN CONCRETO? ¿LOS PASO A CADA JUEGO? 
         this.user = {
             id: null,
             token: null,
             conectado: false,
         }; 
+        this.scores = []; 
         //Para no añadir más de un evento a los formularios:
         this.eventoLogin = false;
         this.eventoRegister = false; 
         this.eventoLogout = false; 
-        //Para producción: 
-        this.api = 'https://apigames.annaponsprojects.com/api/v1'; 
+       
     }
 
     //Método para recuperar los datos del usuario si los hay: 
@@ -287,6 +290,7 @@ class GameApp{
                 //Redigirijo a mis juegos:
                 app.loadContent('Mis juegos'); 
 
+                //CUANDO SE HACE LOGIN, PREGUNTO SI HAY SCORE PARA CADA JUEGO CON ESTE USER, SI NO, SE CREA UN SCORE CON 0: (¿NO HACE FALTA SI YA SE CREAN EN REGISTER?)
 
             }catch(e){  
                 console.error(e);
@@ -331,6 +335,7 @@ class GameApp{
                 //Borro el token:
                 localStorage.removeItem('user');
                 this.resetUserData(); 
+                this.scores = []; 
 
                 //Redigirijo a mis juegos:
                 app.loadContent('Mi usuario'); 
@@ -404,6 +409,9 @@ class GameApp{
                 this.user.token = data.token;
                 this.user.conectado = true;
 
+                this.scores = data.user.scores; 
+                console.log(`estos son los scores:`, this.scores); 
+
                 //Guardo el user con token en localStorage: 
                 localStorage.setItem('user', JSON.stringify(this.user)); 
 
@@ -412,6 +420,8 @@ class GameApp{
 
                 //Redigirijo a mis juegos:
                 app.loadContent('Mis juegos'); 
+
+                //AL HACER REGISTER, SE CREA UN SCORE PARA CADA JUEGO EN 0 DE ESTE USER:  
 
             }catch(e){ 
                 //Manejo los errores de conexión, url, etc:

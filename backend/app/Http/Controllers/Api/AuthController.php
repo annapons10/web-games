@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-
+use App\Models\Game;
+use App\Models\Score; 
 
 
 class AuthController extends Controller
@@ -50,6 +51,16 @@ class AuthController extends Controller
             'password' => Hash::make($validatedData ['password']),
         ]);
 
+        //Creo scores en 0 para cada juego que exista: 
+        $games = Game::all();
+        forEach($games as $game){
+            Score::create([
+                'user_id' => $user->id,
+                'game_id' => $game->id,
+                'score' => 0,
+            ]); 
+        } 
+
         //Autentico al usuario recién creado:
         Auth::login($user);
         //Genero un token personal para el usuario:
@@ -58,7 +69,8 @@ class AuthController extends Controller
         //Retorno al front que todo ha ido bien, 201 Created success:
         return response()->json([
             'message' => 'Registro exitoso',
-            'user' => $user,
+            //load: eager loading, laravel carga los usuarios junto con sus scores(por su relación establecida): 
+            'user' => $user->load('scores'),
             'token' => $token, 
         ], 201); 
         

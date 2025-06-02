@@ -1,3 +1,5 @@
+
+//import { API } from './config.js';
 class JuegoTresEnRaya extends Juego{
     // Declaración de los atributos privados
     #matrizJuego;

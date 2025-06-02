@@ -11,12 +11,18 @@ use App\Http\Controllers\Api\AuthController;
 
 //Versiono ruta API:
 Route::prefix('v1')->group(function(){
+    //DEFAULT:
+    Route::get('/', function () {
+        return response()->json(['message' => 'API Laravel funcionando']);
+    }); 
+
     //Rutas post para el registro y el login: 
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register',[ AuthController::class, 'register']);
     
     //Rutas Api: 
-    Route::apiResource('games', GameController::class);
+    Route::apiResource('games', GameController::class); 
+    //Sumar puntuación: 
     Route::apiResource('genres', GenreController::class);
     Route::apiResource('scores', ScoreController::class);
     Route::apiResource('users', UserController::class);

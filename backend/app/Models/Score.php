@@ -10,8 +10,8 @@ class Score extends Model
 {
     
     protected $fillable = [
-        'idGame',
-        'idUser',
+        'game_id',
+        'user_id',
         'score'
     ];
 

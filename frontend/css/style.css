@@ -408,3 +408,13 @@ li{
     margin-right: 8px;
 }
 
+/* MODALES REGLAS JUEGOS: */
+.container__modal{
+    min-height: 20rem;
+    font-size: 1.2em;
+    line-height: 1.6;
+}
+
+.container__modal p{
+    text-align: justify;
+}

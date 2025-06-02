@@ -1,4 +1,5 @@
 //SE CARGA JUEGO AHORCADO: 
+//import { API } from './config.js';
 class JuegoAhorcado extends Juego {
     #palabraAleatoria;
     #palabraOculta;
@@ -101,7 +102,7 @@ class JuegoAhorcado extends Juego {
 
         } else { 
             this.#finalizarJuego(); 
-            this.#mostrarMensajePartidaFinalizada('¡Has perdido! La palabra era: ' + this.#palabraAleatoria + '.');  
+            this.#mostrarMensajePartidaFinalizada(`¡Has perdido! La palabra era: ${this.#palabraAleatoria}`);  
             this.#mostrarTodaPalabraPantalla(); 
         }
 
@@ -202,6 +203,7 @@ class JuegoAhorcado extends Juego {
         fondo.classList.add('fondo__transparente');
         mensaje.classList.add('mostrar__mensaje'); 
         //Llamar fetch para actualizar los puntos del usuario: 
+        this.#sumarPuntuacionUser();
         this.#eliminarMensajePartidaFinalizada(); 
     }
 
@@ -213,6 +215,15 @@ class JuegoAhorcado extends Juego {
             mensaje.classList.remove('mostrar__mensaje'); 
         }, 3000); 
     } 
+    
+    #sumarPuntuacionUser(){
+        if(this.#user.conectado === false){
+            return; 
+        }
+
+        //fetch
+        fetch('')
+    }
     
     
     #eventoReiniciarJuegoBoton(){ //La persona puede clickar también a media partida por si quiere empezar una nueva. 

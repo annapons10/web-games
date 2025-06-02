@@ -1,3 +1,5 @@
+
+//import { API } from './config.js';
 class JuegoNumerico extends Juego{
     #rondas;
     #operacionesPosibles;
