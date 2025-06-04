@@ -12,13 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('scores', function (Blueprint $table) {
-            //Primero creo las fk:
+            $table->id(); 
             $table->foreignId('game_id')->constrained('games');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->integer('score');
+            $table->integer('score')->default(0);
             $table->timestamps();
-            //Creo la pk compuesta:
-            $table->primary(['game_id', 'user_id']);
+            $table->unique(['game_id', 'user_id']); //Esto garantiza que no se dupliquen pares juego-usuario. 
         });
     }
 
