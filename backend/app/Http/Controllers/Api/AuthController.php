@@ -21,13 +21,14 @@ class AuthController extends Controller
         //Automáticamente Auth::attempt (se dirige a la tabla user y comprueba que es correcto) y devuelve true o false:
         if(Auth::attempt($validateCredentials)){
             //Si son correctas, genero un token personal con el user correspondiente:
+            // Es una instancia de User (modelo Eloquent): 
             $user = Auth::user();
             $token = $user->createToken('auth_token')->plainTextToken;
 
             //Le mando el token y el front ya se encarga de él:
             return response()->json([
                 'message' => 'Login exitoso',
-                'user' => $user,
+                'user' => $user->load('scores'),
                 'token' => $token,
             ], 200); 
 

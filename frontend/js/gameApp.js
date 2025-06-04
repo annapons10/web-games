@@ -34,6 +34,10 @@ class GameApp{
         } 
     }
 
+    resetScoresData(){
+        this.scores = [];
+    }
+
     resetEvents(){ 
         this.eventoLogin = false;
         this.eventoRegister = false; 
@@ -283,6 +287,7 @@ class GameApp{
                 this.user.id = data.id;
                 this.user.token = data.token;
                 this.user.conectado = true; 
+                this.scores = data.user.scores; 
 
                 //Guardo el user en localStorage (pasándolo a json): 
                 localStorage.setItem('user', JSON.stringify(this.user));
@@ -335,7 +340,7 @@ class GameApp{
                 //Borro el token:
                 localStorage.removeItem('user');
                 this.resetUserData(); 
-                this.scores = []; 
+                this.resetScoresData();
 
                 //Redigirijo a mis juegos:
                 app.loadContent('Mi usuario'); 
@@ -410,7 +415,6 @@ class GameApp{
                 this.user.conectado = true;
 
                 this.scores = data.user.scores; 
-                console.log(`estos son los scores:`, this.scores); 
 
                 //Guardo el user con token en localStorage: 
                 localStorage.setItem('user', JSON.stringify(this.user)); 
