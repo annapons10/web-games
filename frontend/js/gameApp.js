@@ -26,6 +26,7 @@ class GameApp{
 
     //Método para recuperar los datos del usuario si los hay: 
     recoverUserData(){
+        console.log("esto aqui"); 
         const storedUser = localStorage.getItem('user');
         const storeScores = localStorage.getItem('scores'); 
         if(storedUser && storeScores){
@@ -35,7 +36,7 @@ class GameApp{
             this.resetUserData();
             this.resetScoresData(); 
         } 
-    }
+    } 
 
     resetScoresData(){
         this.scores = [];
@@ -80,11 +81,12 @@ class GameApp{
     //AÑADIR A PROPIEDADES THIS.CONECTADO PARA SABER SI ESTÁ CONECTADO O NO Y SUMARLE PUNTUACIÓN A LOS JUEGOS: 
     instanciarJuego(id){
         if(id === 'ahorcado' && !this.videojuegosInstanciados[id]){
-            this.videojuegosInstanciados[id] = new JuegoAhorcado(7, this.user);
+            console.log(this.scores[0]); 
+            this.videojuegosInstanciados[id] = new JuegoAhorcado(7, this.user, this.scores[0]);
         }else if(id === 'juegoNumerico' && !this.videojuegosInstanciados[id]){
-            this.videojuegosInstanciados[id] = new JuegoNumerico(10, ['+', '-'], 3, 4, this.user); 
+            this.videojuegosInstanciados[id] = new JuegoNumerico(10, ['+', '-'], 3, 4, this.user, this.scores[1]); 
         }else if(id === 'tresEnRaya' && !this.videojuegosInstanciados[id]){
-            this.videojuegosInstanciados[id] = new JuegoTresEnRaya(this.user); 
+            this.videojuegosInstanciados[id] = new JuegoTresEnRaya(this.user, this.scores[2]); 
         }
     }
 
@@ -296,6 +298,7 @@ class GameApp{
                 localStorage.setItem('user', JSON.stringify(this.user));
                 //Y los scores:
                 localStorage.setItem('scores', JSON.stringify(this.scores)); 
+                console.log(this.scores); 
 
                 //Redigirijo a mis juegos:
                 app.loadContent('Mis juegos'); 
@@ -344,6 +347,7 @@ class GameApp{
                 this.resetEvents(); 
                 //Borro el token:
                 localStorage.removeItem('user');
+                localStorage.removeItem('scores'); 
                 this.resetUserData(); 
                 this.resetScoresData();
 

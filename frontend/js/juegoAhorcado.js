@@ -9,7 +9,8 @@ class JuegoAhorcado extends Juego {
     #letrasEscritas;
     #imagenesAhorcado;
     #user; 
-    constructor(maximaJugadas, user) {
+    #scores; 
+    constructor(maximaJugadas, user, scores) {
         super('ahorcado', 'Juego de palabras', 0);
         this.#maximaJugadas = maximaJugadas;
         this.#palabras = ['AGUA', 'GATO', 'ORDENADOR', 'PROGRAMADORA', 'NATURALEZA', 'BOSQUE', 'ACAMPADA']; 
@@ -28,6 +29,7 @@ class JuegoAhorcado extends Juego {
             './imgAhorcado/octava.jpg'
         ];
         this.#user = user; 
+        this.#scores = scores; 
     } 
 
     //Setters:
@@ -216,13 +218,36 @@ class JuegoAhorcado extends Juego {
         }, 3000); 
     } 
     
-    #sumarPuntuacionUser(){
+     async #sumarPuntuacionUser(){
         if(this.#user.conectado === false){
+            console.log("no estoy conectada"); 
             return; 
         }
 
-        //fetch
-        fetch('')
+        if(this.#user.conectado === true && this.#scores){
+            try{
+                const respuesta = await fetch('http://127.0.0.1:8000/api/v1/scores/${this.#scores.id}', {
+                    method: 'PATCH', //Para actualizar solo la puntuación. 
+                    headers : {
+                        'Content-Type': 'application/json', 
+                        'Accept': 'application/json', 
+                    }
+
+                }); 
+
+                if(!respuesta.ok){
+                    console.log("algo no ha ido bien");
+                }
+
+                console.log(`tengo la data ${respuesta}`); 
+
+
+            }catch(e){
+                console.log(e); 
+            }
+ 
+        }
+
     }
     
     

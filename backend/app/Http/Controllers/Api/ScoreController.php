@@ -38,10 +38,12 @@ class ScoreController extends Controller
      */
     public function update(int $id)
     {
-        //Con el propio id que recibe con el método (Put/Patch): 
-        /* Score::where($id)->update(
-            
-        ) */
+        //Hacer la suma aquí: 
+       Score::where('id', $id)->increment('score', 10);
+       return response()->json([
+            'message' => 'Score + 10 actualizado correctamente'
+       ]); 
+
 
     }
 
