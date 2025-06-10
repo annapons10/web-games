@@ -27,10 +27,13 @@ class GameApp{
     //Método para recuperar los datos del usuario si los hay: 
     recoverUserData(){
         const storedUser = localStorage.getItem('user');
-        if(storedUser){
+        const storeScores = localStorage.getItem('scores'); 
+        if(storedUser && storeScores){
             this.user = JSON.parse(storedUser); 
+            this.scores = JSON.parse(storeScores); 
         }else{
             this.resetUserData();
+            this.resetScoresData(); 
         } 
     }
 
@@ -291,6 +294,8 @@ class GameApp{
 
                 //Guardo el user en localStorage (pasándolo a json): 
                 localStorage.setItem('user', JSON.stringify(this.user));
+                //Y los scores:
+                localStorage.setItem('scores', JSON.stringify(this.scores)); 
 
                 //Redigirijo a mis juegos:
                 app.loadContent('Mis juegos'); 
@@ -342,7 +347,7 @@ class GameApp{
                 this.resetUserData(); 
                 this.resetScoresData();
 
-                //Redigirijo a mis juegos:
+                //Redigirijo a mis juegos: 
                 app.loadContent('Mi usuario'); 
 
             }catch(e){
@@ -418,6 +423,8 @@ class GameApp{
 
                 //Guardo el user con token en localStorage: 
                 localStorage.setItem('user', JSON.stringify(this.user)); 
+                //Y los scores:
+                localStorage.setItem('scores', JSON.stringify(this.scores)); 
 
                 //Cierro el modal:
                 document.querySelector('.modal-backdrop')?.remove();
