@@ -38,14 +38,16 @@ class ScoreController extends Controller
      */
     public function update(int $id)
     {
-        //Hacer la suma aquí: 
-       Score::where('id', $id)->increment('score', 10);
-       return response()->json([
-            'message' => 'Score + 10 actualizado correctamente'
-       ]); 
+        //Hacer la suma aquí, si no necuentra el score, manda 404: 
+        $score = Score::findOrFail($id);
+        $score->score += 10;
+        $currentScore = $score->score;  
+        return response()->json([
+                'message' => 'Score + 10 actualizado correctamente', 
+                'score' => $currentScore
+        ]); 
 
-
-    }
+    } 
 
     /**
      * Remove the specified resource from storage.

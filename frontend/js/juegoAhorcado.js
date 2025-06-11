@@ -100,6 +100,8 @@ class JuegoAhorcado extends Juego {
                 this.#mostrarLetraEnPantalla();
                 this.#finalizarJuego(); 
                 this.#mostrarMensajePartidaFinalizada('¡Felicidades! Has ganado el juego. Sumas 10 puntos.'); 
+                //Llamar fetch para actualizar los puntos del usuario: 
+                this.#sumarPuntuacionUser(); 
             }
 
         } else { 
@@ -204,8 +206,6 @@ class JuegoAhorcado extends Juego {
         mensaje.textContent = resultado; 
         fondo.classList.add('fondo__transparente');
         mensaje.classList.add('mostrar__mensaje'); 
-        //Llamar fetch para actualizar los puntos del usuario: 
-        this.#sumarPuntuacionUser();
         this.#eliminarMensajePartidaFinalizada(); 
     }
 
@@ -219,14 +219,13 @@ class JuegoAhorcado extends Juego {
     } 
     
      async #sumarPuntuacionUser(){
-        if(this.#user.conectado === false){
-            console.log("no estoy conectada"); 
+        if(this.#user.conectado === false){ 
             return; 
         }
 
-        if(this.#user.conectado === true && this.#scores){
+        if(this.#user.conectado === true && this.#scores){ 
             try{
-                const respuesta = await fetch('http://127.0.0.1:8000/api/v1/scores/${this.#scores.id}', {
+                const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/scores/${this.#scores.id}`, {
                     method: 'PATCH', //Para actualizar solo la puntuación. 
                     headers : {
                         'Content-Type': 'application/json', 
@@ -236,14 +235,24 @@ class JuegoAhorcado extends Juego {
                 }); 
 
                 if(!respuesta.ok){
-                    console.log("algo no ha ido bien");
+                    const errorData = await respuesta.json(); 
+                    //Mostrar mensaje div: 
+                    this.#mostrarMensajePartidaFinalizada("Algo no ha ido bien, no se ha podido sumar la puntuación"); 
+                    return; 
                 }
 
-                console.log(`tengo la data ${respuesta}`); 
+                const data = await respuesta.json(); 
+                setTimeout(() => {
+                    this.#mostrarMensajePartidaFinalizada(`Puntuación actualizada: ${data.score}`);
+                }, 3000); 
 
+                return; 
 
+            //No entra al catch solo porque la respuesta http tenga 404, si por problemas de conexión: 
             }catch(e){
-                console.log(e); 
+                //Mensaje a mostrar: 
+                this.#mostrarMensajePartidaFinalizada("Error de red o servidor. No se ha sumado la puntuación");
+                return; 
             }
  
         }
