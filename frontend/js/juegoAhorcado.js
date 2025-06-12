@@ -1,6 +1,5 @@
-//SE CARGA JUEGO AHORCADO: 
 //import { API } from './config.js';
-class JuegoAhorcado extends Juego {
+class JuegoAhorcado extends Juego { 
     #palabraAleatoria;
     #palabraOculta;
     #maximaJugadas;
@@ -9,8 +8,8 @@ class JuegoAhorcado extends Juego {
     #letrasEscritas;
     #imagenesAhorcado;
     #user; 
-    #scores; 
-    constructor(maximaJugadas, user, scores) {
+    #score; 
+    constructor(maximaJugadas, user, score) {
         super('ahorcado', 'Juego de palabras', 0);
         this.#maximaJugadas = maximaJugadas;
         this.#palabras = ['AGUA', 'GATO', 'ORDENADOR', 'PROGRAMADORA', 'NATURALEZA', 'BOSQUE', 'ACAMPADA']; 
@@ -29,7 +28,7 @@ class JuegoAhorcado extends Juego {
             './imgAhorcado/octava.jpg'
         ];
         this.#user = user; 
-        this.#scores = scores; 
+        this.#score = score; 
     } 
 
     //Setters:
@@ -40,7 +39,6 @@ class JuegoAhorcado extends Juego {
     //LÓGICA JUEGO: 
 
     iniciarJuego(){
-        console.log(`este es el user: ${this.#user.conectado}`); 
         this.#palabraAleatoria = '';
         this.#palabraOculta = [];
         this.#numerosErrores = 0;
@@ -228,9 +226,10 @@ class JuegoAhorcado extends Juego {
             return; 
         }
 
-        if(this.#user.conectado === true && this.#scores){ 
+        if(this.#user.conectado === true && this.#score){ 
+            console.log(`este es el score en ahorcado para la llamada: ${this.#score.id}`);
             try{
-                const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/scores/${this.#scores.id}`, {
+                const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/scores/${this.#score.id}`, {
                     method: 'PATCH', //Para actualizar solo la puntuación. 
                     headers : {
                         'Content-Type': 'application/json', 
@@ -243,6 +242,7 @@ class JuegoAhorcado extends Juego {
                     const errorData = await respuesta.json(); 
                     //Mostrar mensaje div: 
                     this.#mostrarMensajePartidaFinalizada("Algo no ha ido bien, no se ha podido sumar la puntuación"); 
+                    console.log(`este es el error data`, errorData); 
                     return; 
                 }
 
@@ -257,6 +257,7 @@ class JuegoAhorcado extends Juego {
             }catch(e){
                 //Mensaje a mostrar: 
                 this.#mostrarMensajePartidaFinalizada("Error de red o servidor. No se ha sumado la puntuación");
+                console.log(`este es el catch ${e}`); 
                 return; 
             }
  

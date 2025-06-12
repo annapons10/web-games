@@ -291,6 +291,8 @@ class GameApp{
                 this.user.token = data.token;
                 this.user.conectado = true; 
                 this.scores = data.user.scores; 
+                console.log(this.scores);
+                console.log(this.scores[0],this.scores[1],this.scores[2].score ); 
 
                 //Guardo el user en localStorage (pasándolo a json): 
                 localStorage.setItem('user', JSON.stringify(this.user));

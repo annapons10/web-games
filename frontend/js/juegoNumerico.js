@@ -9,9 +9,10 @@ class JuegoNumerico extends Juego{
     #resultado;
     #respuesta;
     #puntos;
-    #user;
     #puntosGanador; 
-    constructor(rondas, operacionesPosibles, tope, numOperaciones, user){
+    #user;
+    #score; 
+    constructor(rondas, operacionesPosibles, tope, numOperaciones, user, score){
         super('numerico', 'Juego de matematicas', 0);
         this.#rondas = rondas; 
         this.#operacionesPosibles = operacionesPosibles; 
@@ -27,9 +28,9 @@ class JuegoNumerico extends Juego{
         this.temporizadorEvento = null;
         this.tempoGestionarRondaTrue = null; 
         this.#user = user; 
+        this.#score = score; 
     }
 
-    //¿Cambiar a Jugar? Pone todo el blanco para empezar de 0. 
     #empezarJuego(){
         let operacionPantalla = document.getElementById('operacionPantalla'); 
         operacionPantalla.innerHTML = ''; 
@@ -234,9 +235,16 @@ class JuegoNumerico extends Juego{
         if (this.#contadorRondas >= this.#rondas){
             //Compruebo si ha ganado o no: 
             if(this.#puntos >= 5){
-                this.#mostrarMensajeUltimaRonda(`¡Has ganado! Sumas 10 puntos`);
-                //Llamar fetch para sumarle los puntos en backend. 
-            } else{
+                if(this.#user.conectado === false){
+                    this.#mostrarMensajeUltimaRonda('¡Felicidades! Has ganado el juego. Regístrate si quieres guardar la puntuación');
+                }
+                if(this.#user.conectado){
+                    this.#mostrarMensajeUltimaRonda(`¡Has ganado! Sumas 10 puntos`);
+                    //Llamar fetch para sumarle los puntos en backend. 
+                    this.#sumarPuntuacionUser(); 
+                }
+                
+            }else{
                 this.#mostrarMensajeUltimaRonda(`¡Has perdido! No sumas nigún punto`);  
             } 
             
@@ -251,6 +259,52 @@ class JuegoNumerico extends Juego{
             return; 
         }
         this.#gestionarRonda(); 
+    }
+
+    async #sumarPuntuacionUser(){
+        if(this.#user.conectado === false){ 
+            return; 
+        }
+
+        if(this.#user.conectado === true && this.#score){ 
+            try{
+                const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/scores/${this.#score.id}`, {
+                    method: 'PATCH', //Para actualizar solo la puntuación. 
+                    headers : {
+                        'Content-Type': 'application/json', 
+                        'Accept': 'application/json', 
+                    }
+
+                }); 
+
+                if(!respuesta.ok){
+                    const errorData = await respuesta.json(); 
+                    this.#mostrarMensajeUltimaRonda("Algo no ha ido bien, no se ha podido sumar la puntuación");  
+                }
+
+                if(respuesta.ok){
+                    const data = await respuesta.json(); 
+                    setTimeout(() => {
+                        this.#mostrarMensajeUltimaRonda(`Puntuación actualizada: ${data.score}`); 
+                    }, 3000); 
+                }
+
+                setTimeout(() => {
+                    this.#eliminarMensajeUltimaRonda(() => this.#reiniciarJuego()); 
+                }, 4000); 
+                
+
+                return; 
+
+            //No entra al catch solo porque la respuesta http tenga 404, si por problemas de conexión: 
+            }catch(e){
+                console.log("Error de red o servidor. No se ha sumado la puntuación");
+                this.#reiniciarJuego(); 
+                return; 
+            }
+ 
+        }
+
     }
 
     #limpiarTemporizadores() {
@@ -269,7 +323,7 @@ class JuegoNumerico extends Juego{
         this.#contadorRondas = 0;
         this.#resultado = 0;
         this.#puntos = 0; 
-        this.#respuesta = false;
+        this.#respuesta = false; 
     }
   
 } 
