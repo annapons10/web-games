@@ -40,6 +40,7 @@ class JuegoAhorcado extends Juego {
     //LÓGICA JUEGO: 
 
     iniciarJuego(){
+        console.log(`este es el user: ${this.#user.conectado}`); 
         this.#palabraAleatoria = '';
         this.#palabraOculta = [];
         this.#numerosErrores = 0;
@@ -99,7 +100,11 @@ class JuegoAhorcado extends Juego {
             if (!this.#palabraOculta.includes('_')) { //Si ya no tiene '_' significa que ha completado la palabra.//NO COMPARA BIEN LOS OBJETOS. //si hay espacios en blanco lo vale.
                 this.#mostrarLetraEnPantalla();
                 this.#finalizarJuego(); 
-                this.#mostrarMensajePartidaFinalizada('¡Felicidades! Has ganado el juego. Sumas 10 puntos.'); 
+                if(this.#user.conectado === false){
+                    this.#mostrarMensajePartidaFinalizada('¡Felicidades! Has ganado el juego. Regístrate si quieres guardar la puntuación');  
+                    return; 
+                }
+                this.#mostrarMensajePartidaFinalizada('¡Felicidades! Has ganado el juego. Sumas 10 puntos.')
                 //Llamar fetch para actualizar los puntos del usuario: 
                 this.#sumarPuntuacionUser(); 
             }

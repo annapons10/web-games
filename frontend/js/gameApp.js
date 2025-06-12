@@ -25,8 +25,7 @@ class GameApp{
     }
 
     //Método para recuperar los datos del usuario si los hay: 
-    recoverUserData(){
-        console.log("esto aqui"); 
+    recoverUserData(){ 
         const storedUser = localStorage.getItem('user');
         const storeScores = localStorage.getItem('scores'); 
         if(storedUser && storeScores){
@@ -53,7 +52,7 @@ class GameApp{
             id: null,
             token: null,
             conectado: false,
-        }
+        } 
     }
 
 
@@ -81,7 +80,6 @@ class GameApp{
     //AÑADIR A PROPIEDADES THIS.CONECTADO PARA SABER SI ESTÁ CONECTADO O NO Y SUMARLE PUNTUACIÓN A LOS JUEGOS: 
     instanciarJuego(id){
         if(id === 'ahorcado' && !this.videojuegosInstanciados[id]){
-            console.log(this.scores[0]); 
             this.videojuegosInstanciados[id] = new JuegoAhorcado(7, this.user, this.scores[0]);
         }else if(id === 'juegoNumerico' && !this.videojuegosInstanciados[id]){
             this.videojuegosInstanciados[id] = new JuegoNumerico(10, ['+', '-'], 3, 4, this.user, this.scores[1]); 
@@ -298,7 +296,6 @@ class GameApp{
                 localStorage.setItem('user', JSON.stringify(this.user));
                 //Y los scores:
                 localStorage.setItem('scores', JSON.stringify(this.scores)); 
-                console.log(this.scores); 
 
                 //Redigirijo a mis juegos:
                 app.loadContent('Mis juegos'); 
@@ -306,7 +303,6 @@ class GameApp{
                 //CUANDO SE HACE LOGIN, PREGUNTO SI HAY SCORE PARA CADA JUEGO CON ESTE USER, SI NO, SE CREA UN SCORE CON 0: (¿NO HACE FALTA SI YA SE CREAN EN REGISTER?)
 
             }catch(e){  
-                console.error(e);
                 //Error de red, servidor caído, URL mal escrita, etc.
                 errorDiv.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde.'; 
             }
@@ -317,7 +313,6 @@ class GameApp{
 
     //Método para el logout:
     configurarEventoLogout(){ 
-
         if(this.eventoLogout) return; 
         this.eventoLogout = true;
         const buttonLogout = document.querySelector('.btn-logout');
@@ -350,6 +345,8 @@ class GameApp{
                 localStorage.removeItem('scores'); 
                 this.resetUserData(); 
                 this.resetScoresData();
+                //Vacio juegos intanciados para que se vuelvan a instanciar con this.user en false:
+                this.videojuegosInstanciados = {}; 
 
                 //Redigirijo a mis juegos: 
                 app.loadContent('Mi usuario'); 
