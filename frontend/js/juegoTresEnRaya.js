@@ -11,8 +11,9 @@ class JuegoTresEnRaya extends Juego{
     #primerTurno;
     #turnoActual;
     #user; 
+    #score;
 
-    constructor(user) {
+    constructor(user, score) {
         super('tresEnRaya', 'Juego de estrategia', 0);
         // Inicialización de los atributos privados: 
         this.#matrizJuego = [
@@ -30,6 +31,7 @@ class JuegoTresEnRaya extends Juego{
         this.#turnoActual = this.#primerTurno;
         this.#numJugada = 0; // Para saber en qué jugada me encuentro
         this.#user = user; 
+        this.#score = score; 
     }
     
     //Controlar inicio juego:
@@ -85,8 +87,15 @@ class JuegoTresEnRaya extends Juego{
                 if (this.#numJugada >= 5) {
                     let respuestaHaGanadoPersona = this.#comprobarSiPersonaHaGanadoPersona();
                     if (respuestaHaGanadoPersona) {
+                        if(this.#user.conectado === false){
+                            this.#mensajeFinalizaJuego('¡Felicidades! Has ganado el juego. Regístrate si quieres guardar la puntuación');  
+                            this.#eliminarMensajeFinalizaJuego(); 
+                            return; 
+                        }
+
                         this.#mensajeFinalizaJuego('¡Has ganado! Sumas 10 puntos');
                         //Llamar al fetch para sumar los puntos en la BD: 
+                        this.#sumarPuntuacionUser(); 
                         this.#eliminarMensajeFinalizaJuego();
                         return;
                     }
@@ -102,6 +111,51 @@ class JuegoTresEnRaya extends Juego{
                 }
             });
         });
+    }
+
+    async #sumarPuntuacionUser(){
+        if(this.#user.conectado === false){ 
+            return; 
+        }
+
+        if(this.#user.conectado === true && this.#score){ 
+            try{
+                const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/scores/${this.#score.id}`, {
+                    method: 'PATCH', //Para actualizar solo la puntuación. 
+                    headers : {
+                        'Content-Type': 'application/json', 
+                        'Accept': 'application/json', 
+                    }
+
+                }); 
+
+                if(!respuesta.ok){
+                    const errorData = await respuesta.json(); 
+                    this.#mensajeFinalizaJuego("Algo no ha ido bien, no se ha podido sumar la puntuación");  
+                }
+
+                if(respuesta.ok){
+                    const data = await respuesta.json(); 
+                    setTimeout(() => {
+                        this.#mensajeFinalizaJuego(`Puntuación actualizada: ${data.score}`); 
+                    }, 3000); 
+                } 
+
+                setTimeout(() => {
+                    this.#eliminarMensajeFinalizaJuego();   
+                }, 4000);
+
+                return; 
+
+            //No entra al catch solo porque la respuesta http tenga 404, si por problemas de conexión: 
+            }catch(e){
+                this.#mensajeFinalizaJuego("Error de red o servidor. No se ha sumado la puntuación"); 
+                this.#eliminarMensajeFinalizaJuego(); 
+                return; 
+            }
+ 
+        }
+
     }
     
     #comprobarSiPersonaHaGanadoPersona(){
