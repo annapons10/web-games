@@ -14,7 +14,10 @@ class UserController extends Controller
     public function index()
     {
         //4
-        return User::all();
+       /*  //Devuelvo los scores con su id de game y los datos de éstos. 
+        //with() hace eager loading de relaciones entre modelos de Laravel.
+        $users = User::with(['scores'])->get(); 
+        return response()->json($users); */
     }
 
     /**
@@ -30,7 +33,10 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        //Por usuario concreto muestro sus scores con los games y genres. 
+        //with() se usa para traer relaciones relacionadas al mismo tiempo que el modelo principal, para evitar hacer muchas consultas separadas (esto se llama eager loading).
+        $user = User::with(['scores.game.genre'])->findOrFail($id); 
+        return response()->json($user);
     }
 
     /**

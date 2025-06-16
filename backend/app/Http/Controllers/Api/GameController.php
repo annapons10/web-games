@@ -11,6 +11,7 @@ class GameController extends Controller
     /**
      * Display a listing of the resource.
      */
+    //Todos los juegos: 
     public function index()
     {
         //
@@ -28,6 +29,7 @@ class GameController extends Controller
     /**
      * Display the specified resource.
      */
+    //Un juego por su $id: 
     public function show(string $id)
     {
         //

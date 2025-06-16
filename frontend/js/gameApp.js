@@ -199,28 +199,59 @@ class GameApp{
                 });
         }
     }
-        //MÉTODO NUEVO PARA MOSTRAR JUEGOS EN PANTALLA CUANDO EL USUARIO HAGA CLICK EN "MIS JUEGOS":
-        mostrarJuegosEnPantalla(){
-            // InicializaR una variable para acumular el HTML.
-            let juegosHTML = '';
-            for(const juego of this.videojuegos){
-                juegosHTML += `
-                <div class="card">
-                    <div class="card__inner">
-                        <div class="card__front">
-                            <h3 class="h3__card">${juego.nombre}</h3>
+
+    //MÉTODO NUEVO PARA MOSTRAR JUEGOS EN PANTALLA CUANDO EL USUARIO HAGA CLICK EN "MIS JUEGOS":
+    async mostrarJuegosEnPantalla(){
+        // InicializaR una variable para acumular el HTML.
+        let juegosHTML = ''; 
+        //Conectar con la BD. Coger el name de los juegos. El Género de los juegos. El score de los juegos. 
+        //Voy al backend para confirmar:
+            try{
+                const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/users/${this.user.id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json', 
+                        'Accept': 'application/json'
+                    } 
+                }); 
+
+                //Respuesta servidor fuera de rango 200-299: 
+                if(!respuesta.ok){
+                    const errorData = await respuesta.json();
+                    console.log('Ocurrió un error inesperado. Inténtalo más tarde.');
+                    return;
+                
+                }
+
+                const data = await respuesta.json(); 
+                console.log(data); 
+            
+
+                data.scores.map((score) => {
+                    juegosHTML += `
+                        <div class="card">
+                            <div class="card__inner">
+                                <div class="card__front">
+                                    <h3 class="h3__card">${score.game.name}</h3>
+                                </div>
+                                <div class="card__back">
+                                    <p class="nuevoP">Género: ${score.game.genre.name}</p>
+                                    <p class="nuevoP">Puntuación: ${score.id}</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card__back">
-                            <p class="nuevoP">Género: ${juego.tipo}</p>
-                            <p class="nuevoP">Puntuación: ${juego.puntuacion}</p>
-                        </div>
-                    </div>
-                </div>
-            `;
+                    `
+                });
+
+                document.getElementById('gamesContainer').innerHTML = juegosHTML; 
+
+            }catch(e){  
+                //Error de red, servidor caído, URL mal escrita, etc.
+                console.log('Ocurrió un error inesperado. Inténtalo más tarde.'); 
             }
-        // Una vez que he acumulado todo el HTML, se inserta en el dom de una vez.
-        document.getElementById('gamesContainer').innerHTML = juegosHTML;
-    }
+
+     
+    } 
 
     //Método para cambiar el hash y mostrar la pantalla correspondiente: 
     router(){
@@ -287,7 +318,7 @@ class GameApp{
                 const data = await respuesta.json(); 
 
                 //Guardo los datos del usuario: 
-                this.user.id = data.id;
+                this.user.id = data.user.id; 
                 this.user.token = data.token;
                 this.user.conectado = true; 
                 this.scores = data.user.scores; 

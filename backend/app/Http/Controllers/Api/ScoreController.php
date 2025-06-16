@@ -13,8 +13,7 @@ class ScoreController extends Controller
      */
     public function index()
     {
-        //
-        return Score::all();
+       
     }
 
     /**
@@ -41,6 +40,7 @@ class ScoreController extends Controller
         //Hacer la suma aquí, si no necuentra el score, manda 404: 
         $score = Score::findOrFail($id);
         $score->score += 10;
+        $score->save(); 
         $currentScore = $score->score;  
         return response()->json([
                 'message' => 'Score + 10 actualizado correctamente', 
