@@ -204,8 +204,16 @@ class GameApp{
     async mostrarJuegosEnPantalla(){
         // InicializaR una variable para acumular el HTML.
         let juegosHTML = ''; 
-        //Conectar con la BD. Coger el name de los juegos. El Género de los juegos. El score de los juegos. 
-        //Voy al backend para confirmar:
+
+        if(this.user.conectado === false){
+            juegosHTML += `
+               <p>¡Para llevar un seguimiento de tus juegos, regístrate o inicia sesión!</p>
+            `
+            document.getElementById('gamesContainer').innerHTML = juegosHTML; 
+            return; 
+        }
+
+        //Conectar con la BD para mostrar los juegos/puntuación: 
             try{
                 const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/users/${this.user.id}`, {
                     method: 'GET',
@@ -218,38 +226,39 @@ class GameApp{
                 //Respuesta servidor fuera de rango 200-299: 
                 if(!respuesta.ok){
                     const errorData = await respuesta.json();
-                    console.log('Ocurrió un error inesperado. Inténtalo más tarde.');
-                    return;
+                    juegosHTML += `
+                        <p>Ocurrió un error inesperado. Inténtalo más tarde.</p>
+                    `
                 
                 }
-
-                const data = await respuesta.json(); 
-                console.log(data); 
-            
-
-                data.scores.map((score) => {
-                    juegosHTML += `
-                        <div class="card">
-                            <div class="card__inner">
-                                <div class="card__front">
-                                    <h3 class="h3__card">${score.game.name}</h3>
-                                </div>
-                                <div class="card__back">
-                                    <p class="nuevoP">Género: ${score.game.genre.name}</p>
-                                    <p class="nuevoP">Puntuación: ${score.id}</p>
+ 
+                if(respuesta.ok){
+                    const data = await respuesta.json(); 
+                    data.scores.map((score) => {
+                        juegosHTML += `
+                            <div class="card">
+                                <div class="card__inner">
+                                    <div class="card__front">
+                                        <h3 class="h3__card">${score.game.name}</h3>
+                                    </div>
+                                    <div class="card__back">
+                                        <p class="nuevoP">Género: ${score.game.genre.name}</p>
+                                        <p class="nuevoP">Puntuación: ${score.score}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    `
-                });
-
-                document.getElementById('gamesContainer').innerHTML = juegosHTML; 
+                        `
+                    }); 
+                }
 
             }catch(e){  
                 //Error de red, servidor caído, URL mal escrita, etc.
-                console.log('Ocurrió un error inesperado. Inténtalo más tarde.'); 
-            }
+                juegosHTML += `
+                    <p>Ocurrió un error inesperado. Inténtalo más tarde.</p>
+                `
+            } 
 
+            document.getElementById('gamesContainer').innerHTML = juegosHTML; 
      
     } 
 
@@ -322,8 +331,6 @@ class GameApp{
                 this.user.token = data.token;
                 this.user.conectado = true; 
                 this.scores = data.user.scores; 
-                console.log(this.scores);
-                console.log(this.scores[0],this.scores[1],this.scores[2].score ); 
 
                 //Guardo el user en localStorage (pasándolo a json): 
                 localStorage.setItem('user', JSON.stringify(this.user));

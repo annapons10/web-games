@@ -266,6 +266,7 @@ li{
     justify-content: space-around; /* Asegura que empiece desde la parte superior */
     min-height: 100vh; /* Asegura que ocupe toda la altura de la ventana */
     font-size: 1.1em;
+    color: var(--blanco-vintage); 
 }
 
 
