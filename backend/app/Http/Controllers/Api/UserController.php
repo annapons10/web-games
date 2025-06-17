@@ -7,26 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 
 class UserController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //4
-       /*  //Devuelvo los scores con su id de game y los datos de éstos. 
-        //with() hace eager loading de relaciones entre modelos de Laravel.
-        $users = User::with(['scores'])->get(); 
-        return response()->json($users); */
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+{ 
 
     /**
      * Display the specified resource.
@@ -39,19 +20,26 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+   
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        //
+        //En la tabla BD en scores (Delete on cascade). Elimino el user y se eliminan los scores asociados a él. 
+        $user = User::findOrFail($id);
+        if(!$user){
+            return response()->json(
+                [
+                    "message" => 'Usuario no encontrado'
+                ], 404
+            ); 
+        }; 
+
+        $user->delete(); 
+        return response()->json(
+                [
+                    "message" => 'Usuario eliminado correctamente'
+                ], 200
+            ); 
+        
     }
 }

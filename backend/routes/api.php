@@ -20,12 +20,9 @@ Route::prefix('v1')->group(function(){
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register',[ AuthController::class, 'register']);
     
-    //Rutas Api: 
-    Route::apiResource('games', GameController::class); 
-    //Sumar puntuación: 
-    Route::apiResource('genres', GenreController::class);
-    Route::apiResource('scores', ScoreController::class);
-    Route::apiResource('users', UserController::class);
+    
+    Route::apiResource('scores', ScoreController::class)->only(['update']);
+    Route::apiResource('users', UserController::class)->only(['show', 'destroy']);
 
     //Ruta protegida para ver los juegos y su puntuación, este middleware es el que valida el token devuelvo por front (guardado en la bd):
     //La ruta middleware le inyecta el usuario autenticado al $request, por eso luego se puede acceder a él directamente, o devuelve null : 
