@@ -207,7 +207,7 @@ class GameApp{
 
         if(this.user.conectado === false){
             juegosHTML += `
-               <p>¡Para llevar un seguimiento de tus juegos, regístrate o inicia sesión!</p>
+               <p>Para llevar un seguimiento de tus juegos, regístrate o inicia sesión. </p>
             `
             document.getElementById('gamesContainer').innerHTML = juegosHTML; 
             return; 
