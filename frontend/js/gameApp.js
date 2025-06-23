@@ -21,6 +21,7 @@ class GameApp{
         this.eventoLogin = false;
         this.eventoRegister = false; 
         this.eventoLogout = false; 
+        this.eventoEliminarUsuario = false; 
        
     }
 
@@ -45,6 +46,7 @@ class GameApp{
         this.eventoLogin = false;
         this.eventoRegister = false; 
         this.eventoLogout = false;
+        this.eventoEliminarUsuario = false; 
     }  
 
     resetUserData(){  
@@ -139,6 +141,7 @@ class GameApp{
                     document.getElementById('main').innerHTML = data
                     //Activar el click en el botón cerrar sesión: 
                     this.configurarEventoLogout();  
+                    this.configurarEventoEliminarUsuario(); 
                 })
                 .catch(error => {
                     document.querySelector('.container__home').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
@@ -202,6 +205,7 @@ class GameApp{
 
     //MÉTODO NUEVO PARA MOSTRAR JUEGOS EN PANTALLA CUANDO EL USUARIO HAGA CLICK EN "MIS JUEGOS":
     async mostrarJuegosEnPantalla(){
+        console.log(`este es el id del user: ${this.user.id}`); 
         // InicializaR una variable para acumular el HTML.
         let juegosHTML = ''; 
 
@@ -215,7 +219,7 @@ class GameApp{
 
         //Conectar con la BD para mostrar los juegos/puntuación: 
             try{
-                const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/users/${this.user.id}`, {
+                const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/users/13`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json', 
@@ -456,7 +460,7 @@ class GameApp{
                 const data = await respuesta.json();
 
                 //Guardo datos suario conectado:
-                this.user.id = data.id;
+                this.user.id = data.user.id; 
                 this.user.token = data.token;
                 this.user.conectado = true;
 
@@ -480,6 +484,45 @@ class GameApp{
                 error.textContent = 'Error de red o servidor. Inténtalo más tarde.'; 
             }  
         }) 
+
+    }
+
+    configurarEventoEliminarUsuario(){
+        if(this.eventoEliminarUsuario) return; 
+        this.eventoEliminarUsuario = true;
+        const buttonDelete = document.querySelector('.btn-delete');
+        const errorDiv = document.querySelector('.errorLogout'); 
+
+        buttonDelete.addEventListener('click', async () => { 
+            try{ 
+                const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/users/${this.user.id}`, {
+                    method: 'DELETE',
+                     headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'  
+                    } 
+                });
+
+                if(!respuesta.ok){
+                    errorDiv.textContent = 'Error al eliminar la cuenta. Inténtalo más tarde.';
+                    return; 
+                }
+
+                this.resetEvents(); 
+                //Borro el token:
+                localStorage.removeItem('user');
+                localStorage.removeItem('scores'); 
+                this.resetUserData(); 
+                this.resetScoresData();
+                //Vacio juegos intanciados para que se vuelvan a instanciar con this.user en false:
+                this.videojuegosInstanciados = {}; 
+
+                app.loadContent('Mis Juegos'); 
+
+            }catch(e){
+                errorDiv.textContent = 'Error de red o servidor. Inténtalo más tarde.'; 
+            } 
+        }); 
 
     }
 

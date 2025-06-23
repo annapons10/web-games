@@ -242,7 +242,6 @@ class JuegoAhorcado extends Juego {
                     const errorData = await respuesta.json(); 
                     //Mostrar mensaje div: 
                     this.#mostrarMensajePartidaFinalizada("Algo no ha ido bien, no se ha podido sumar la puntuación"); 
-                    console.log(`este es el error data`, errorData); 
                     return; 
                 }
 

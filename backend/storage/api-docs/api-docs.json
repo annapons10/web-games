@@ -1,0 +1,183 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API de Juegos",
+        "description": "Documentación oficial de la API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "api/v1/scores/{id}": {
+            "patch": {
+                "tags": [
+                    "Scores"
+                ],
+                "summary": "Incrementa una puntuación en 10 puntos",
+                "operationId": "87f3879c68ea4274cc6d19cc86d9db5a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Éxito",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Score +10 actualizado"
+                                        },
+                                        "score": {
+                                            "type": "integer",
+                                            "example": 110
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Score no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\\\Score] 123"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Obtiene un usuario específico con sus puntuaciones, juegos y géneros asociados",
+                "description": "Devuelve todos los datos del usuario incluyendo sus puntuaciones en juegos y los géneros de esos juegos",
+                "operationId": "46a89c61ee453da0462c40d3531c722b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del usuario",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 13
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Datos del usuario obtenidos correctamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 13
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "anna"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "anna@gmail.com"
+                                        },
+                                        "scores": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 37
+                                                    },
+                                                    "score": {
+                                                        "type": "integer",
+                                                        "example": 100
+                                                    },
+                                                    "game": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Juego Ahorcado"
+                                                            },
+                                                            "genre": {
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "type": "integer",
+                                                                        "example": 1
+                                                                    },
+                                                                    "name": {
+                                                                        "type": "string",
+                                                                        "example": "Palabras"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuario no encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\\\User] 123"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Scores",
+            "description": "Gestión de puntuaciones"
+        },
+        {
+            "name": "Users",
+            "description": "Gestión de usuarios"
+        }
+    ]
+}
