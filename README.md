@@ -18,6 +18,7 @@ Podrás competir para alinear tres símbolos (X o O) en una fila, columna o diag
 - **JavaScript**: El lenguaje principal para la lógica y la interacción en todos los juegos.
 - **CSS**: Usado para los estilos y diseño de la interfaz de usuario, asegurando una experiencia atractiva y fluida.
 - **HTML**: La base estructural de la web.
+- **Laravel**: Framework backend para construir la API RESTful. 
 
 ## Cómo Jugar
 
@@ -25,5 +26,25 @@ Podrás competir para alinear tres símbolos (X o O) en una fila, columna o diag
 2. Selecciona el juego que deseas jugar desde la interfaz principal.
 3. Sigue las instrucciones dentro de cada juego. 
 
-## ACTUALMENTE EN DESARROLLO BACKEND (AUTENTICACIÓN DE USUARIO). 
 
+## Funcionalidades Backend 🖥️
+
+Este proyecto incluye una API backend que añade funcionalidades como autenticación y gestión de datos. Está desarrollada con **Laravel** y actualmente permite:
+
+- Registro e inicio de sesión de usuarios.
+- Logout y gestión de sesiones.
+- Visualización y almacenamiento de puntuaciones por usuario y por juego.
+- Gestión de usuarios. 
+
+### 🔑 Endpoints principales
+
+| Método | Endpoint            | Descripción                                    |
+|--------|-------------------- |------------------------------------------------|
+| POST   | `/api/v1/register`  | Registrar un nuevo usuario                     |
+| POST   | `/api/v1/login`     | Iniciar sesión y recibir token                 |
+| POST   | `/api/v1/logout`    | Cerrar sesión del usuario y eliminar el token  |
+| GET    | `/api/v1/users/:id` | Obtener datos de usuario, juegos y puntuaciones|
+| DELETE | `/api/v1/users/:id` | Eliminar cuenta de usuario                     |
+| PATCH  | `/api/v1/scores/:id`| Actualizar una puntuación existente            | 
+
+> ⚠️ Algunos endpoints requieren autenticación mediante token. 
