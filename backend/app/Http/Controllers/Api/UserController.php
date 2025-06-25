@@ -77,6 +77,36 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    /**
+ * @OA\Delete(
+ *      path="/api/v1/users/{id}",
+*       tags={"Users"},
+ *      summary="Se elimina un usuario con sus puntuaciones asociadas",
+ *      description="Elimina un usuario y sus puntuaciones asociadas. Si el usuario no existe, devuelve un mensaje de error.",
+ *       @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ *          description="ID del usuario a eliminar",
+ *          @OA\Schema(type="integer", example="123")
+ *       ),
+ *      @OA\Response(
+ *           response=200,
+ *           description="Usuario eliminado correctamente", 
+ *            @OA\JsonContent(
+ *                @OA\Property(property="message", type="string", example="Usuario eliminado correctamente")
+ *            ) 
+ *       ),
+ *       @OA\Response(
+ *           response=404,
+ *           description="Usuario no encontrado",
+ *           @OA\JsonContent(
+ *               @OA\Property(property="message", type="string", example="Usuario no encontrado") 
+ *            )
+ *       ), 
+ *     
+ * )
+ */
 
 
     public function destroy(string $id)

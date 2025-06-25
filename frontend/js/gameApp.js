@@ -219,7 +219,7 @@ class GameApp{
 
         //Conectar con la BD para mostrar los juegos/puntuación: 
             try{
-                const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/users/13`, {
+                const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/users/${this.user.id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json', 
@@ -378,8 +378,10 @@ class GameApp{
                         errorDiv.textContent = 'No estás autorizado para cerrar sesión. Por favor, inicia sesión primero.'; 
                         return;
                     }
-                    errorDiv.textContent = 'Error al cerrar sesión. Inténtalo más tarde.';
-                    return; 
+                    if(respuesta.status === 500){
+                        errorDiv.textContent = 'Error al cerrar sesión. Inténtalo más tarde.'; 
+                        return;
+                    } 
 
                 }
 
