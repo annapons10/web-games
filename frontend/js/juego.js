@@ -6,9 +6,8 @@ class Juego{
         this.puntuacion = puntuacion;
     }
 
-
-    mostrarModalInicio(){ //Para todos igual.
-        //CARGAR MODALES DINÁMICAMENTE, EL MODAL ADECUADO DEPENDIENDO DE QUE JUEGO ESTÉ EN PANTALLA:
+     //Cargar modales dinámicamente, dependiendo del juego que se quiera mostrar: 
+    mostrarModalInicio(){ 
         const modalId = `#modal-${this.titulo}`; 
         const modal = document.querySelector(modalId);
 

@@ -36,7 +36,7 @@ class JuegoAhorcado extends Juego {
         this.#maximaJugadas = jugadas;
     } 
 
-    //LÓGICA JUEGO: 
+    //Lógica juego: 
 
     iniciarJuego(){
         this.#palabraAleatoria = '';
@@ -52,17 +52,18 @@ class JuegoAhorcado extends Juego {
         this.#palabraAleatoria = this.#palabras[indiceA];
 
         // Inicializa palabraOculta con guiones bajos
-        this.#palabraOculta = Array(this.#palabraAleatoria.length).fill('_'); //Array: especifico el tamaño que va a tener. es un array llena de _ _ _ _ 
+        this.#palabraOculta = Array(this.#palabraAleatoria.length).fill('_'); 
+        //Muestra los ' _ ' que necesite en pantalla según la palabra.
+        let numLetras = this.#palabraAleatoria.length; 
+        this.#mostrarGuionesEnPantalla(numLetras); 
 
-        let numLetras = this.#palabraAleatoria.length; //Para mostras los ' _ ' que necesite en pantalla según la palabra.
-        this.#mostrarGuionesEnPantalla(numLetras); //Llamo al método que lo hace. 
-
-        this.#eventoTeclado(); //Aqui se llama al evento. 
+        this.#eventoTeclado(); 
         this.#eventoReiniciarJuegoBoton();
     }
 
-    #recorrerBotones = (event) => { //PARA TENER LA REFERENCIA Y LLAMARLA CUANDO AÑADO EL EVENTO Y LO ELIMINO. 
-        const letra = event.target.textContent; //Coge el contenido del botón que ha disparado el evento directamente. 
+    //Coger el evento del teclado y recorrer los botones:
+    #recorrerBotones = (event) => { 
+        const letra = event.target.textContent; 
         this.#jugarAhorcado(letra); 
     }
 
@@ -76,16 +77,18 @@ class JuegoAhorcado extends Juego {
     } 
 
     #jugarAhorcado(letra) {
-
-        if (this.#numerosErrores < this.#maximaJugadas){ //Confirmo que hay jugadas. 
-            this.#letrasEscritas.push(letra); //Introduzco la letra para llevar el seguimiento.
-
-            let letraEncontrada = false; //No ha encontrado la letra, para marcarme el camino. 
-            for (let i = 0; i < this.#palabraAleatoria.length; i++) { //Recorro para verificar si esta la letra o no. 
+        //Confirmar que hay jugadas. 
+        if (this.#numerosErrores < this.#maximaJugadas){
+            this.#letrasEscritas.push(letra); 
+            //No ha encontrado la letra, marcar el camino. 
+            let letraEncontrada = false; 
+            for (let i = 0; i < this.#palabraAleatoria.length; i++) { 
                 if (letra === this.#palabraAleatoria[i].toLocaleUpperCase()) {
-                    this.#palabraOculta[i] = this.#palabraAleatoria[i]; //Añado la letra a la palabraOculta. 
+                    //Añadir la letra a la palabraOculta. 
+                    this.#palabraOculta[i] = this.#palabraAleatoria[i]; 
                     letraEncontrada = true;
-                    this.#mostrarLetraEnPantalla(letra); //Llamo al método de mostrar la letra en pantalla porque la ha acertado.   
+                    //La ha acertado, se muestra: 
+                    this.#mostrarLetraEnPantalla(letra); 
                 }
             }
 
@@ -94,8 +97,8 @@ class JuegoAhorcado extends Juego {
                 this.#numerosErrores++;
                 this.#mostrarImgAhorcado(); 
             }
-
-            if (!this.#palabraOculta.includes('_')) { //Si ya no tiene '_' significa que ha completado la palabra.//NO COMPARA BIEN LOS OBJETOS. //si hay espacios en blanco lo vale.
+            //Ha completado la palabra: 
+            if (!this.#palabraOculta.includes('_')) { 
                 this.#mostrarLetraEnPantalla();
                 this.#finalizarJuego(); 
                 if(this.#user.conectado === false){
@@ -103,7 +106,7 @@ class JuegoAhorcado extends Juego {
                     return; 
                 }
                 this.#mostrarMensajePartidaFinalizada('¡Felicidades! Has ganado el juego. Sumas 10 puntos.')
-                //Llamar fetch para actualizar los puntos del usuario: 
+                //Actualizar los puntos del usuario: 
                 this.#sumarPuntuacionUser(); 
             }
 
@@ -117,8 +120,8 @@ class JuegoAhorcado extends Juego {
     }
 
     #mostrarTodaPalabraPantalla(){
-        let containerLetra = document.getElementById('div__letra'); //Cojo el contenedor principal. 
-        let spans = containerLetra.querySelectorAll('span'); // Cojo los elem de dentro del div para recorrerlos. 
+        let containerLetra = document.getElementById('div__letra'); 
+        let spans = containerLetra.querySelectorAll('span'); 
         for (let i = 0; i < this.#palabraAleatoria.length; i++) {
             if(spans[i].innerHTML === ''){
                 continue;
@@ -127,17 +130,16 @@ class JuegoAhorcado extends Juego {
         }
     } 
 
-    //MOVIMIENTO DOM DINÁMICO:
-    //CREO UN MÉTODO PARA QUE CADA VEZ QUE LA PERSONA FALLE EN UNA LETRA, SE LLAME A ÉSTE Y SE VAYA IMPRIMIENDO EL "AHORCADO"
+    //Movimiento dom dinámico: 
 
-    crearTecladoPantalla() { //crear teclado en pantalla. Lo llamo en el fetch al llamar a index.html. Para que se vea todo junto.  
+    crearTecladoPantalla() { 
         let ahorcadoContainer = document.getElementById('ahorcado__container');
-        let tecladoContainer = document.createElement('div'); //creo el contenedor para el teclado.
-        tecladoContainer.classList.add('teclado__container')//le añado la clase. 
-        let fragment = document.createDocumentFragment();//Creo un fragmento.
+        let tecladoContainer = document.createElement('div'); 
+        tecladoContainer.classList.add('teclado__container')
+        let fragment = document.createDocumentFragment();
         for (let x = 0; x < 26; x++) {
-            let div = document.createElement('div');//creo un div
-            div.classList.add('letra__container');//añado las clases. 
+            let div = document.createElement('div');
+            div.classList.add('letra__container'); 
             let button = document.createElement('button');
             button.classList.add('button__letra');
 
@@ -149,60 +151,61 @@ class JuegoAhorcado extends Juego {
         }
 
         tecladoContainer.appendChild(fragment);
-        ahorcadoContainer.appendChild(tecladoContainer); //finalmente pego todo el fragmento de una vez. 
+        ahorcadoContainer.appendChild(tecladoContainer); 
     }
 
     #mostrarImgAhorcado() { 
-        let img = document.getElementById('img__ahorcado'); //cojo el html de img. 
+        //Coger html de la imagen y cambiarla según el número de errores: 
+        let img = document.getElementById('img__ahorcado'); 
         img.src = this.#imagenesAhorcado[this.#numerosErrores]; 
         img.alt = 'Ahorcado';
     }
 
-    #mostrarGuionesEnPantalla(numLetras) { //QUIERO CREAR UNA CADENA DE STRING DENTRO DE UN DIV. 
-        //let guiones = Array(numLetras).fill('_'); //Creo el array de guiones para marcarme el camino.  
-        let containerLetra = document.getElementById('div__letra'); //Cojo el contenedor principal. 
+    #mostrarGuionesEnPantalla(numLetras) { 
+        let containerLetra = document.getElementById('div__letra'); 
 
-        containerLetra.innerHTML = ''; //Limpio el contenedor por si se juega varias veces. 
+        containerLetra.innerHTML = ''; 
 
         containerLetra.classList.add('guiones__en__pantalla');
-        this.#palabraOculta.forEach(() => { //Recorro el array de palabra oculta para crear por guion un span. 
+        //Recorrer el array de palabra oculta para crear por guion un span. 
+        this.#palabraOculta.forEach(() => { 
             let spanGuion = document.createElement('span');
-            spanGuion.innerHTML = '_';  // Añadir el guion al span
-            spanGuion.classList.add('guion');  // Añadir una clase para aplicar estilo
+            spanGuion.innerHTML = '_';  
+            spanGuion.classList.add('guion'); 
 
             // Agregar el span al divPalabra
             containerLetra.appendChild(spanGuion);
         });
     }
 
-    #mostrarLetraEnPantalla(letra) { //Coger los guiones de html en los span y recorrerlos para añadir la letra en el lugar correspodiente. 
-        let containerLetra = document.getElementById('div__letra'); //Cojo el contenedor principal. 
-        let spans = containerLetra.querySelectorAll('span'); // Cojo los elem de dentro del div para recorrerlos. 
-        for (let i = 0; i < this.#palabraAleatoria.length; i++) {
-            //for(let i = 0; i < this.#palabraAleatoria.length; i++){ //Recorro para verificar si esta la letra o no. 
+    //Coger los guiones de html en los span y recorrerlos para añadir la letra en el lugar correspodiente. 
+    #mostrarLetraEnPantalla(letra) { 
+        let containerLetra = document.getElementById('div__letra'); 
+        let spans = containerLetra.querySelectorAll('span'); 
+        for (let i = 0; i < this.#palabraAleatoria.length; i++) { 
             if (letra === this.#palabraAleatoria[i].toLocaleUpperCase()) {
                 spans[i].innerHTML = letra;
             }
         }
     }
 
-    #finalizarJuego(){ //Para el evento para parar el juego hasta que de click al botón y reinicie el juego. 
+    //Parar el juego hasta que de click al botón y reinicie el juego. 
+    #finalizarJuego(){ 
         setTimeout(() => {
-            this.#removerEventoDelTeclado(); // Llamar al método reiniciar juego después del retraso 
+            this.#removerEventoDelTeclado(); 
         }, 2000); 
     }
 
-    #removerEventoDelTeclado(){ //Eliminar el evento para cuando reinice, empiece de cero y no se repitan eventos y sumen más de 1. 
-         //Evento click del ratón:
-         const botonesTeclado = document.querySelectorAll('.button__letra'); //Cojo todos los botones. 
-         botonesTeclado.forEach(botonTeclado => { //Primero recorro todos los botones. Y me lo guardo. 
-             //const botonTecladoPantalla = botonTeclado;
-             // Agrego un event listener (a todos los botones) para cuando se haga clic en el botón.
-             botonTeclado.removeEventListener('click', this.#recorrerBotones);
-        }); //Es una opción de los listeners. Hace que el evento ocurra una vez y luego se elimine automáticamente. 
+    //Eliminar el evento para cuando reinice, empiece de cero y no se repitan eventos y sumen más de 1. 
+    #removerEventoDelTeclado(){ 
+        //Evento click del ratón:
+        const botonesTeclado = document.querySelectorAll('.button__letra'); //Cojo todos los botones. 
+        botonesTeclado.forEach(botonTeclado => { 
+            botonTeclado.removeEventListener('click', this.#recorrerBotones);
+        }); 
     };
 
-    //MOSTRAR MENSAJE QUE HA GANADO Y LOS PUNTOS: 
+    //Mensaje de partida finalizada:  
     #mostrarMensajePartidaFinalizada(resultado){
         const fondo = document.querySelector('.fondo');
         const mensaje = document.querySelector('.mensaje');
@@ -227,10 +230,9 @@ class JuegoAhorcado extends Juego {
         }
 
         if(this.#user.conectado === true && this.#score){ 
-            console.log(`este es el score en ahorcado para la llamada: ${this.#score.id}`);
             try{
                 const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/scores/${this.#score.id}`, {
-                    method: 'PATCH', //Para actualizar solo la puntuación. 
+                    method: 'PATCH', 
                     headers : {
                         'Content-Type': 'application/json', 
                         'Accept': 'application/json', 
@@ -255,8 +257,7 @@ class JuegoAhorcado extends Juego {
             //No entra al catch solo porque la respuesta http tenga 404, si por problemas de conexión: 
             }catch(e){
                 //Mensaje a mostrar: 
-                this.#mostrarMensajePartidaFinalizada("Error de red o servidor. No se ha sumado la puntuación");
-                console.log(`este es el catch ${e}`); 
+                this.#mostrarMensajePartidaFinalizada("Error de red o servidor. No se ha sumado la puntuación"); 
                 return; 
             }
  
@@ -264,21 +265,18 @@ class JuegoAhorcado extends Juego {
 
     }
     
-    
-    #eventoReiniciarJuegoBoton(){ //La persona puede clickar también a media partida por si quiere empezar una nueva. 
+     //Se puede dar click también a media partida por si quiere empezar una nueva: 
+    #eventoReiniciarJuegoBoton(){ 
         const botonVolverAjugar = document.getElementById('botonVolverAjugar');
         if (!botonVolverAjugar) { 
             return;
         }
-        //HACERELO CON ONCLICK. 
         botonVolverAjugar.onclick = () => { 
-            // Deshabilitar el botón después de hacer click para no acumular llamadas. 
             botonVolverAjugar.disabled = true; 
             // Rehabilitar el botón después de cierto tiempo o condición
-            // Puedes usar setTimeout, o alguna lógica que determine cuándo habilitarlo de nuevo
             setTimeout(() => {
-                botonVolverAjugar.disabled = false; // Rehabilitar el botón
-            }, 2000); // 2 segundos, ajusta según necesites
+                botonVolverAjugar.disabled = false; 
+            }, 2000); 
             this.iniciarJuego();
         };
     } 

@@ -25,14 +25,11 @@ fetch('./html/header.html')
     });
 
 
-//TRAIGO LO QUE HAY EN footer.HTML PERO ESTOY EN INDEX.HTML
 fetch('./html/footer.html')
     .then(response => {
-        //Si hay un error lo lanzo para que catch lo coja. 
         if(!response.ok){
             throw new Error(`Error al cargar footer.html: ${response.statusText}`);
         }
-        //Si ese exitosa, contiunuamos. 
         return response.text(); 
     })
     .then(data =>{
@@ -43,11 +40,10 @@ fetch('./html/footer.html')
         document.getElementById('footer').innerHTML = "<p>Lo siento, no se pudo cargar el contenido del pie de página.</p>";
     });
 
-//Instancio la game App y cargo lo primero el home con las fotos de los juegos:
 const app = new GameApp();
 app.loadContent('Home');
-//Recupero los datos del usuario si los hay, para que no se pierdan al recargar la página.  
+//Recuperar datos user si los hay. 
 app.recoverUserData(); 
 
-//Añado los eventos para poder ir para atrás y adelante de la página (Router), escucha cambios en # el hash de la URL:  
+//Añadir los eventos para poder ir para atrás y adelante de la página (Router), escucha cambios en # el hash de la URL:  
 window.addEventListener('hashchange', app.router.bind(app)); 

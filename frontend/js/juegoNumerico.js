@@ -45,13 +45,12 @@ class JuegoNumerico extends Juego{
   
     #jugar(){
         this.#construirOperacion(this.#sacarNumOperandosRandom()); 
-        //Cada vez que se llama a jugar, se cuenta la ronda. 
         this.#contadorRondas++; 
     }
 
-    //PARA SEGUIR JUGANDO LIMPIANDO ANTES Y REINICIADO TEMPORIZADOR. 
+    //Seguir jugando, se limpian los temporizadores, se habilitan los botones y se llama a jugar para que empiece la siguiente ronda. 
     #gestionarRonda(){
-        //Reestablezco antes de empezar la bandera para saber si se responde o no y se cuenten las rondas correctamente.
+        //Reestablecer antes de empezar la bandera para saber si se responde o no y se cuenten las rondas correctamente.
         this.#respuesta = false; 
         this.#limpiarTemporizadores(); 
         this.#habilitarBotones();
@@ -59,31 +58,32 @@ class JuegoNumerico extends Juego{
         this.#reiniciarTemporizador(); 
     }
 
-    //LÓGICA OPERACIONES:
+    //Lógica operaciones: 
     #sacarNumOperandosRandom() {
        return Math.floor(Math.random() * (this.#numOperaciones - 1)) + 2; 
     }
 
     #construirOperacion(numOperandos) {
-        let operacion = []; //Limpio el array para que no se acumulen y pueda mostrar la operación correctamente. 
+        let operacion = []; 
         let numArellenar = 0; 
         let indiceOperacion = 0;
         let numFinalizarBucle = (numOperandos - 1) * 2;
-        while(operacion.length < numFinalizarBucle){ //Quiero que rellene el array con nun número menos. 
+        while(operacion.length < numFinalizarBucle){ 
             numArellenar = this.#calcularNumeroArellenar();
             indiceOperacion = Math.floor(Math.random() * this.#operacionesPosibles.length);
-            operacion.push(numArellenar); //Agrega el num random. 
-            operacion.push(this.#operacionesPosibles[indiceOperacion]); //Agrega la operación. 
+            operacion.push(numArellenar); 
+            operacion.push(this.#operacionesPosibles[indiceOperacion]); 
         }
         numArellenar = this.#calcularNumeroArellenar();
-        operacion.push(numArellenar); //para rellenar el último número y no preguntar un if dentro del bucle. 
-        this.#confirmarOperacion(operacion.join(' ')); //Confirmo. 
+        //Rellenar el último número y no preguntar un if dentro del bucle. 
+        operacion.push(numArellenar); 
+        this.#confirmarOperacion(operacion.join(' ')); 
     }
 
     #confirmarOperacion(operacionString) {
-        this.#resultado = math.evaluate(operacionString);//Utilizo la librería para pasar un string a num y calcular. 
+        this.#resultado = math.evaluate(operacionString);
         if (this.#resultado >= 1 && this.#resultado <= this.#tope) {
-            this.#mostrarOperacionPantalla(operacionString); //Si el this.resultado es correcto. Muestro operación. 
+            this.#mostrarOperacionPantalla(operacionString); 
             return;
         } 
         //Para que se construya otra vez y obtenga el resultado. 
@@ -123,7 +123,7 @@ class JuegoNumerico extends Juego{
         }
     }
 
-    #mostrarMensajeUltimaRonda(mensajeAmostrar){ //mostrar última ronda. 
+    #mostrarMensajeUltimaRonda(mensajeAmostrar){ 
         const fondo = document.querySelector('.fondo');
         const mensaje = document.querySelector('.mensaje');
         mensaje.textContent = mensajeAmostrar;
@@ -131,7 +131,7 @@ class JuegoNumerico extends Juego{
         mensaje.classList.add('mostrar__mensaje'); 
     }
 
-    #eliminarMensajeUltimaRonda(callback){ //eliminar mensaje última ronda al pasar 4 segundos. 
+    #eliminarMensajeUltimaRonda(callback){ 
         const fondo = document.querySelector('.fondo');
         const mensaje = document.querySelector('.mensaje');
         let temporizadorMensaje = setTimeout(()=>{
@@ -141,17 +141,18 @@ class JuegoNumerico extends Juego{
         }, 3000);
     } 
 
-    /*PRIMER MÉTODO AL QUE SE LLAMA PARA EMPEZAR TODO. CLICK INICIO JUEGO */ 
+    /*Aquí empieza. Click inicio juego */ 
     inicioJuegoBoton() {
         let botonIniciar = document.getElementById('buttonIniciar');
         botonIniciar.onclick = () => {
             this.#empezarJuego(); 
             this.#eventoBotonResultado();
-            botonIniciar.disabled = true; //el usuario ya no puede hacer click en él, está desabilitado. //al darle click a iniciar juego porque si no, el juego empieza aunque no haya iniciado y le doy click al 1, ya cuenta. 
+            //User no puede dar click, se deshabilita. 
+            botonIniciar.disabled = true; 
             this.#configurarBotonVolverAjugar();
         }
     } 
-    //OTRO BOTÓN PARA VOLVER  A JUGAR: 
+    
     #configurarBotonVolverAjugar(){
         const botonVolver = document.getElementById('volverJugar');
         botonVolver.onclick = () => {
@@ -211,7 +212,7 @@ class JuegoNumerico extends Juego{
         }); 
     } 
 
-   //Quiero que vaya siempre cuando el usuario haya acertado si ha fallado o ha terminado, detenerlo. 
+   //Que vaya siempre cuando el usuario haya acertado si ha fallado o ha terminado, detenerlo. 
    #reiniciarTemporizador() { 
         let circulo = document.getElementById('circulo');
         // Remover para reiniciar.
@@ -221,9 +222,8 @@ class JuegoNumerico extends Juego{
             circulo.classList.add('temporizador__activo');
         }, 50);
 
-        // PASADOS 5 SEGUNDOS COMPRUEBA SI HA HABIDO RESPUESTA:
+        // Pasados 5s comprobar si hay respuesta: 
         this.idTemporizadorRespuesta = setTimeout(() => {
-            //Si  no se recibió respuesta: 
             if(!this.#respuesta){
                 this.#comprobarRonda(); 
             }
@@ -297,8 +297,7 @@ class JuegoNumerico extends Juego{
                 return; 
 
             //No entra al catch solo porque la respuesta http tenga 404, si por problemas de conexión: 
-            }catch(e){
-                console.log("Error de red o servidor. No se ha sumado la puntuación");
+            }catch(e){ 
                 this.#reiniciarJuego(); 
                 return; 
             }

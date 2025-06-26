@@ -15,7 +15,6 @@ class JuegoTresEnRaya extends Juego{
 
     constructor(user, score) {
         super('tresEnRaya', 'Juego de estrategia', 0);
-        // Inicialización de los atributos privados: 
         this.#matrizJuego = [
             [undefined, undefined, undefined],
             [undefined, undefined, undefined],
@@ -27,9 +26,9 @@ class JuegoTresEnRaya extends Juego{
             './img/o.png', 
             './img/x.png'];
        
-        this.#primerTurno = this.#fichaPersona; // Primero le toca persona
+        this.#primerTurno = this.#fichaPersona; 
         this.#turnoActual = this.#primerTurno;
-        this.#numJugada = 0; // Para saber en qué jugada me encuentro
+        this.#numJugada = 0;
         this.#user = user; 
         this.#score = score; 
     }
@@ -42,11 +41,11 @@ class JuegoTresEnRaya extends Juego{
         }else{
             this.#primeraJugadaSiTurnoMaquina();
         }
-        //Al iniciar juego se activa el onclick de reiniciar: 
+        //Se activa el onclick de reiniciar: 
         this.#reiniciarJuego();
     }
 
-    //JUGADA PERSONA:
+    //Jugada persona:
     #eventoClickBotones() {
         //Selecciona todos los botones
         const botones = document.querySelectorAll('.button');
@@ -121,7 +120,7 @@ class JuegoTresEnRaya extends Juego{
         if(this.#user.conectado === true && this.#score){ 
             try{
                 const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/scores/${this.#score.id}`, {
-                    method: 'PATCH', //Para actualizar solo la puntuación. 
+                    method: 'PATCH', 
                     headers : {
                         'Content-Type': 'application/json', 
                         'Accept': 'application/json', 
@@ -217,7 +216,7 @@ class JuegoTresEnRaya extends Juego{
         }); 
         this.#cambiarTurnoVisual(); 
     }
-    //Para que no pueda hacer click mientras juega la máquina:
+    //User no pueda hacer click mientras juega la máquina:
     #deshabilitarJugador(){
         const botones = document.querySelectorAll('.button');
         botones.forEach((boton)=>{
@@ -248,13 +247,13 @@ class JuegoTresEnRaya extends Juego{
         }
     }
 
-    //JUGADA MÁQUINA: 
+    //Jugada máquina: : 
     #primeraJugadaSiTurnoMaquina(){
         this.#deshabilitarJugador();
-        //Siempre la primera tirada de la máquina será en medio: 
+        //Primera tirada, en medio: 
         let primeraPosicionMaquina = [1,1];
         this.#posicionarFichaMaquina(primeraPosicionMaquina);
-        //Y llama al evento click para que el usuario pueda jugar:
+        //Llamar al evento click para que el user pueda jugar: 
         this.#eventoClickBotones(); 
     }
 
@@ -275,8 +274,7 @@ class JuegoTresEnRaya extends Juego{
         let respuestaDobleFichaGanadora = false;
         let respuestaFichaEvitarPerder = false;
         let posicionEstrategicaEncontrada = [];
-        let posicionVaciaEncontrada = [];
-        //let respuestaFichaEvitarPerder = false;
+        let posicionVaciaEncontrada = []; 
         //Primero comprobar si hay dos seguidas máquina para posicionar la tercera y ganar:
         respuestaDobleFichaGanadora = this.#posicionEntreDos(this.#fichaMaquina);
         //Si ha encontrado posición ganadora, posicionarla: 
@@ -335,7 +333,7 @@ class JuegoTresEnRaya extends Juego{
     //Llama para revisar filaColumna recursivamente. Diagonal principal. Diagonal secundaria. 
     #posicionEntreDos(ficha){
         let respuestaDiagonaPrincipal, respuestaDiagonalSecundaria, respuestaFilaCol;
-        //Llamo, compruebo en fila y col si hay 2 iguales de ficha máquina. Si las hay return fila y col de la posición. 
+        //Compruebar en fila y col si hay 2 iguales de ficha máquina. Si las hay return fila y col de la posición. 
         respuestaFilaCol = this.#revisarFilaColumna(0,0, ficha);
         if(respuestaFilaCol){
             return respuestaFilaCol;
@@ -365,26 +363,26 @@ class JuegoTresEnRaya extends Juego{
         if(fila > 2){
             return false;
         }
-        //Primero compruebo la fila, la recorro y me devuelve las veces que ha encontrado esa ficha. 
+        //Comprobar la fila, la recorro y devuelve las veces que ha encontrado esa ficha. 
         ocurrenciasFila = this.#matrizJuego[fila].filter(elemento => elemento === ficha).length;
         if(ocurrenciasFila === 2){
             indiceVacio = this.#matrizJuego[fila].findIndex(elemento => elemento === undefined);
             if(indiceVacio != -1){
-                //Returno la posición que he encontrado para posicionar fichaMaquina.
+                //Return la posición que ha encontrado para posicionar fichaMaquina.
                 return [fila, indiceVacio];
             }
         }
-        //Ahora compruebo las columnas: 
+        //Comprobar las columnas: 
         columnaArray = this.#matrizJuego.map(fila => fila[columna]);
         contadorOcurrenciasColumna = columnaArray.filter(elemento => elemento === ficha).length;
         if(contadorOcurrenciasColumna === 2){
             indiceVacioCol = columnaArray.findIndex(elemento => elemento === undefined);
             if(indiceVacioCol != -1){
-                //Retorno la posición que he encontrado para posicionar fichaMaquina. 
+                //Return la posición que he encontrado para posicionar fichaMaquina. 
                 return [indiceVacioCol, fila];
             }
         }
-        // Llamada recursiva y DEVOLVER SU RESULTADO
+        // Llamada recursiva y devolver resultado: 
         return this.#revisarFilaColumna(fila + 1, columna + 1, ficha);   
     }
 
@@ -429,7 +427,7 @@ class JuegoTresEnRaya extends Juego{
     #posicionEstrategica() {
         let posicionEstrategica;
     
-        // Primero compruebo en fila,col
+        // Comprobar en fila,col
         posicionEstrategica = this.#posicionEstrategicaFilaCol(0, 0);
         if (posicionEstrategica) {
             return posicionEstrategica;
@@ -460,7 +458,7 @@ class JuegoTresEnRaya extends Juego{
         if(fila > 2){
             return false;
         }
-        //Primero compruebo la fila. 
+        //Comprobar fila: 
         this.#matrizJuego[fila].forEach((elemento, indice) =>{
             if(elemento === undefined){
                 contadorEspacioVacioFila++;
@@ -472,11 +470,11 @@ class JuegoTresEnRaya extends Juego{
         });
 
         if(contadorEspacioVacioFila === 2 && totalFichaMaquinaFila === 1){
-            //He encontrado mi ficha con 2 espacios vacios.
+            //Encontrado la ficha con 2 espacios vacios.
             return [fila, indicesVaciosFila[0]];
         }
 
-        //Ahora compruebo las columnas: 
+        //Comprobar las columnas: 
         columnaArray = this.#matrizJuego.map(fila => fila[columna]);
         columnaArray.forEach((elemento, indice) => {
             if(elemento === undefined){
@@ -489,15 +487,15 @@ class JuegoTresEnRaya extends Juego{
         });
 
         if(contadorEspacioVacioCol === 2 && totalFichaMaquinaCol === 1){
-            //He encontrado mi ficha con 2 espacios vacios.
+            //Ha encontrado la ficha con 2 espacios vacios.
             return [indicesVaciosCol[0], fila];
         }
 
-        // Llamada recursiva y DEVOLVER SU RESULTADO
+        // Llamada recursiva y devolver resultado: 
         return this.#posicionEstrategicaFilaCol(fila + 1, columna + 1); 
     }
 
-    //COMPROBAR DIAGONALES PARA POSICION ESTRATEGICA. 
+    //Comprobar diagonales para posición estratégica:  
     #posicionEstrategicaDiagonalPrincipal(){
         let contadorFichaMaquina = 0;
         let contadorEspaciosVacios = 0;
@@ -538,7 +536,7 @@ class JuegoTresEnRaya extends Juego{
         }
     }
 
-    //Posiciono ficha ganadora máquina. 
+    //Posicionar ficha ganadora máquina. 
     #posicionarFichaMaquina(filaColumna){
         this.#numJugada++;
         //Se posiciona ficha en matriz interna:
@@ -570,11 +568,12 @@ class JuegoTresEnRaya extends Juego{
         mensaje.textContent = mensajeAmostrar;
         fondo.classList.add('fondo__transparente');
         mensaje.classList.add('mostrar__mensaje'); 
-        //Termino juego para deshabilitar los botones:
+        //Terminar juego para deshabilitar los botones:
         this.#terminarJuego();
     }
 
-    #eliminarMensajeFinalizaJuego(){ //eliminar mensaje última ronda al pasar 4 segundos. 
+    //Eliminar mensaje última ronda al pasar 4 segundos. 
+    #eliminarMensajeFinalizaJuego(){ 
         const fondo = document.querySelector('.fondo');
         const mensaje = document.querySelector('.mensaje');
         let temporizadorMensaje = setTimeout(()=>{
@@ -591,10 +590,10 @@ class JuegoTresEnRaya extends Juego{
     #reiniciarJuego(){
         let botonVolverAjugar = document.querySelector('.boton__volver-jugar-tres-en-raya');
         botonVolverAjugar.onclick = (() =>{
-            //Limpio matriz interna:
+            //Limpiar matriz interna:
             this.#matrizJuego = Array(3).fill().map(() => Array(3).fill(undefined));
             this.#numJugada = 0;
-            //Limpio imágenes en tablero:
+            //Limpiar imágenes en tablero:
             document.querySelectorAll('.imagen_button').forEach(img => img.remove());
             this.#primerTurno = this.#primerTurno === this.#fichaPersona ? this.#fichaMaquina : this.#fichaPersona;
             this.iniciarJuego(); 
