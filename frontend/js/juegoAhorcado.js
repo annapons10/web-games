@@ -1,5 +1,6 @@
-//import { API } from './config.js';
-class JuegoAhorcado extends Juego { 
+import { API } from './config.js';
+import { Juego } from './juego.js';
+export class JuegoAhorcado extends Juego { 
     #palabraAleatoria;
     #palabraOculta;
     #maximaJugadas;

@@ -1,6 +1,9 @@
+import { API } from './config.js';
+import { JuegoAhorcado } from './juegoAhorcado.js';
+import { JuegoNumerico } from './juegoNumerico.js';
+import { JuegoTresEnRaya } from './juegoTresEnRaya.js';
 
-//import { API } from './config.js';
-class GameApp{
+export class GameApp{
     constructor(){
         this.videojuegos = [
             { id: "ahorcado", nombre: "Juego Ahorcado", tipo: "Palabras", puntuacion: 0 },
@@ -317,7 +320,7 @@ class GameApp{
                         return; 
                     }else{
                         //Lanzar un error genérico:
-                        errorDiv.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde.';
+                        errorDiv.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde error.';
                         return;
                     }
                 }

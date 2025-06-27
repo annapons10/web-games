@@ -1,6 +1,6 @@
-
-//import { API } from './config.js';
-class JuegoNumerico extends Juego{
+import { API } from './config.js';
+import { Juego } from './juego.js';
+export class JuegoNumerico extends Juego{
     #rondas;
     #operacionesPosibles;
     #tope;

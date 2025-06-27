@@ -1,4 +1,8 @@
-//TRAIGO LO QUE HAY EN HEADER.HTML PERO ESTOY EN INDEX.HTML 
+//Punto de entrada de la aplicación, aquí se importan los módulos y se inicializa la aplicación.
+
+import { GameApp } from './GameApp.js';
+
+//Traer lo que hay en el header y footer de los archivos html. 
 fetch('./html/header.html') 
     .then(response => {
         if(!response.ok){

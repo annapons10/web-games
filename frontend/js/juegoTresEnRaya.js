@@ -1,6 +1,6 @@
-
-//import { API } from './config.js';
-class JuegoTresEnRaya extends Juego{
+import { API } from './config.js';
+import { Juego } from './juego.js';
+export class JuegoTresEnRaya extends Juego{
     // Declaración de los atributos privados
     #matrizJuego;
     #fichaMaquina;

@@ -1,2 +1,2 @@
 
-export const API = 'https://apigames.annaponsprojects.com/api/v1'; 
+export const API = 'https://api-games.annaponsprojects.com/api/v1'; 
