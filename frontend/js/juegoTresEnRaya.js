@@ -45,16 +45,17 @@ export class JuegoTresEnRaya extends Juego{
     }
 
     #reiniciarJuego(){ 
+        //Se limpia todo al iniciar el juego:
+        this.#limpiarJuego(); 
+        //Se activa el onclick de reiniciar: 
+        this.#botonEventoReiniciarJuego();
+
         if(this.#primerTurno === this.#fichaPersona){
             this.#habilitarClickJugador();
             this.#eventoClickBotones(); 
         }else{
             this.#primeraJugadaSiTurnoMaquina();
-        }
-        //Se limpia todo al iniciar el juego:
-        this.#limpiarJuego(); 
-        //Se activa el onclick de reiniciar: 
-        this.#botonEventoReiniciarJuego();
+        } 
     }
 
 
@@ -290,6 +291,7 @@ export class JuegoTresEnRaya extends Juego{
         let posicionVaciaEncontrada = []; 
         //Primero comprobar si hay dos seguidas máquina para posicionar la tercera y ganar:
         respuestaDobleFichaGanadora = this.#posicionEntreDos(this.#fichaMaquina);
+        console.log(`respuestaDobleFichaGanadora máquina: ${respuestaDobleFichaGanadora}`);
         //Si ha encontrado posición ganadora, posicionarla: 
         if(respuestaDobleFichaGanadora){
             this.#posicionarFichaMaquina(respuestaDobleFichaGanadora);
@@ -317,6 +319,9 @@ export class JuegoTresEnRaya extends Juego{
                     }
                 } 
             }
+            console.log(`respuestaFichaEvitarPerder: ${respuestaFichaEvitarPerder}`);
+            console.log(`respuestaDobleFichaGanadora: ${respuestaDobleFichaGanadora}`);
+            console.log(`posicionEstrategicaEncontrada: ${posicionEstrategicaEncontrada}`);
         } 
 
         //Comprobar que num de jugada es, si es la última y no quedan, empate: 
@@ -344,6 +349,7 @@ export class JuegoTresEnRaya extends Juego{
 
     //Recibe fichaMaquina o fichaPersona para comprobar si hay dos seguidas y colocar la tercera o bien para ganar o para evitar perder.
     //Llama para revisar filaColumna recursivamente. Diagonal principal. Diagonal secundaria. 
+    //AQUI:::::
     #posicionEntreDos(ficha){
         let respuestaDiagonaPrincipal, respuestaDiagonalSecundaria, respuestaFilaCol;
         //Compruebar en fila y col si hay 2 iguales de ficha máquina. Si las hay return fila y col de la posición. 
@@ -363,6 +369,7 @@ export class JuegoTresEnRaya extends Juego{
         } 
 
         //No ha encontrado lugar ni ganadora ni evitar perder. 
+        console.log("No ha encontrado posicion ganadora de: " + ficha);
         return false;
     }
 
@@ -378,6 +385,7 @@ export class JuegoTresEnRaya extends Juego{
         }
         //Comprobar la fila, la recorro y devuelve las veces que ha encontrado esa ficha. 
         ocurrenciasFila = this.#matrizJuego[fila].filter(elemento => elemento === ficha).length;
+        console.log(`ocurrenciasFila: ${ocurrenciasFila} de ficha: ${ficha}`);
         if(ocurrenciasFila === 2){
             indiceVacio = this.#matrizJuego[fila].findIndex(elemento => elemento === undefined);
             if(indiceVacio != -1){
@@ -400,11 +408,15 @@ export class JuegoTresEnRaya extends Juego{
     }
 
     #recorrerDiagonalPrincipal(ficha){
+        console.log(this.#matrizJuego);
         let contador = 0;
         let indiceVacio = -1;
         for(let i = 0; i < this.#matrizJuego.length; i++){
             if(this.#matrizJuego[i][i] === ficha){
+                
+                console.log("pasooooo"); 
                 contador++;
+                console.log(`en ${i}${i} de ficha: ${ficha} contador: ${contador}`);
             }
             if(this.#matrizJuego[i][i] === undefined){
                 indiceVacio = i;
@@ -551,9 +563,11 @@ export class JuegoTresEnRaya extends Juego{
 
     //Posicionar ficha ganadora máquina. 
     #posicionarFichaMaquina(filaColumna){
+        console.log(`posicionarFichaMaquina: ${filaColumna}`);
         this.#numJugada++;
         //Se posiciona ficha en matriz interna:
         this.#matrizJuego[filaColumna[0]][filaColumna[1]] = this.#fichaMaquina;
+        console.log(`esta es la matrizjuego supuestamente despues de añadir fihca máquina: ${this.#matrizJuego}`);
         //Posicionar ficha máquina visualmente aquí pero con unos segundos de espera:
         setTimeout(() =>{
             this.#posicionarImagenFicha(this.#fichaMaquina,filaColumna[0], filaColumna[1]);
