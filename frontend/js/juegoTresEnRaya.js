@@ -34,8 +34,7 @@ export class JuegoTresEnRaya extends Juego{
     }
     
     //Punto de entrada del juego:
-    entradaJuego(){
-        console.log("entrada juego"); 
+    entradaJuego(){ 
         //Se limpia todo al iniciar el juego:
         this.#limpiarJuego(); 
         this.#primerTurno = this.#fichaPersona; 
@@ -45,9 +44,7 @@ export class JuegoTresEnRaya extends Juego{
         this.#botonEventoReiniciarJuego();
     }
 
-    #reiniciarJuego(){
-        console.log("Reinicio juego desde dentro"); 
-        console.log(`primer turno: ${this.#primerTurno}`);
+    #reiniciarJuego(){ 
         if(this.#primerTurno === this.#fichaPersona){
             this.#habilitarClickJugador();
             this.#eventoClickBotones(); 
@@ -607,12 +604,8 @@ export class JuegoTresEnRaya extends Juego{
         let botonVolverAjugar = document.querySelector('.boton__volver-jugar-tres-en-raya');
         botonVolverAjugar.onclick = (() =>{
             //Cambiar ficha: 
-            console.log(`this.#primerTurno: ${this.#primerTurno}`);
             this.#primerTurno = this.#primerTurno === this.#fichaPersona ? this.#fichaMaquina : this.#fichaPersona;
             this.#reiniciarJuego(); 
-           /*  this.#limpiarJuego(); 
-            this.#primerTurno = this.#primerTurno === this.#fichaPersona ? this.#fichaMaquina : this.#fichaPersona;
-            this.iniciarJuego();  */
         }); 
     }
 
