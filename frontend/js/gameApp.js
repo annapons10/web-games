@@ -4,25 +4,33 @@ import { JuegoNumerico } from './juegoNumerico.js';
 import { JuegoTresEnRaya } from './juegoTresEnRaya.js';
 
 export class GameApp{
+    #videojuegos;
+    #videojuegosInstanciados;
+    #user;
+    #scores;
+    #eventoLogin;
+    #eventoRegister;
+    #eventoLogout;
+    #eventoEliminarUsuario;
     constructor(){
-        this.videojuegos = [
+        this.#videojuegos = [
             { id: "ahorcado", nombre: "Juego Ahorcado", tipo: "Palabras", puntuacion: 0 },
             { id: "juegoNumerico", nombre: "Juego Numérico", tipo: "Matemáticas", puntuacion: 0 },
             { id: "tresEnRaya", nombre: "Juego Tres En Raya", tipo: "Estrategia", puntuacion: 0 }
         ];
         //Objeto donde voy a guardar las instancias para luego acceder a sus métodos. 
-        this.videojuegosInstanciados = {} ;
-        this.user = {
+        this.#videojuegosInstanciados = {} ;
+        this.#user = {
             id: null,
             token: null,
             conectado: false,
         }; 
-        this.scores = []; 
+        this.#scores = []; 
         //Para no añadir más de un evento a los formularios:
-        this.eventoLogin = false;
-        this.eventoRegister = false; 
-        this.eventoLogout = false; 
-        this.eventoEliminarUsuario = false; 
+        this.#eventoLogin = false;
+        this.#eventoRegister = false; 
+        this.#eventoLogout = false; 
+        this.#eventoEliminarUsuario = false; 
        
     }
 
@@ -31,27 +39,27 @@ export class GameApp{
         const storedUser = localStorage.getItem('user');
         const storeScores = localStorage.getItem('scores'); 
         if(storedUser && storeScores){
-            this.user = JSON.parse(storedUser); 
-            this.scores = JSON.parse(storeScores); 
+            this.#user = JSON.parse(storedUser); 
+            this.#scores = JSON.parse(storeScores); 
         }else{
-            this.resetUserData();
-            this.resetScoresData(); 
+            this.#resetUserData();
+            this.#resetScoresData(); 
         } 
     } 
 
-    resetScoresData(){
-        this.scores = [];
+    #resetScoresData(){
+        this.#scores = [];
     }
 
-    resetEvents(){ 
-        this.eventoLogin = false;
-        this.eventoRegister = false; 
-        this.eventoLogout = false;
-        this.eventoEliminarUsuario = false; 
+    #resetEvents(){ 
+        this.#eventoLogin = false;
+        this.#eventoRegister = false; 
+        this.#eventoLogout = false;
+        this.#eventoEliminarUsuario = false; 
     }  
 
-    resetUserData(){  
-        this.user = {
+    #resetUserData(){  
+        this.#user = {
             id: null,
             token: null,
             conectado: false,
@@ -60,7 +68,7 @@ export class GameApp{
 
 
     //Clicks de los botones de los juegos para cargar html y instanciar los juegos:
-    crearEventosParaTodosLosJuegosAlHacerClick(){
+    #crearEventosParaTodosLosJuegosAlHacerClick(){
         const botonesImagenesJuegos = document.querySelectorAll('.img-button');
         botonesImagenesJuegos.forEach(boton => {
             boton.addEventListener('click', () =>{
@@ -68,10 +76,10 @@ export class GameApp{
                 //Cambiar hash de la URL : 
                 const nuevoHash = `#${juego}`;
                 location.hash = nuevoHash; 
-                this.instanciarJuego(juego);
+                this.#instanciarJuego(juego);
                 //Asegura que el dom está cargado y tengo las instancias para llamar a sus métodos. 
                 setTimeout(() => {
-                    this.loadGameContent(juego);
+                    this.#loadGameContent(juego);
                 }, 100);
 
             });
@@ -80,13 +88,13 @@ export class GameApp{
 
   
     //INSTANCIAR LOS JUEGOS DEPENDIENDO DE DÓNDE HAGA CLICK EL USUARIO: 
-    instanciarJuego(id){
-        if(id === 'ahorcado' && !this.videojuegosInstanciados[id]){
-            this.videojuegosInstanciados[id] = new JuegoAhorcado(7, this.user, this.scores[0]);
-        }else if(id === 'juegoNumerico' && !this.videojuegosInstanciados[id]){
-            this.videojuegosInstanciados[id] = new JuegoNumerico(10, ['+', '-'], 3, 4, this.user, this.scores[1]); 
-        }else if(id === 'tresEnRaya' && !this.videojuegosInstanciados[id]){
-            this.videojuegosInstanciados[id] = new JuegoTresEnRaya(this.user, this.scores[2]); 
+    #instanciarJuego(id){
+        if(id === 'ahorcado' && !this.#videojuegosInstanciados[id]){
+            this.#videojuegosInstanciados[id] = new JuegoAhorcado(7, this.#user, this.#scores[0]);
+        }else if(id === 'juegoNumerico' && !this.#videojuegosInstanciados[id]){
+            this.#videojuegosInstanciados[id] = new JuegoNumerico(10, ['+', '-'], 3, 4, this.#user, this.#scores[1]); 
+        }else if(id === 'tresEnRaya' && !this.#videojuegosInstanciados[id]){
+            this.#videojuegosInstanciados[id] = new JuegoTresEnRaya(this.#user, this.#scores[2]); 
         }
     }
 
@@ -95,11 +103,11 @@ export class GameApp{
 
         if(page === 'Home'){
             //TRAIGO LO QUE HAY EN HEADER.HTML PERO ESTOY EN INDEX.HTML
-            fetch('./html/home.html') 
+            fetch('./html/home.html')
                 .then(response => response.text() )
                 .then(data =>{
                     document.getElementById('main').innerHTML = data; 
-                    this.crearEventosParaTodosLosJuegosAlHacerClick(); 
+                    this.#crearEventosParaTodosLosJuegosAlHacerClick(); 
                 })
                 .catch(error => {
                     document.querySelector('.container__home').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
@@ -109,7 +117,7 @@ export class GameApp{
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
-                    this.mostrarJuegosEnPantalla(); 
+                    this.#mostrarJuegosEnPantalla(); 
                 })
                 .catch(error => {
                     document.querySelector('.container__home').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
@@ -117,15 +125,15 @@ export class GameApp{
         }else if(page === 'Mi usuario'){ 
 
             //No está conectado, mostrar para conectarse: 
-            if(!this.user.conectado){
+            if(!this.#user.conectado){
                 fetch('./html/miUsuario.html')
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
                     //Activar el evento de envío de form y registro solo cuando el html está cargado: 
                     requestAnimationFrame(() => {
-                        this.configurarEventoLogin(); 
-                        this.configurarEventoClickRegistro();
+                        this.#configurarEventoLogin(); 
+                        this.#configurarEventoClickRegistro();
                     });
                 })
                 .catch(error => {
@@ -133,14 +141,14 @@ export class GameApp{
                 }); 
             }
             //Está conectado, mostrar para poder hacer logout: 
-            if(this.user.conectado){ 
+            if(this.#user.conectado){ 
                 fetch('./html/logout.html')
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
                     //Activar el click en el botón cerrar sesión: 
-                    this.configurarEventoLogout();  
-                    this.configurarEventoEliminarUsuario(); 
+                    this.#configurarEventoLogout();  
+                    this.#configurarEventoEliminarUsuario(); 
                 })
                 .catch(error => {
                     document.querySelector('.container__home').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
@@ -151,23 +159,23 @@ export class GameApp{
         
     }
 
-    configurarEventoClickRegistro(){
+    #configurarEventoClickRegistro(){
         const buttonRegister =  document.querySelector('.button-register');
         buttonRegister.addEventListener('click', () => {
-            this.configurarEventoRegister(); 
+            this.#configurarEventoRegister(); 
         }); 
     }
 
     //Cargar los juegos dinámicamente: 
-    loadGameContent(game){
+    #loadGameContent(game){
         if(game === 'ahorcado'){
             fetch('./html/ahorcado.html') 
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data
-                    this.videojuegosInstanciados['ahorcado'].crearTecladoPantalla(); 
-                    this.videojuegosInstanciados['ahorcado'].mostrarModalInicio(); 
-                    this.videojuegosInstanciados['ahorcado'].iniciarJuego();
+                    this.#videojuegosInstanciados['ahorcado'].crearTecladoPantalla(); 
+                    this.#videojuegosInstanciados['ahorcado'].mostrarModalInicio(); 
+                    this.#videojuegosInstanciados['ahorcado'].iniciarJuego();
                 })
                 .catch(error => {
                     document.querySelector('.ahorcado__container').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
@@ -180,8 +188,8 @@ export class GameApp{
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data 
-                    this.videojuegosInstanciados['juegoNumerico'].mostrarModalInicio(); 
-                    this.videojuegosInstanciados['juegoNumerico'].inicioJuegoBoton();  
+                    this.#videojuegosInstanciados['juegoNumerico'].mostrarModalInicio(); 
+                    this.#videojuegosInstanciados['juegoNumerico'].inicioJuegoBoton();  
                     const botonVolver = document.getElementById('volverJugar');
                 })
                 .catch(error => {
@@ -193,8 +201,8 @@ export class GameApp{
                 .then(response => response.text())
                 .then(data =>{
                     document.getElementById('main').innerHTML = data 
-                    this.videojuegosInstanciados['tresEnRaya'].mostrarModalInicio(); 
-                    this.videojuegosInstanciados['tresEnRaya'].entradaJuego();
+                    this.#videojuegosInstanciados['tresEnRaya'].mostrarModalInicio(); 
+                    this.#videojuegosInstanciados['tresEnRaya'].entradaJuego();
                 })
                 .catch(error => {
                     document.querySelector('.container').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";
@@ -203,11 +211,11 @@ export class GameApp{
     }
 
     //MOSTRAR JUEGOS EN PANTALLA CUANDO EL USUARIO HAGA CLICK EN "MIS JUEGOS":
-    async mostrarJuegosEnPantalla(){
+    async #mostrarJuegosEnPantalla(){
         // Inicializar una variable para acumular el HTML.
         let juegosHTML = ''; 
 
-        if(this.user.conectado === false){
+        if(this.#user.conectado === false){
             juegosHTML += `
                <p>Para llevar un seguimiento de tus juegos, regístrate o inicia sesión. </p>
             `
@@ -217,7 +225,7 @@ export class GameApp{
 
         //Conectar con la BD para mostrar los juegos/puntuación: 
             try{
-                const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/users/${this.user.id}`, {
+                const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/users/${this.#user.id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json', 
@@ -265,7 +273,7 @@ export class GameApp{
     } 
 
     //Cambiar el hash y mostrar la pantalla correspondiente: 
-    router(){
+    #router(){
         const router = location.hash.slice(1);
 
         if(router === 'home'){
@@ -279,10 +287,10 @@ export class GameApp{
     } 
 
     //El login: 
-    configurarEventoLogin(){ 
-        if(this.eventoLogin) return; 
+    #configurarEventoLogin(){ 
+        if(this.#eventoLogin) return; 
 
-        this.eventoLogin = true;
+        this.#eventoLogin = true;
         //Escucha el envío de login y hace la llamada al backend:
         const loginForm = document.querySelector('.form__miUsuario');
         const errorDiv = document.querySelector('.errorLogin'); 
@@ -301,7 +309,7 @@ export class GameApp{
 
             //Ir al backend para confirmar:
             try{
-                const respuesta = await fetch('http://127.0.0.1:8000/api/v1/login', {
+                const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json', 
@@ -320,7 +328,7 @@ export class GameApp{
                         return; 
                     }else{
                         //Lanzar un error genérico:
-                        errorDiv.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde error.';
+                        errorDiv.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde.';
                         return;
                     }
                 }
@@ -329,22 +337,22 @@ export class GameApp{
                 const data = await respuesta.json(); 
 
                 //Guardar datos user conectado:  
-                this.user.id = data.user.id; 
-                this.user.token = data.token;
-                this.user.conectado = true; 
-                this.scores = data.user.scores; 
+                this.#user.id = data.user.id; 
+                this.#user.token = data.token;
+                this.#user.conectado = true; 
+                this.#scores = data.user.scores; 
 
                 //Guardar el user en localStorage (pasándolo a json): 
-                localStorage.setItem('user', JSON.stringify(this.user));
+                localStorage.setItem('user', JSON.stringify(this.#user));
                 //Y los scores:
-                localStorage.setItem('scores', JSON.stringify(this.scores)); 
+                localStorage.setItem('scores', JSON.stringify(this.#scores)); 
 
                 //Redigirigir a mis juegos:
-                app.loadContent('Mis juegos'); 
+                this.loadContent('Mis juegos'); 
 
             }catch(e){  
                 //Error de red, servidor caído, URL mal escrita, etc.
-                errorDiv.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde.'; 
+                errorDiv.textContent = 'Ocurrió un error inesperado. Inténtalo más tarde.';  
             }
 
 
@@ -352,19 +360,19 @@ export class GameApp{
     }
 
     //Logout:
-    configurarEventoLogout(){ 
-        if(this.eventoLogout) return; 
-        this.eventoLogout = true;
+    #configurarEventoLogout(){ 
+        if(this.#eventoLogout) return; 
+        this.#eventoLogout = true;
         const buttonLogout = document.querySelector('.btn-logout');
         const errorDiv = document.querySelector('.errorLogout'); 
 
         buttonLogout.addEventListener('click', async () => { 
             try{ 
-                const respuesta = await fetch('http://127.0.0.1:8000/api/v1/logout', {
+                const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/logout`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.user.token}`, 
+                        'Authorization': `Bearer ${this.#user.token}`, 
                     }
                 });
 
@@ -381,28 +389,27 @@ export class GameApp{
 
                 }
 
-                this.resetEvents(); 
+                this.#resetEvents(); 
                 //Borrar el token:
                 localStorage.removeItem('user');
                 localStorage.removeItem('scores'); 
-                this.resetUserData(); 
-                this.resetScoresData();
+                this.#resetUserData(); 
+                this.#resetScoresData();
                 //Vaciar juegos intanciados para que se vuelvan a instanciar con this.user en false:
-                this.videojuegosInstanciados = {}; 
+                this.#videojuegosInstanciados = {}; 
 
                 //Redigirigir a mis juegos: 
-                app.loadContent('Mi usuario'); 
+                this.loadContent('Mi usuario'); 
 
             }catch(e){
-
                 errorDiv.textContent = 'Error de red o servidor. Inténtalo más tarde.'; 
             } 
         }); 
     }
 
-    configurarEventoRegister(){
-        if(this.eventoRegister) return;
-        this.eventoRegister = true; 
+    #configurarEventoRegister(){
+        if(this.#eventoRegister) return;
+        this.#eventoRegister = true; 
         //Coger form: 
         const registerForm = document.querySelector('.form__register'); 
         const error = document.querySelector('.error');
@@ -410,7 +417,7 @@ export class GameApp{
         //Añadir el evento: 
         registerForm.addEventListener('submit', async (e) => { 
             e.preventDefault();
-            this.limpiarErroresFormulario();
+            this.#limpiarErroresFormulario();
 
             // Acceder a inputs: 
             const name = registerForm.nameRegister.value;
@@ -420,7 +427,7 @@ export class GameApp{
 
             //Ir al backend para confirmar:
             try{
-                const respuesta = await fetch('http://127.0.0.1:8000/api/v1/register', {
+                const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/register`, {
                     method: 'POST', 
                     headers: {
                         'Content-Type': 'application/json', //-->Le dice a laravel que le estoy enviando un json. 
@@ -442,7 +449,7 @@ export class GameApp{
                     //Manejar aquí los errores que devuelve el backend:
                     if(errorData.errors){
                         //Errores, mostrar form: 
-                        this.mostrarErroresFormulario(errorData.errors);
+                        this.#mostrarErroresFormulario(errorData.errors);
                         return;
                     }
                     if(errorData.message){
@@ -457,22 +464,22 @@ export class GameApp{
                 const data = await respuesta.json();
 
                 //Guardar datos suario conectado:
-                this.user.id = data.user.id; 
-                this.user.token = data.token;
-                this.user.conectado = true;
+                this.#user.id = data.user.id; 
+                this.#user.token = data.token;
+                this.#user.conectado = true;
 
-                this.scores = data.user.scores; 
+                this.#scores = data.user.scores; 
 
                 //Guardar el user con token en localStorage: 
-                localStorage.setItem('user', JSON.stringify(this.user)); 
+                localStorage.setItem('user', JSON.stringify(this.#user)); 
                 //Y los scores:
-                localStorage.setItem('scores', JSON.stringify(this.scores)); 
+                localStorage.setItem('scores', JSON.stringify(this.#scores)); 
 
                 //Cerrar el modal:
                 document.querySelector('.modal-backdrop')?.remove();
 
                 //Redirigir a mis juegos:
-                app.loadContent('Mis juegos'); 
+                this.loadContent('Mis juegos'); 
 
                 //AL HACER REGISTER, SE CREA UN SCORE PARA CADA JUEGO EN 0 DE ESTE USER:  
 
@@ -484,15 +491,15 @@ export class GameApp{
 
     }
 
-    configurarEventoEliminarUsuario(){
-        if(this.eventoEliminarUsuario) return; 
-        this.eventoEliminarUsuario = true;
+    #configurarEventoEliminarUsuario(){
+        if(this.#eventoEliminarUsuario) return; 
+        this.#eventoEliminarUsuario = true;
         const buttonDelete = document.querySelector('.btn-delete');
         const errorDiv = document.querySelector('.errorLogout'); 
 
         buttonDelete.addEventListener('click', async () => { 
             try{ 
-                const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/users/${this.user.id}`, {
+                const respuesta = await fetch(`http://127.0.0.1:8000/api/v1/users/${this.#user.id}`, {
                     method: 'DELETE',
                      headers: {
                         'Content-Type': 'application/json',
@@ -505,16 +512,16 @@ export class GameApp{
                     return; 
                 }
 
-                this.resetEvents(); 
+                this.#resetEvents(); 
                 //Borrar el token:
                 localStorage.removeItem('user');
                 localStorage.removeItem('scores'); 
-                this.resetUserData(); 
-                this.resetScoresData();
+                this.#resetUserData(); 
+                this.#resetScoresData();
                 //Vaciar juegos intanciados para que se vuelvan a instanciar con this.user en false:
-                this.videojuegosInstanciados = {}; 
+                this.#videojuegosInstanciados = {}; 
 
-                app.loadContent('Mis Juegos'); 
+                this.loadContent('Mis Juegos'); 
 
             }catch(e){
                 errorDiv.textContent = 'Error de red o servidor. Inténtalo más tarde.'; 
@@ -523,7 +530,7 @@ export class GameApp{
 
     }
 
-    objetoDivsErrores(){
+    #objetoDivsErrores(){
         //Coger los divs donde mostrar los errores:
         const errorName = document.querySelector('.nameRegister');
         const errorEmail = document.querySelector('.emailRegister');
@@ -542,9 +549,9 @@ export class GameApp{
     
     
 
-    mostrarErroresFormulario(errors){
+    #mostrarErroresFormulario(errors){
         //Destructuración de objetos: 
-        const { errorName, errorEmail, errorPassword, errorPasswordConfirm } = this.objetoDivsErrores();
+        const { errorName, errorEmail, errorPassword, errorPasswordConfirm } = this.#objetoDivsErrores();
 
         if(errors.name){
             errorName.textContent = errors.name[0];
@@ -564,14 +571,19 @@ export class GameApp{
         }
     }
 
-    limpiarErroresFormulario(){
+    #limpiarErroresFormulario(){
         //Destructuración de objetos: 
-        const { errorName, errorEmail, errorPassword, errorPasswordConfirm } = this.objetoDivsErrores();
+        const { errorName, errorEmail, errorPassword, errorPasswordConfirm } = this.#objetoDivsErrores();
 
         //Limpiar los mensajes de error:
         errorName.textContent = '';
         errorEmail.textContent = '';
         errorPassword.textContent = '';
         errorPasswordConfirm.textContent = '';
+    }
+    
+    activarEventoHashChange(){
+        //Añadir los eventos para poder ir para atrás y adelante de la página (Router), escucha cambios en # el hash de la URL:  
+        window.addEventListener('hashchange', () => this.#router()); 
     }
 } 

@@ -347,9 +347,8 @@ export class JuegoTresEnRaya extends Juego{
        
     }
 
-    //Recibe fichaMaquina o fichaPersona para comprobar si hay dos seguidas y colocar la tercera o bien para ganar o para evitar perder.
-    //Llama para revisar filaColumna recursivamente. Diagonal principal. Diagonal secundaria. 
-    //AQUI:::::
+    //Recibir fichaMaquina o fichaPersona para comprobar si hay dos seguidas y colocar la tercera o bien para ganar o para evitar perder.
+    //Llamar para revisar filaColumna recursivamente. 
     #posicionEntreDos(ficha){
         let respuestaDiagonaPrincipal, respuestaDiagonalSecundaria, respuestaFilaCol;
         //Compruebar en fila y col si hay 2 iguales de ficha máquina. Si las hay return fila y col de la posición. 
@@ -566,8 +565,7 @@ export class JuegoTresEnRaya extends Juego{
         console.log(`posicionarFichaMaquina: ${filaColumna}`);
         this.#numJugada++;
         //Se posiciona ficha en matriz interna:
-        this.#matrizJuego[filaColumna[0]][filaColumna[1]] = this.#fichaMaquina;
-        console.log(`esta es la matrizjuego supuestamente despues de añadir fihca máquina: ${this.#matrizJuego}`);
+        this.#matrizJuego[filaColumna[0]][filaColumna[1]] = this.#fichaMaquina; 
         //Posicionar ficha máquina visualmente aquí pero con unos segundos de espera:
         setTimeout(() =>{
             this.#posicionarImagenFicha(this.#fichaMaquina,filaColumna[0], filaColumna[1]);
@@ -578,6 +576,7 @@ export class JuegoTresEnRaya extends Juego{
     #posicionarImagenFicha(ficha, fila, columna){
         const boton = document.querySelectorAll('.button')[fila * 3 + columna];
         let img = document.createElement('img');
+        console.log(`la ficha que toca para la imagen es: ${ficha}`);
         img.src = ficha === this.#fichaMaquina ? this.#imagenesFichas[1] : this.#imagenesFichas[0];
         img.classList.add('imagen_button');
         boton.appendChild(img);

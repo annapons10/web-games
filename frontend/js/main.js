@@ -1,6 +1,6 @@
 //Punto de entrada de la aplicación, aquí se importan los módulos y se inicializa la aplicación.
 
-import { GameApp } from './GameApp.js';
+import { GameApp } from './gameApp.js';
 
 //Traer lo que hay en el header y footer de los archivos html. 
 fetch('./html/header.html') 
@@ -49,5 +49,4 @@ app.loadContent('Home');
 //Recuperar datos user si los hay. 
 app.recoverUserData(); 
 
-//Añadir los eventos para poder ir para atrás y adelante de la página (Router), escucha cambios en # el hash de la URL:  
-window.addEventListener('hashchange', app.router.bind(app)); 
+app.activarEventoHashChange(); 
