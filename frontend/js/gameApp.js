@@ -194,7 +194,7 @@ export class GameApp{
                 .then(data =>{
                     document.getElementById('main').innerHTML = data 
                     this.videojuegosInstanciados['tresEnRaya'].mostrarModalInicio(); 
-                    this.videojuegosInstanciados['tresEnRaya'].iniciarJuego();
+                    this.videojuegosInstanciados['tresEnRaya'].entradaJuego();
                 })
                 .catch(error => {
                     document.querySelector('.container').innerHTML = "<p>Lo siento, no se pudo cargar el contenido de esta página.</p>";

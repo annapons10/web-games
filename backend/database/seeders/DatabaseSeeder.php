@@ -14,8 +14,8 @@ class DatabaseSeeder extends Seeder
     {
         //Llamo a los seeders para que se ejecuten: 
         $this->call([
-            GenreGameSeeder::class,
-            UserScoreSeeder::class,
+            GenreGameSeeder::class
+            //UserScoreSeeder::class,
         ]);
     }
 }

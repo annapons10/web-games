@@ -33,17 +33,33 @@ export class JuegoTresEnRaya extends Juego{
         this.#score = score; 
     }
     
-    //Controlar inicio juego:
-    iniciarJuego(){
+    //Punto de entrada del juego:
+    entradaJuego(){
+        console.log("entrada juego"); 
+        //Se limpia todo al iniciar el juego:
+        this.#limpiarJuego(); 
+        this.#primerTurno = this.#fichaPersona; 
+        this.#habilitarClickJugador();
+        this.#eventoClickBotones(); 
+        //Se activa el onclick de reiniciar: 
+        this.#botonEventoReiniciarJuego();
+    }
+
+    #reiniciarJuego(){
+        console.log("Reinicio juego desde dentro"); 
+        console.log(`primer turno: ${this.#primerTurno}`);
         if(this.#primerTurno === this.#fichaPersona){
             this.#habilitarClickJugador();
             this.#eventoClickBotones(); 
         }else{
             this.#primeraJugadaSiTurnoMaquina();
         }
+        //Se limpia todo al iniciar el juego:
+        this.#limpiarJuego(); 
         //Se activa el onclick de reiniciar: 
-        this.#reiniciarJuego();
+        this.#botonEventoReiniciarJuego();
     }
+
 
     //Jugada persona:
     #eventoClickBotones() {
@@ -587,16 +603,27 @@ export class JuegoTresEnRaya extends Juego{
         this.#deshabilitarJugador(); 
     }
 
-    #reiniciarJuego(){
+    #botonEventoReiniciarJuego(){
         let botonVolverAjugar = document.querySelector('.boton__volver-jugar-tres-en-raya');
         botonVolverAjugar.onclick = (() =>{
-            //Limpiar matriz interna:
-            this.#matrizJuego = Array(3).fill().map(() => Array(3).fill(undefined));
-            this.#numJugada = 0;
-            //Limpiar imágenes en tablero:
-            document.querySelectorAll('.imagen_button').forEach(img => img.remove());
+            //Cambiar ficha: 
+            console.log(`this.#primerTurno: ${this.#primerTurno}`);
             this.#primerTurno = this.#primerTurno === this.#fichaPersona ? this.#fichaMaquina : this.#fichaPersona;
-            this.iniciarJuego(); 
-        })
+            this.#reiniciarJuego(); 
+           /*  this.#limpiarJuego(); 
+            this.#primerTurno = this.#primerTurno === this.#fichaPersona ? this.#fichaMaquina : this.#fichaPersona;
+            this.iniciarJuego();  */
+        }); 
+    }
+
+    //Para asegurarse de que todo empieza de cero (si ya está instanciado, se empieza donde se quedó):
+    #limpiarJuego(){
+        //Limpiar matriz interna:
+        this.#matrizJuego = Array(3).fill().map(() => Array(3).fill(undefined));
+        this.#numJugada = 0;
+        //Limpiar imágenes en tablero:
+        document.querySelectorAll('.imagen_button').forEach(img => img.remove());
+       
+            
     }
 } 
