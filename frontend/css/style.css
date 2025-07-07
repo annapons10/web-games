@@ -259,12 +259,16 @@ li{
 /*CONTENEDOR ESTRUCTURA PÁGINA.*/
 
 /*"TARJETAS JUEGOS EN "MIS JUEGOS" "*/
+.p__misJuegos{
+    text-align: center;
+}
+
 .gamesContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around; /* Asegura que empiece desde la parte superior */
-    min-height: 100vh; /* Asegura que ocupe toda la altura de la ventana */
+   /*  min-height: 100vh; */ /* Asegura que ocupe toda la altura de la ventana */
     font-size: 1.1em;
     color: var(--blanco-vintage); 
 }
@@ -319,11 +323,12 @@ li{
 }
 
 /*MEDIA QUERIES MIS JUEGOS__TARJETAS*/
-@media screen and (min-width: 950px){
+@media screen and (min-width: 850px){
    
     .gamesContainer{
         display: flex;
         flex-direction: row;
+        flex-wrap:wrap;
         justify-content: center;
         min-height: 50vh;
     }
